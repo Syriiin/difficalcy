@@ -1,0 +1,147 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Reflection;
+using System.Text.Json;
+using System.Threading.Tasks;
+using Difficalcy.Mania.Models;
+using Difficalcy.Services;
+using Microsoft.Extensions.Configuration;
+using osu.Game.Beatmaps.Legacy;
+using osu.Game.Rulesets.Mania;
+using osu.Game.Rulesets.Mania.Difficulty;
+using osu.Game.Rulesets.Mania.Objects;
+using osu.Game.Rulesets.Mods;
+using osu.Game.Rulesets.Scoring;
+using osu.Game.Scoring;
+using StackExchange.Redis;
+
+namespace Difficalcy.Mania.Services
+{
+    public class ManiaCalculatorService : CalculatorService<ManiaScore, ManiaDifficulty, ManiaPerformance, ManiaCalculation>
+    {
+        private readonly IConfiguration _configuration;
+        private ManiaRuleset ManiaRuleset { get; } = new ManiaRuleset();
+
+        public override string RulesetName => ManiaRuleset.Description;
+        public override string CalculatorName => "Official osu!mania";
+        public override string CalculatorPackage => Assembly.GetAssembly(typeof(ManiaRuleset)).GetName().Name;
+        public override string CalculatorVersion => Assembly.GetAssembly(typeof(ManiaRuleset)).GetName().Version.ToString();
+
+        public ManiaCalculatorService(IConfiguration configuration, IConnectionMultiplexer redis) : base(redis)
+        {
+            _configuration = configuration;
+        }
+
+        public override async Task EnsureBeatmap(int beatmapId)
+        {
+            var beatmapPath = Path.Combine(_configuration["BEATMAP_DIRECTORY"], beatmapId.ToString());
+            if (!File.Exists(beatmapPath))
+            {
+                var myWebClient = new WebClient();
+                await myWebClient.DownloadFileTaskAsync($"https://osu.ppy.sh/osu/{beatmapId}", beatmapPath);
+            }
+        }
+
+        public override (object, string) CalculateDifficulty(ManiaScore score)
+        {
+            var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
+            var mods = ManiaRuleset.ConvertFromLegacyMods((LegacyMods)(score.Mods ?? 0)).ToArray();
+
+            var difficultyCalculator = ManiaRuleset.CreateDifficultyCalculator(workingBeatmap);
+            var difficultyAttributes = difficultyCalculator.Calculate(mods) as ManiaDifficultyAttributes;
+
+            // Serialising anonymous object with same names because Mods and Skills can't be serialised
+            return (difficultyAttributes, JsonSerializer.Serialize(new
+            {
+                StarRating = difficultyAttributes.StarRating,
+                MaxCombo = difficultyAttributes.MaxCombo,
+                GreatHitWindow = difficultyAttributes.GreatHitWindow,
+                ScoreMultiplier = difficultyAttributes.ScoreMultiplier
+            }));
+        }
+
+        public override ManiaDifficulty GetDifficulty(object difficultyAttributes)
+        {
+            var maniaDifficultyAttributes = (ManiaDifficultyAttributes)difficultyAttributes;
+            return new ManiaDifficulty()
+            {
+                Total = maniaDifficultyAttributes.StarRating
+            };
+        }
+
+        public override object DeserialiseDifficultyAttributes(string difficultyAttributesJson)
+        {
+            return JsonSerializer.Deserialize<ManiaDifficultyAttributes>(difficultyAttributesJson, new JsonSerializerOptions() { IncludeFields = true });
+        }
+
+        public override ManiaPerformance CalculatePerformance(ManiaScore score, object difficultyAttributes)
+        {
+            var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
+            var mods = ManiaRuleset.ConvertFromLegacyMods((LegacyMods)(score.Mods ?? 0)).ToArray();
+            var beatmap = workingBeatmap.GetPlayableBeatmap(ManiaRuleset.RulesetInfo, mods);
+
+            var hitResultCount = beatmap.HitObjects.Count;
+            var statistics = new Dictionary<HitResult, int>
+            {
+                { HitResult.Perfect, hitResultCount },
+                { HitResult.Great, 0 },
+                { HitResult.Ok, 0 },
+                { HitResult.Good, 0 },
+                { HitResult.Meh, 0 },
+                { HitResult.Miss, 0 }
+            };
+            var totalScore = score.TotalScore ?? determineScore(mods);
+
+            var scoreInfo = new ScoreInfo()
+            {
+                Accuracy = 0,
+                MaxCombo = 0,
+                Statistics = statistics,
+                Mods = mods,
+                TotalScore = totalScore
+            };
+
+            var performanceCalculator = ManiaRuleset.CreatePerformanceCalculator((ManiaDifficultyAttributes)difficultyAttributes, scoreInfo);
+            var categoryAttributes = new Dictionary<string, double>();
+            var performance = performanceCalculator.Calculate(categoryAttributes);
+
+            return new ManiaPerformance()
+            {
+                Total = performance,
+                Strain = categoryAttributes["Strain"],
+                Accuracy = categoryAttributes["Accuracy"]
+            };
+        }
+
+        public override ManiaCalculation GetCalculation(ManiaDifficulty difficulty, ManiaPerformance performance)
+        {
+            return new ManiaCalculation()
+            {
+                Difficulty = difficulty,
+                Performance = performance
+            };
+        }
+
+        private CalculatorWorkingBeatmap getWorkingBeatmap(int beatmapId)
+        {
+            var beatmapPath = Path.Combine(_configuration["BEATMAP_DIRECTORY"], beatmapId.ToString());
+            return new CalculatorWorkingBeatmap(ManiaRuleset, beatmapPath, beatmapId);
+        }
+
+        private int determineScore(Mod[] mods)
+        {
+            double scoreMultiplier = 1;
+
+            foreach (var mod in mods)
+            {
+                if (mod.Type == ModType.DifficultyReduction)
+                    scoreMultiplier *= mod.ScoreMultiplier;
+            }
+
+            return (int)Math.Round(1000000 * scoreMultiplier);
+        }
+    }
+}

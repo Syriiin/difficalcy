@@ -1,0 +1,61 @@
+version: '3.4'
+
+services:
+  difficalcy-osu:
+    image: difficalcy-osu
+    ports:
+      - 5000:80
+    build:
+      context: .
+      dockerfile: ./Difficalcy.Osu/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - BEATMAP_DIRECTORY=/app/beatmaps/external
+      - REDIS_CONFIGURATION=cache:6379
+    volumes:
+      - ${BEATMAP_DIRECTORY}:/app/beatmaps/external
+
+  difficalcy-taiko:
+    image: difficalcy-taiko
+    ports:
+      - 5001:80
+    build:
+      context: .
+      dockerfile: ./Difficalcy.Taiko/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - BEATMAP_DIRECTORY=/app/beatmaps/external
+      - REDIS_CONFIGURATION=cache:6379
+    volumes:
+      - ${BEATMAP_DIRECTORY}:/app/beatmaps/external
+
+  difficalcy-catch:
+    image: difficalcy-catch
+    ports:
+      - 5002:80
+    build:
+      context: .
+      dockerfile: ./Difficalcy.Catch/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - BEATMAP_DIRECTORY=/app/beatmaps/external
+      - REDIS_CONFIGURATION=cache:6379
+    volumes:
+      - ${BEATMAP_DIRECTORY}:/app/beatmaps/external
+
+  difficalcy-mania:
+    image: difficalcy-mania
+    ports:
+      - 5003:80
+    build:
+      context: .
+      dockerfile: ./Difficalcy.Mania/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - BEATMAP_DIRECTORY=/app/beatmaps/external
+      - REDIS_CONFIGURATION=cache:6379
+    volumes:
+      - ${BEATMAP_DIRECTORY}:/app/beatmaps/external
+
+  cache:
+    image: redis:6
