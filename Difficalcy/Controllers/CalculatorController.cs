@@ -22,6 +22,12 @@ namespace Difficalcy.Controllers
             this.calculatorService = calculatorService;
         }
 
+        [HttpGet("info")]
+        public ActionResult<CalculatorInfo> GetInfo()
+        {
+            return Ok(calculatorService.Info);
+        }
+
         [HttpGet("difficulty")]
         public async Task<ActionResult<TDifficulty>> GetDifficulty([FromQuery] TScore score)
         {

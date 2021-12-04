@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Difficalcy.Catch.Models;
+using Difficalcy.Models;
 using Difficalcy.Services;
 using Microsoft.Extensions.Configuration;
 using osu.Game.Beatmaps;
@@ -25,10 +26,13 @@ namespace Difficalcy.Catch.Services
         private readonly IConfiguration _configuration;
         private CatchRuleset CatchRuleset { get; } = new CatchRuleset();
 
-        public override string RulesetName => CatchRuleset.Description;
-        public override string CalculatorName => "Official osu!catch";
-        public override string CalculatorPackage => Assembly.GetAssembly(typeof(CatchRuleset)).GetName().Name;
-        public override string CalculatorVersion => Assembly.GetAssembly(typeof(CatchRuleset)).GetName().Version.ToString();
+        public override CalculatorInfo Info => new CalculatorInfo
+        {
+            RulesetName = CatchRuleset.Description,
+            CalculatorName = "Official osu!catch",
+            CalculatorPackage = Assembly.GetAssembly(typeof(CatchRuleset)).GetName().Name,
+            CalculatorVersion = Assembly.GetAssembly(typeof(CatchRuleset)).GetName().Version.ToString()
+        };
 
         public CatchCalculatorService(IConfiguration configuration, IConnectionMultiplexer redis) : base(redis)
         {

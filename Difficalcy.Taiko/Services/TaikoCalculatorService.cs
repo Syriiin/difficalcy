@@ -6,6 +6,7 @@ using System.Net;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Difficalcy.Models;
 using Difficalcy.Services;
 using Difficalcy.Taiko.Models;
 using Microsoft.Extensions.Configuration;
@@ -24,10 +25,13 @@ namespace Difficalcy.Taiko.Services
         private readonly IConfiguration _configuration;
         private TaikoRuleset TaikoRuleset { get; } = new TaikoRuleset();
 
-        public override string RulesetName => TaikoRuleset.Description;
-        public override string CalculatorName => "Official osu!taiko";
-        public override string CalculatorPackage => Assembly.GetAssembly(typeof(TaikoRuleset)).GetName().Name;
-        public override string CalculatorVersion => Assembly.GetAssembly(typeof(TaikoRuleset)).GetName().Version.ToString();
+        public override CalculatorInfo Info => new CalculatorInfo
+        {
+            RulesetName = TaikoRuleset.Description,
+            CalculatorName = "Official osu!taiko",
+            CalculatorPackage = Assembly.GetAssembly(typeof(TaikoRuleset)).GetName().Name,
+            CalculatorVersion = Assembly.GetAssembly(typeof(TaikoRuleset)).GetName().Version.ToString()
+        };
 
         public TaikoCalculatorService(IConfiguration configuration, IConnectionMultiplexer redis) : base(redis)
         {

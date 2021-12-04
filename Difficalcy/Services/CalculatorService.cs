@@ -10,12 +10,9 @@ namespace Difficalcy.Services
         where TPerformance : Performance
         where TCalculation : Calculation<TDifficulty, TPerformance>
     {
-        public abstract string RulesetName { get; }
-        public abstract string CalculatorName { get; }
-        public abstract string CalculatorPackage { get; }
-        public abstract string CalculatorVersion { get; }
+        public abstract CalculatorInfo Info { get; }
 
-        public string CalculatorDiscriminator => $"{CalculatorPackage}:{CalculatorVersion}";
+        public string CalculatorDiscriminator => $"{Info.CalculatorPackage}:{Info.CalculatorVersion}";
 
         private readonly IConnectionMultiplexer _redis;
 

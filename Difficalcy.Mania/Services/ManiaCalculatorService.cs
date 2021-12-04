@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Difficalcy.Mania.Models;
+using Difficalcy.Models;
 using Difficalcy.Services;
 using Microsoft.Extensions.Configuration;
 using osu.Game.Beatmaps.Legacy;
@@ -25,10 +26,13 @@ namespace Difficalcy.Mania.Services
         private readonly IConfiguration _configuration;
         private ManiaRuleset ManiaRuleset { get; } = new ManiaRuleset();
 
-        public override string RulesetName => ManiaRuleset.Description;
-        public override string CalculatorName => "Official osu!mania";
-        public override string CalculatorPackage => Assembly.GetAssembly(typeof(ManiaRuleset)).GetName().Name;
-        public override string CalculatorVersion => Assembly.GetAssembly(typeof(ManiaRuleset)).GetName().Version.ToString();
+        public override CalculatorInfo Info => new CalculatorInfo
+        {
+            RulesetName = ManiaRuleset.Description,
+            CalculatorName = "Official osu!mania",
+            CalculatorPackage = Assembly.GetAssembly(typeof(ManiaRuleset)).GetName().Name,
+            CalculatorVersion = Assembly.GetAssembly(typeof(ManiaRuleset)).GetName().Version.ToString()
+        };
 
         public ManiaCalculatorService(IConfiguration configuration, IConnectionMultiplexer redis) : base(redis)
         {

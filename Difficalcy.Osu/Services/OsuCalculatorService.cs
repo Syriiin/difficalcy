@@ -6,6 +6,7 @@ using System.Net;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Difficalcy.Models;
 using Difficalcy.Osu.Models;
 using Difficalcy.Services;
 using Microsoft.Extensions.Configuration;
@@ -24,10 +25,13 @@ namespace Difficalcy.Osu.Services
         private readonly IConfiguration _configuration;
         private OsuRuleset OsuRuleset { get; } = new OsuRuleset();
 
-        public override string RulesetName => OsuRuleset.Description;
-        public override string CalculatorName => "Official osu!";
-        public override string CalculatorPackage => Assembly.GetAssembly(typeof(OsuRuleset)).GetName().Name;
-        public override string CalculatorVersion => Assembly.GetAssembly(typeof(OsuRuleset)).GetName().Version.ToString();
+        public override CalculatorInfo Info => new CalculatorInfo
+        {
+            RulesetName = OsuRuleset.Description,
+            CalculatorName = "Official osu!",
+            CalculatorPackage = Assembly.GetAssembly(typeof(OsuRuleset)).GetName().Name,
+            CalculatorVersion = Assembly.GetAssembly(typeof(OsuRuleset)).GetName().Version.ToString()
+        };
 
         public OsuCalculatorService(IConfiguration configuration, IConnectionMultiplexer redis) : base(redis)
         {
