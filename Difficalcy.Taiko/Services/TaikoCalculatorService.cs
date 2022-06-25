@@ -16,7 +16,6 @@ using osu.Game.Rulesets.Taiko;
 using osu.Game.Rulesets.Taiko.Difficulty;
 using osu.Game.Rulesets.Taiko.Objects;
 using osu.Game.Scoring;
-using StackExchange.Redis;
 
 namespace Difficalcy.Taiko.Services
 {
@@ -42,7 +41,7 @@ namespace Difficalcy.Taiko.Services
             }
         }
 
-        public TaikoCalculatorService(IConfiguration configuration, IConnectionMultiplexer redis) : base(redis)
+        public TaikoCalculatorService(IConfiguration configuration, ICache cache) : base(cache)
         {
             _configuration = configuration;
         }

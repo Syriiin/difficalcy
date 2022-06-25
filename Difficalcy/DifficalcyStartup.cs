@@ -1,3 +1,4 @@
+using Difficalcy.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -30,8 +31,14 @@ namespace Difficalcy
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = OpenApiTitle, Version = OpenApiVersion });
             });
 
-            var multiplexer = ConnectionMultiplexer.Connect(Configuration["REDIS_CONFIGURATION"]);
-            services.AddSingleton<IConnectionMultiplexer>(multiplexer);
+            var redisConfig = Configuration["REDIS_CONFIGURATION"];
+
+            ICache cache;
+            if (redisConfig == null)
+                cache = new DummyCache();
+            else
+                cache = new RedisCache(ConnectionMultiplexer.Connect(redisConfig));
+            services.AddSingleton<ICache>(cache);
 
             ConfigureCalculatorServices(services);
         }

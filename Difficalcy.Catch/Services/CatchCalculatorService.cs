@@ -17,7 +17,6 @@ using osu.Game.Rulesets.Catch.Difficulty;
 using osu.Game.Rulesets.Catch.Objects;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Scoring;
-using StackExchange.Redis;
 
 namespace Difficalcy.Catch.Services
 {
@@ -43,7 +42,7 @@ namespace Difficalcy.Catch.Services
             }
         }
 
-        public CatchCalculatorService(IConfiguration configuration, IConnectionMultiplexer redis) : base(redis)
+        public CatchCalculatorService(IConfiguration configuration, ICache cache) : base(cache)
         {
             _configuration = configuration;
         }

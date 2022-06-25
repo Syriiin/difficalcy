@@ -16,7 +16,6 @@ using osu.Game.Rulesets.Osu.Difficulty;
 using osu.Game.Rulesets.Osu.Objects;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Scoring;
-using StackExchange.Redis;
 
 namespace Difficalcy.Osu.Services
 {
@@ -42,7 +41,7 @@ namespace Difficalcy.Osu.Services
             }
         }
 
-        public OsuCalculatorService(IConfiguration configuration, IConnectionMultiplexer redis) : base(redis)
+        public OsuCalculatorService(IConfiguration configuration, ICache cache) : base(cache)
         {
             _configuration = configuration;
         }

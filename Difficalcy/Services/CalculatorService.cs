@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using Difficalcy.Models;
-using StackExchange.Redis;
 
 namespace Difficalcy.Services
 {
@@ -21,11 +20,11 @@ namespace Difficalcy.Services
         /// </summary>
         public string CalculatorDiscriminator => $"{Info.CalculatorPackage}:{Info.CalculatorVersion}";
 
-        private readonly IConnectionMultiplexer _redis;
+        private readonly ICache _cache;
 
-        public CalculatorService(IConnectionMultiplexer redis)
+        public CalculatorService(ICache cache)
         {
-            _redis = redis;
+            _cache = cache;
         }
 
         /// <summary>
@@ -91,15 +90,15 @@ namespace Difficalcy.Services
         {
             await EnsureBeatmap(score.BeatmapId);
 
-            var db = _redis.GetDatabase();
+            var db = _cache.GetDatabase();
             var redisKey = $"{CalculatorDiscriminator}:{score.BeatmapId}:{score.Mods ?? 0}";
-            var difficultyAttributesJson = await db.StringGetAsync(redisKey);
+            var difficultyAttributesJson = await db.GetAsync(redisKey);
 
             object difficultyAttributes;
-            if (difficultyAttributesJson.IsNull)
+            if (difficultyAttributesJson == null)
             {
                 (difficultyAttributes, difficultyAttributesJson) = CalculateDifficulty(score);
-                db.StringSet(redisKey, difficultyAttributesJson, flags: CommandFlags.FireAndForget);
+                db.Set(redisKey, difficultyAttributesJson);
             }
             else
             {

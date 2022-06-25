@@ -16,7 +16,6 @@ using osu.Game.Rulesets.Mania.Difficulty;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Scoring;
-using StackExchange.Redis;
 
 namespace Difficalcy.Mania.Services
 {
@@ -42,7 +41,7 @@ namespace Difficalcy.Mania.Services
             }
         }
 
-        public ManiaCalculatorService(IConfiguration configuration, IConnectionMultiplexer redis) : base(redis)
+        public ManiaCalculatorService(IConfiguration configuration, ICache cache) : base(cache)
         {
             _configuration = configuration;
         }
