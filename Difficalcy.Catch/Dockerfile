@@ -14,7 +14,8 @@ RUN dotnet restore Difficalcy/Difficalcy.csproj
 COPY ./Difficalcy.Catch/Difficalcy.Catch.csproj ./Difficalcy.Catch/
 RUN dotnet restore Difficalcy.Catch/Difficalcy.Catch.csproj
 
-COPY . .
+COPY ./Difficalcy/ ./Difficalcy/
+COPY ./Difficalcy.Catch/ ./Difficalcy.Catch/
 RUN dotnet build Difficalcy.Catch/Difficalcy.Catch.csproj -c Release -o /app/build
 
 FROM base AS final

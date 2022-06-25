@@ -14,7 +14,8 @@ RUN dotnet restore Difficalcy/Difficalcy.csproj
 COPY ./Difficalcy.Mania/Difficalcy.Mania.csproj ./Difficalcy.Mania/
 RUN dotnet restore Difficalcy.Mania/Difficalcy.Mania.csproj
 
-COPY . .
+COPY ./Difficalcy/ ./Difficalcy/
+COPY ./Difficalcy.Mania/ ./Difficalcy.Mania/
 RUN dotnet build Difficalcy.Mania/Difficalcy.Mania.csproj -c Release -o /app/build
 
 FROM base AS final

@@ -14,7 +14,8 @@ RUN dotnet restore Difficalcy/Difficalcy.csproj
 COPY ./Difficalcy.Taiko/Difficalcy.Taiko.csproj ./Difficalcy.Taiko/
 RUN dotnet restore Difficalcy.Taiko/Difficalcy.Taiko.csproj
 
-COPY . .
+COPY ./Difficalcy/ ./Difficalcy/
+COPY ./Difficalcy.Taiko/ ./Difficalcy.Taiko/
 RUN dotnet build Difficalcy.Taiko/Difficalcy.Taiko.csproj -c Release -o /app/build
 
 FROM base AS final

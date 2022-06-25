@@ -14,7 +14,8 @@ RUN dotnet restore Difficalcy/Difficalcy.csproj
 COPY ./Difficalcy.Osu/Difficalcy.Osu.csproj ./Difficalcy.Osu/
 RUN dotnet restore Difficalcy.Osu/Difficalcy.Osu.csproj
 
-COPY . .
+COPY ./Difficalcy/ ./Difficalcy/
+COPY ./Difficalcy.Osu/ ./Difficalcy.Osu/
 RUN dotnet build Difficalcy.Osu/Difficalcy.Osu.csproj -c Release -o /app/build
 
 FROM base AS final
