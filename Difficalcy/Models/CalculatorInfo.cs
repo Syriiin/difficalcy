@@ -6,5 +6,6 @@ namespace Difficalcy.Models
         public string CalculatorName { get; init; }
         public string CalculatorPackage { get; init; }
         public string CalculatorVersion { get; init; }
+        public string CalculatorUrl { get; init; }
     }
 }

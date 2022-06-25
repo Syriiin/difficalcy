@@ -25,13 +25,22 @@ namespace Difficalcy.Taiko.Services
         private readonly IConfiguration _configuration;
         private TaikoRuleset TaikoRuleset { get; } = new TaikoRuleset();
 
-        public override CalculatorInfo Info => new CalculatorInfo
+        public override CalculatorInfo Info
         {
-            RulesetName = TaikoRuleset.Description,
-            CalculatorName = "Official osu!taiko",
-            CalculatorPackage = Assembly.GetAssembly(typeof(TaikoRuleset)).GetName().Name,
-            CalculatorVersion = Assembly.GetAssembly(typeof(TaikoRuleset)).GetName().Version.ToString()
-        };
+            get
+            {
+                var packageName = Assembly.GetAssembly(typeof(TaikoRuleset)).GetName().Name;
+                var packageVersion = Assembly.GetAssembly(typeof(TaikoRuleset)).GetName().Version.ToString();
+                return new CalculatorInfo
+                {
+                    RulesetName = TaikoRuleset.Description,
+                    CalculatorName = "Official osu!taiko",
+                    CalculatorPackage = packageName,
+                    CalculatorVersion = packageVersion,
+                    CalculatorUrl = $"https://nuget.org/packages/ppy.{packageName}/{packageVersion}"
+                };
+            }
+        }
 
         public TaikoCalculatorService(IConfiguration configuration, IConnectionMultiplexer redis) : base(redis)
         {

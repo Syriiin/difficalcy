@@ -13,7 +13,6 @@ using Microsoft.Extensions.Configuration;
 using osu.Game.Beatmaps.Legacy;
 using osu.Game.Rulesets.Mania;
 using osu.Game.Rulesets.Mania.Difficulty;
-using osu.Game.Rulesets.Mania.Objects;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Scoring;
@@ -26,13 +25,22 @@ namespace Difficalcy.Mania.Services
         private readonly IConfiguration _configuration;
         private ManiaRuleset ManiaRuleset { get; } = new ManiaRuleset();
 
-        public override CalculatorInfo Info => new CalculatorInfo
+        public override CalculatorInfo Info
         {
-            RulesetName = ManiaRuleset.Description,
-            CalculatorName = "Official osu!mania",
-            CalculatorPackage = Assembly.GetAssembly(typeof(ManiaRuleset)).GetName().Name,
-            CalculatorVersion = Assembly.GetAssembly(typeof(ManiaRuleset)).GetName().Version.ToString()
-        };
+            get
+            {
+                var packageName = Assembly.GetAssembly(typeof(ManiaRuleset)).GetName().Name;
+                var packageVersion = Assembly.GetAssembly(typeof(ManiaRuleset)).GetName().Version.ToString();
+                return new CalculatorInfo
+                {
+                    RulesetName = ManiaRuleset.Description,
+                    CalculatorName = "Official osu!mania",
+                    CalculatorPackage = packageName,
+                    CalculatorVersion = packageVersion,
+                    CalculatorUrl = $"https://nuget.org/packages/ppy.{packageName}/{packageVersion}"
+                };
+            }
+        }
 
         public ManiaCalculatorService(IConfiguration configuration, IConnectionMultiplexer redis) : base(redis)
         {

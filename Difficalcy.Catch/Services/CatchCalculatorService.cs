@@ -26,13 +26,22 @@ namespace Difficalcy.Catch.Services
         private readonly IConfiguration _configuration;
         private CatchRuleset CatchRuleset { get; } = new CatchRuleset();
 
-        public override CalculatorInfo Info => new CalculatorInfo
+        public override CalculatorInfo Info
         {
-            RulesetName = CatchRuleset.Description,
-            CalculatorName = "Official osu!catch",
-            CalculatorPackage = Assembly.GetAssembly(typeof(CatchRuleset)).GetName().Name,
-            CalculatorVersion = Assembly.GetAssembly(typeof(CatchRuleset)).GetName().Version.ToString()
-        };
+            get
+            {
+                var packageName = Assembly.GetAssembly(typeof(CatchRuleset)).GetName().Name;
+                var packageVersion = Assembly.GetAssembly(typeof(CatchRuleset)).GetName().Version.ToString();
+                return new CalculatorInfo
+                {
+                    RulesetName = CatchRuleset.Description,
+                    CalculatorName = "Official osu!catch",
+                    CalculatorPackage = packageName,
+                    CalculatorVersion = packageVersion,
+                    CalculatorUrl = $"https://nuget.org/packages/ppy.{packageName}/{packageVersion}"
+                };
+            }
+        }
 
         public CatchCalculatorService(IConfiguration configuration, IConnectionMultiplexer redis) : base(redis)
         {

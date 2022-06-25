@@ -25,13 +25,22 @@ namespace Difficalcy.Osu.Services
         private readonly IConfiguration _configuration;
         private OsuRuleset OsuRuleset { get; } = new OsuRuleset();
 
-        public override CalculatorInfo Info => new CalculatorInfo
+        public override CalculatorInfo Info
         {
-            RulesetName = OsuRuleset.Description,
-            CalculatorName = "Official osu!",
-            CalculatorPackage = Assembly.GetAssembly(typeof(OsuRuleset)).GetName().Name,
-            CalculatorVersion = Assembly.GetAssembly(typeof(OsuRuleset)).GetName().Version.ToString()
-        };
+            get
+            {
+                var packageName = Assembly.GetAssembly(typeof(OsuRuleset)).GetName().Name;
+                var packageVersion = Assembly.GetAssembly(typeof(OsuRuleset)).GetName().Version.ToString();
+                return new CalculatorInfo
+                {
+                    RulesetName = OsuRuleset.Description,
+                    CalculatorName = "Official osu!",
+                    CalculatorPackage = packageName,
+                    CalculatorVersion = packageVersion,
+                    CalculatorUrl = $"https://nuget.org/packages/ppy.{packageName}/{packageVersion}"
+                };
+            }
+        }
 
         public OsuCalculatorService(IConfiguration configuration, IConnectionMultiplexer redis) : base(redis)
         {
