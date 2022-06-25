@@ -78,7 +78,7 @@ namespace Difficalcy.Taiko.Services
             }));
         }
 
-        public override TaikoDifficulty GetDifficulty(object difficultyAttributes)
+        public override TaikoDifficulty GetDifficultyFromDifficultyAttributes(object difficultyAttributes)
         {
             var taikoDifficultyAttributes = (TaikoDifficultyAttributes)difficultyAttributes;
             return new TaikoDifficulty()

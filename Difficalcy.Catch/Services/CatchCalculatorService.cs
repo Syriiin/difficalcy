@@ -75,7 +75,7 @@ namespace Difficalcy.Catch.Services
             }));
         }
 
-        public override CatchDifficulty GetDifficulty(object difficultyAttributes)
+        public override CatchDifficulty GetDifficultyFromDifficultyAttributes(object difficultyAttributes)
         {
             var catchDifficultyAttributes = (CatchDifficultyAttributes)difficultyAttributes;
             return new CatchDifficulty()

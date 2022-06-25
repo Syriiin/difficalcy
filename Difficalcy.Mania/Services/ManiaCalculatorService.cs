@@ -75,7 +75,7 @@ namespace Difficalcy.Mania.Services
             }));
         }
 
-        public override ManiaDifficulty GetDifficulty(object difficultyAttributes)
+        public override ManiaDifficulty GetDifficultyFromDifficultyAttributes(object difficultyAttributes)
         {
             var maniaDifficultyAttributes = (ManiaDifficultyAttributes)difficultyAttributes;
             return new ManiaDifficulty()

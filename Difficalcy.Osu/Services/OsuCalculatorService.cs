@@ -81,7 +81,7 @@ namespace Difficalcy.Osu.Services
             }));
         }
 
-        public override OsuDifficulty GetDifficulty(object difficultyAttributes)
+        public override OsuDifficulty GetDifficultyFromDifficultyAttributes(object difficultyAttributes)
         {
             var osuDifficultyAttributes = (OsuDifficultyAttributes)difficultyAttributes;
             return new OsuDifficulty()

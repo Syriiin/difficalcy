@@ -10,8 +10,15 @@ namespace Difficalcy.Services
         where TPerformance : Performance
         where TCalculation : Calculation<TDifficulty, TPerformance>
     {
+        /// <summary>
+        /// A set of information describing the calculator.
+        /// </summary>
         public abstract CalculatorInfo Info { get; }
 
+        /// <summary>
+        /// A unique discriminator for this calculator.
+        /// Should be unique for calculator that might return differing results.
+        /// </summary>
         public string CalculatorDiscriminator => $"{Info.CalculatorPackage}:{Info.CalculatorVersion}";
 
         private readonly IConnectionMultiplexer _redis;
@@ -21,34 +28,61 @@ namespace Difficalcy.Services
             _redis = redis;
         }
 
+        /// <summary>
+        /// Ensures the beatmap with the given ID is available locally.
+        /// </summary>
         public abstract Task EnsureBeatmap(int beatmapId);
 
+        /// <summary>
+        /// Runs the difficulty calculator and returns the difficulty attributes as both an object and JSON serialised string.
+        /// </summary>
         public abstract (object, string) CalculateDifficulty(TScore score);
 
-        public abstract TDifficulty GetDifficulty(object difficultyAttributes);
+        /// <summary>
+        /// Returns the difficulty within a given difficulty attributes object.
+        /// </summary>
+        public abstract TDifficulty GetDifficultyFromDifficultyAttributes(object difficultyAttributes);
 
+        /// <summary>
+        /// Returns the deserialised object for a given JSON serialised difficulty attributes object.
+        /// </summary>
         public abstract object DeserialiseDifficultyAttributes(string difficultyAttributesJson);
 
+        /// <summary>
+        /// Runs the performance calculator on a given score with pre-calculated difficulty attributes and returns the performance.
+        /// </summary>
         public abstract TPerformance CalculatePerformance(TScore score, object difficultyAttributes);
 
+        /// <summary>
+        /// Returns a calculation object that contains the passed difficulty and performance.
+        /// </summary>
         public abstract TCalculation GetCalculation(TDifficulty difficulty, TPerformance performance);
 
+        /// <summary>
+        /// Returns the difficulty of a given score.
+        /// </summary>
         public async Task<TDifficulty> GetDifficulty(TScore score)
         {
             var difficultyAttributes = await GetDifficultyAttributes(score);
-            return GetDifficulty(difficultyAttributes);
+            return GetDifficultyFromDifficultyAttributes(difficultyAttributes);
         }
 
+        /// <summary>
+        /// Returns the performance of a given score.
+        /// </summary>
         public async Task<TPerformance> GetPerformance(TScore score)
         {
             var difficultyAttributes = await GetDifficultyAttributes(score);
             return CalculatePerformance(score, difficultyAttributes);
         }
 
+        /// <summary>
+        /// Returns the difficulty and performance of a given score.
+        /// </summary>
         public async Task<TCalculation> GetCalculation(TScore score)
         {
             var difficultyAttributes = await GetDifficultyAttributes(score);
-            var difficulty = GetDifficulty(difficultyAttributes);
+            var difficulty = GetDifficultyFromDifficultyAttributes(difficultyAttributes);
             var performance = CalculatePerformance(score, difficultyAttributes);
             return GetCalculation(difficulty, performance);
         }
