@@ -48,7 +48,7 @@ namespace Difficalcy.Catch.Services
             _configuration = configuration;
         }
 
-        public override async Task EnsureBeatmap(int beatmapId)
+        protected override async Task EnsureBeatmap(int beatmapId)
         {
             var beatmapPath = Path.Combine(_configuration["BEATMAP_DIRECTORY"], beatmapId.ToString());
             if (!File.Exists(beatmapPath))
@@ -59,7 +59,7 @@ namespace Difficalcy.Catch.Services
             }
         }
 
-        public override (object, string) CalculateDifficultyAttributes(CatchScore score)
+        protected override (object, string) CalculateDifficultyAttributes(CatchScore score)
         {
             var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
             var mods = CatchRuleset.ConvertFromLegacyMods((LegacyMods)(score.Mods ?? 0)).ToArray();
@@ -76,7 +76,7 @@ namespace Difficalcy.Catch.Services
             }));
         }
 
-        public override CatchDifficulty GetDifficultyFromDifficultyAttributes(object difficultyAttributes)
+        protected override CatchDifficulty GetDifficultyFromDifficultyAttributes(object difficultyAttributes)
         {
             var catchDifficultyAttributes = (CatchDifficultyAttributes)difficultyAttributes;
             return new CatchDifficulty()
@@ -85,12 +85,12 @@ namespace Difficalcy.Catch.Services
             };
         }
 
-        public override object DeserialiseDifficultyAttributes(string difficultyAttributesJson)
+        protected override object DeserialiseDifficultyAttributes(string difficultyAttributesJson)
         {
             return JsonSerializer.Deserialize<CatchDifficultyAttributes>(difficultyAttributesJson, new JsonSerializerOptions() { IncludeFields = true });
         }
 
-        public override CatchPerformance CalculatePerformance(CatchScore score, object difficultyAttributes)
+        protected override CatchPerformance CalculatePerformance(CatchScore score, object difficultyAttributes)
         {
             var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
             var mods = CatchRuleset.ConvertFromLegacyMods((LegacyMods)(score.Mods ?? 0)).ToArray();
@@ -119,7 +119,7 @@ namespace Difficalcy.Catch.Services
             };
         }
 
-        public override CatchCalculation GetCalculation(CatchDifficulty difficulty, CatchPerformance performance)
+        protected override CatchCalculation GetCalculation(CatchDifficulty difficulty, CatchPerformance performance)
         {
             return new CatchCalculation()
             {

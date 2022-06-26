@@ -47,7 +47,7 @@ namespace Difficalcy.Mania.Services
             _configuration = configuration;
         }
 
-        public override async Task EnsureBeatmap(int beatmapId)
+        protected override async Task EnsureBeatmap(int beatmapId)
         {
             var beatmapPath = Path.Combine(_configuration["BEATMAP_DIRECTORY"], beatmapId.ToString());
             if (!File.Exists(beatmapPath))
@@ -58,7 +58,7 @@ namespace Difficalcy.Mania.Services
             }
         }
 
-        public override (object, string) CalculateDifficultyAttributes(ManiaScore score)
+        protected override (object, string) CalculateDifficultyAttributes(ManiaScore score)
         {
             var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
             var mods = ManiaRuleset.ConvertFromLegacyMods((LegacyMods)(score.Mods ?? 0)).ToArray();
@@ -76,7 +76,7 @@ namespace Difficalcy.Mania.Services
             }));
         }
 
-        public override ManiaDifficulty GetDifficultyFromDifficultyAttributes(object difficultyAttributes)
+        protected override ManiaDifficulty GetDifficultyFromDifficultyAttributes(object difficultyAttributes)
         {
             var maniaDifficultyAttributes = (ManiaDifficultyAttributes)difficultyAttributes;
             return new ManiaDifficulty()
@@ -85,12 +85,12 @@ namespace Difficalcy.Mania.Services
             };
         }
 
-        public override object DeserialiseDifficultyAttributes(string difficultyAttributesJson)
+        protected override object DeserialiseDifficultyAttributes(string difficultyAttributesJson)
         {
             return JsonSerializer.Deserialize<ManiaDifficultyAttributes>(difficultyAttributesJson, new JsonSerializerOptions() { IncludeFields = true });
         }
 
-        public override ManiaPerformance CalculatePerformance(ManiaScore score, object difficultyAttributes)
+        protected override ManiaPerformance CalculatePerformance(ManiaScore score, object difficultyAttributes)
         {
             var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
             var mods = ManiaRuleset.ConvertFromLegacyMods((LegacyMods)(score.Mods ?? 0)).ToArray();
@@ -129,7 +129,7 @@ namespace Difficalcy.Mania.Services
             };
         }
 
-        public override ManiaCalculation GetCalculation(ManiaDifficulty difficulty, ManiaPerformance performance)
+        protected override ManiaCalculation GetCalculation(ManiaDifficulty difficulty, ManiaPerformance performance)
         {
             return new ManiaCalculation()
             {

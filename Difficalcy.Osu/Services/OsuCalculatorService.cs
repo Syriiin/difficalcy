@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Text.Json;
@@ -48,7 +47,7 @@ namespace Difficalcy.Osu.Services
             _configuration = configuration;
         }
 
-        public override async Task EnsureBeatmap(int beatmapId)
+        protected override async Task EnsureBeatmap(int beatmapId)
         {
             var beatmapPath = Path.Combine(_configuration["BEATMAP_DIRECTORY"], beatmapId.ToString());
             if (!File.Exists(beatmapPath))
@@ -59,7 +58,7 @@ namespace Difficalcy.Osu.Services
             }
         }
 
-        public override (object, string) CalculateDifficultyAttributes(OsuScore score)
+        protected override (object, string) CalculateDifficultyAttributes(OsuScore score)
         {
             var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
             var mods = OsuRuleset.ConvertFromLegacyMods((LegacyMods)(score.Mods ?? 0)).ToArray();
@@ -83,7 +82,7 @@ namespace Difficalcy.Osu.Services
             }));
         }
 
-        public override OsuDifficulty GetDifficultyFromDifficultyAttributes(object difficultyAttributes)
+        protected override OsuDifficulty GetDifficultyFromDifficultyAttributes(object difficultyAttributes)
         {
             var osuDifficultyAttributes = (OsuDifficultyAttributes)difficultyAttributes;
             return new OsuDifficulty()
@@ -95,12 +94,12 @@ namespace Difficalcy.Osu.Services
             };
         }
 
-        public override object DeserialiseDifficultyAttributes(string difficultyAttributesJson)
+        protected override object DeserialiseDifficultyAttributes(string difficultyAttributesJson)
         {
             return JsonSerializer.Deserialize<OsuDifficultyAttributes>(difficultyAttributesJson, new JsonSerializerOptions() { IncludeFields = true });
         }
 
-        public override OsuPerformance CalculatePerformance(OsuScore score, object difficultyAttributes)
+        protected override OsuPerformance CalculatePerformance(OsuScore score, object difficultyAttributes)
         {
             var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
             var mods = OsuRuleset.ConvertFromLegacyMods((LegacyMods)(score.Mods ?? 0)).ToArray();
@@ -132,7 +131,7 @@ namespace Difficalcy.Osu.Services
             };
         }
 
-        public override OsuCalculation GetCalculation(OsuDifficulty difficulty, OsuPerformance performance)
+        protected override OsuCalculation GetCalculation(OsuDifficulty difficulty, OsuPerformance performance)
         {
             return new OsuCalculation()
             {

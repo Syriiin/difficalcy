@@ -30,32 +30,32 @@ namespace Difficalcy.Services
         /// <summary>
         /// Ensures the beatmap with the given ID is available locally.
         /// </summary>
-        public abstract Task EnsureBeatmap(int beatmapId);
+        protected abstract Task EnsureBeatmap(int beatmapId);
 
         /// <summary>
         /// Runs the difficulty calculator and returns the difficulty attributes as both an object and JSON serialised string.
         /// </summary>
-        public abstract (object, string) CalculateDifficultyAttributes(TScore score);
+        protected abstract (object, string) CalculateDifficultyAttributes(TScore score);
 
         /// <summary>
         /// Returns the difficulty within a given difficulty attributes object.
         /// </summary>
-        public abstract TDifficulty GetDifficultyFromDifficultyAttributes(object difficultyAttributes);
+        protected abstract TDifficulty GetDifficultyFromDifficultyAttributes(object difficultyAttributes);
 
         /// <summary>
         /// Returns the deserialised object for a given JSON serialised difficulty attributes object.
         /// </summary>
-        public abstract object DeserialiseDifficultyAttributes(string difficultyAttributesJson);
+        protected abstract object DeserialiseDifficultyAttributes(string difficultyAttributesJson);
 
         /// <summary>
         /// Runs the performance calculator on a given score with pre-calculated difficulty attributes and returns the performance.
         /// </summary>
-        public abstract TPerformance CalculatePerformance(TScore score, object difficultyAttributes);
+        protected abstract TPerformance CalculatePerformance(TScore score, object difficultyAttributes);
 
         /// <summary>
         /// Returns a calculation object that contains the passed difficulty and performance.
         /// </summary>
-        public abstract TCalculation GetCalculation(TDifficulty difficulty, TPerformance performance);
+        protected abstract TCalculation GetCalculation(TDifficulty difficulty, TPerformance performance);
 
         /// <summary>
         /// Returns the difficulty of a given score.

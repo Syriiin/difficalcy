@@ -47,7 +47,7 @@ namespace Difficalcy.Taiko.Services
             _configuration = configuration;
         }
 
-        public override async Task EnsureBeatmap(int beatmapId)
+        protected override async Task EnsureBeatmap(int beatmapId)
         {
             var beatmapPath = Path.Combine(_configuration["BEATMAP_DIRECTORY"], beatmapId.ToString());
             if (!File.Exists(beatmapPath))
@@ -58,7 +58,7 @@ namespace Difficalcy.Taiko.Services
             }
         }
 
-        public override (object, string) CalculateDifficultyAttributes(TaikoScore score)
+        protected override (object, string) CalculateDifficultyAttributes(TaikoScore score)
         {
             var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
             var mods = TaikoRuleset.ConvertFromLegacyMods((LegacyMods)(score.Mods ?? 0)).ToArray();
@@ -79,7 +79,7 @@ namespace Difficalcy.Taiko.Services
             }));
         }
 
-        public override TaikoDifficulty GetDifficultyFromDifficultyAttributes(object difficultyAttributes)
+        protected override TaikoDifficulty GetDifficultyFromDifficultyAttributes(object difficultyAttributes)
         {
             var taikoDifficultyAttributes = (TaikoDifficultyAttributes)difficultyAttributes;
             return new TaikoDifficulty()
@@ -91,12 +91,12 @@ namespace Difficalcy.Taiko.Services
             };
         }
 
-        public override object DeserialiseDifficultyAttributes(string difficultyAttributesJson)
+        protected override object DeserialiseDifficultyAttributes(string difficultyAttributesJson)
         {
             return JsonSerializer.Deserialize<TaikoDifficultyAttributes>(difficultyAttributesJson, new JsonSerializerOptions() { IncludeFields = true });
         }
 
-        public override TaikoPerformance CalculatePerformance(TaikoScore score, object difficultyAttributes)
+        protected override TaikoPerformance CalculatePerformance(TaikoScore score, object difficultyAttributes)
         {
             var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
             var mods = TaikoRuleset.ConvertFromLegacyMods((LegacyMods)(score.Mods ?? 0)).ToArray();
@@ -127,7 +127,7 @@ namespace Difficalcy.Taiko.Services
             };
         }
 
-        public override TaikoCalculation GetCalculation(TaikoDifficulty difficulty, TaikoPerformance performance)
+        protected override TaikoCalculation GetCalculation(TaikoDifficulty difficulty, TaikoPerformance performance)
         {
             return new TaikoCalculation()
             {
