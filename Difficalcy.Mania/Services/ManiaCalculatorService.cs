@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -22,6 +22,7 @@ namespace Difficalcy.Mania.Services
     public class ManiaCalculatorService : CalculatorService<ManiaScore, ManiaDifficulty, ManiaPerformance, ManiaCalculation>
     {
         private readonly IConfiguration _configuration;
+        private readonly HttpClient _httpClient = new HttpClient();
         private ManiaRuleset ManiaRuleset { get; } = new ManiaRuleset();
 
         public override CalculatorInfo Info
@@ -51,8 +52,9 @@ namespace Difficalcy.Mania.Services
             var beatmapPath = Path.Combine(_configuration["BEATMAP_DIRECTORY"], beatmapId.ToString());
             if (!File.Exists(beatmapPath))
             {
-                var myWebClient = new WebClient();
-                await myWebClient.DownloadFileTaskAsync($"https://osu.ppy.sh/osu/{beatmapId}", beatmapPath);
+                var response = await _httpClient.GetStreamAsync($"https://osu.ppy.sh/osu/{beatmapId}");
+                using (var fs = new FileStream(beatmapPath, FileMode.CreateNew))
+                    await response.CopyToAsync(fs);
             }
         }
 

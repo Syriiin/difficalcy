@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -22,6 +23,7 @@ namespace Difficalcy.Osu.Services
     public class OsuCalculatorService : CalculatorService<OsuScore, OsuDifficulty, OsuPerformance, OsuCalculation>
     {
         private readonly IConfiguration _configuration;
+        private readonly HttpClient _httpClient = new HttpClient();
         private OsuRuleset OsuRuleset { get; } = new OsuRuleset();
 
         public override CalculatorInfo Info
@@ -51,8 +53,9 @@ namespace Difficalcy.Osu.Services
             var beatmapPath = Path.Combine(_configuration["BEATMAP_DIRECTORY"], beatmapId.ToString());
             if (!File.Exists(beatmapPath))
             {
-                var myWebClient = new WebClient();
-                await myWebClient.DownloadFileTaskAsync($"https://osu.ppy.sh/osu/{beatmapId}", beatmapPath);
+                var response = await _httpClient.GetStreamAsync($"https://osu.ppy.sh/osu/{beatmapId}");
+                using (var fs = new FileStream(beatmapPath, FileMode.CreateNew))
+                    await response.CopyToAsync(fs);
             }
         }
 
