@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Difficalcy.Catch", "Diffica
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Difficalcy.Mania", "Difficalcy.Mania\Difficalcy.Mania.csproj", "{C7BC114F-AAE0-42F9-BDC0-545E07E71DC7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Difficalcy.Tests", "Difficalcy.Tests\Difficalcy.Tests.csproj", "{FBA3098D-8E2B-41A4-BF92-83A25567FFCD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{C7BC114F-AAE0-42F9-BDC0-545E07E71DC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7BC114F-AAE0-42F9-BDC0-545E07E71DC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C7BC114F-AAE0-42F9-BDC0-545E07E71DC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBA3098D-8E2B-41A4-BF92-83A25567FFCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBA3098D-8E2B-41A4-BF92-83A25567FFCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBA3098D-8E2B-41A4-BF92-83A25567FFCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBA3098D-8E2B-41A4-BF92-83A25567FFCD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
