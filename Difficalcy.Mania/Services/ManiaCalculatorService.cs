@@ -58,7 +58,7 @@ namespace Difficalcy.Mania.Services
             }
         }
 
-        public override (object, string) CalculateDifficulty(ManiaScore score)
+        public override (object, string) CalculateDifficultyAttributes(ManiaScore score)
         {
             var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
             var mods = ManiaRuleset.ConvertFromLegacyMods((LegacyMods)(score.Mods ?? 0)).ToArray();

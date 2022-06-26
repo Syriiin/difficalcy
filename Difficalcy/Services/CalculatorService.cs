@@ -35,7 +35,7 @@ namespace Difficalcy.Services
         /// <summary>
         /// Runs the difficulty calculator and returns the difficulty attributes as both an object and JSON serialised string.
         /// </summary>
-        public abstract (object, string) CalculateDifficulty(TScore score);
+        public abstract (object, string) CalculateDifficultyAttributes(TScore score);
 
         /// <summary>
         /// Returns the difficulty within a given difficulty attributes object.
@@ -97,7 +97,7 @@ namespace Difficalcy.Services
             object difficultyAttributes;
             if (difficultyAttributesJson == null)
             {
-                (difficultyAttributes, difficultyAttributesJson) = CalculateDifficulty(score);
+                (difficultyAttributes, difficultyAttributesJson) = CalculateDifficultyAttributes(score);
                 db.Set(redisKey, difficultyAttributesJson);
             }
             else

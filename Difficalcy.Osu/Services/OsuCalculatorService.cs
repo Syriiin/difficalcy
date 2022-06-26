@@ -59,7 +59,7 @@ namespace Difficalcy.Osu.Services
             }
         }
 
-        public override (object, string) CalculateDifficulty(OsuScore score)
+        public override (object, string) CalculateDifficultyAttributes(OsuScore score)
         {
             var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
             var mods = OsuRuleset.ConvertFromLegacyMods((LegacyMods)(score.Mods ?? 0)).ToArray();

@@ -59,7 +59,7 @@ namespace Difficalcy.Catch.Services
             }
         }
 
-        public override (object, string) CalculateDifficulty(CatchScore score)
+        public override (object, string) CalculateDifficultyAttributes(CatchScore score)
         {
             var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
             var mods = CatchRuleset.ConvertFromLegacyMods((LegacyMods)(score.Mods ?? 0)).ToArray();

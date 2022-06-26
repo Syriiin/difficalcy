@@ -58,7 +58,7 @@ namespace Difficalcy.Taiko.Services
             }
         }
 
-        public override (object, string) CalculateDifficulty(TaikoScore score)
+        public override (object, string) CalculateDifficultyAttributes(TaikoScore score)
         {
             var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
             var mods = TaikoRuleset.ConvertFromLegacyMods((LegacyMods)(score.Mods ?? 0)).ToArray();
