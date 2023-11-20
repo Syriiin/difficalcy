@@ -21,8 +21,7 @@ namespace Difficalcy.Taiko.Services
 {
     public class TaikoCalculatorService : CalculatorService<TaikoScore, TaikoDifficulty, TaikoPerformance, TaikoCalculation>
     {
-        private readonly IConfiguration _configuration;
-        private readonly HttpClient _httpClient = new HttpClient();
+        private readonly IBeatmapProvider _beatmapProvider;
         private TaikoRuleset TaikoRuleset { get; } = new TaikoRuleset();
 
         public override CalculatorInfo Info
@@ -42,20 +41,14 @@ namespace Difficalcy.Taiko.Services
             }
         }
 
-        public TaikoCalculatorService(IConfiguration configuration, ICache cache) : base(cache)
+        public TaikoCalculatorService(ICache cache, IBeatmapProvider beatmapProvider) : base(cache)
         {
-            _configuration = configuration;
+            _beatmapProvider = beatmapProvider;
         }
 
-        protected override async Task EnsureBeatmap(int beatmapId)
+        protected override async Task EnsureBeatmap(string beatmapId)
         {
-            var beatmapPath = Path.Combine(_configuration["BEATMAP_DIRECTORY"], beatmapId.ToString());
-            if (!File.Exists(beatmapPath))
-            {
-                var response = await _httpClient.GetStreamAsync($"https://osu.ppy.sh/osu/{beatmapId}");
-                using (var fs = new FileStream(beatmapPath, FileMode.CreateNew))
-                    await response.CopyToAsync(fs);
-            }
+            await _beatmapProvider.EnsureBeatmap(beatmapId);
         }
 
         protected override (object, string) CalculateDifficultyAttributes(TaikoScore score)
@@ -136,10 +129,10 @@ namespace Difficalcy.Taiko.Services
             };
         }
 
-        private CalculatorWorkingBeatmap getWorkingBeatmap(int beatmapId)
+        private CalculatorWorkingBeatmap getWorkingBeatmap(string beatmapId)
         {
-            var beatmapPath = Path.Combine(_configuration["BEATMAP_DIRECTORY"], beatmapId.ToString());
-            return new CalculatorWorkingBeatmap(TaikoRuleset, beatmapPath, beatmapId);
+            using var beatmapStream = _beatmapProvider.GetBeatmapStream(beatmapId);
+            return new CalculatorWorkingBeatmap(TaikoRuleset, beatmapStream, beatmapId);
         }
 
         private Dictionary<HitResult, int> determineHitResults(double targetAccuracy, int hitResultCount, int countMiss, int? countOk)

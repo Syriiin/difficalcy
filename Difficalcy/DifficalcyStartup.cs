@@ -40,6 +40,8 @@ namespace Difficalcy
                 cache = new RedisCache(ConnectionMultiplexer.Connect(redisConfig));
             services.AddSingleton<ICache>(cache);
 
+            services.AddSingleton(typeof(IBeatmapProvider), typeof(WebBeatmapProvider));
+
             ConfigureCalculatorServices(services);
         }
 

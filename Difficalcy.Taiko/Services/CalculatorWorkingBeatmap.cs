@@ -14,22 +14,20 @@ namespace Difficalcy.Taiko.Services
     {
         private readonly Beatmap _beatmap;
 
-        public CalculatorWorkingBeatmap(Ruleset ruleset, string beatmapPath, int beatmapId) : this(ruleset, readFromFile(beatmapPath), beatmapId) { }
+        public CalculatorWorkingBeatmap(Ruleset ruleset, Stream beatmapStream, string beatmapId) : this(ruleset, readFromStream(beatmapStream), beatmapId) { }
 
-        private CalculatorWorkingBeatmap(Ruleset ruleset, Beatmap beatmap, int beatmapId) : base(beatmap.BeatmapInfo, null)
+        private CalculatorWorkingBeatmap(Ruleset ruleset, Beatmap beatmap, string beatmapId) : base(beatmap.BeatmapInfo, null)
         {
             _beatmap = beatmap;
 
             // Only valid maps will be either osu! converts or osu!taiko maps
             _beatmap.BeatmapInfo.Ruleset = beatmap.BeatmapInfo.RulesetID == 0 ? (new OsuRuleset()).RulesetInfo : ruleset.RulesetInfo;
-            _beatmap.BeatmapInfo.OnlineBeatmapID = beatmapId;
         }
 
-        private static Beatmap readFromFile(string filename)
+        private static Beatmap readFromStream(Stream stream)
         {
-            using (var stream = File.OpenRead(filename))
-            using (var reader = new LineBufferedReader(stream))
-                return Decoder.GetDecoder<Beatmap>(reader).Decode(reader);
+            using var reader = new LineBufferedReader(stream);
+            return Decoder.GetDecoder<Beatmap>(reader).Decode(reader);
         }
 
         protected override IBeatmap GetBeatmap() => _beatmap;

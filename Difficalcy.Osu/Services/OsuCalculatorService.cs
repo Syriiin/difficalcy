@@ -1,15 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Difficalcy.Models;
 using Difficalcy.Osu.Models;
 using Difficalcy.Services;
-using Microsoft.Extensions.Configuration;
 using osu.Game.Beatmaps.Legacy;
 using osu.Game.Rulesets.Osu;
 using osu.Game.Rulesets.Osu.Difficulty;
@@ -21,8 +18,7 @@ namespace Difficalcy.Osu.Services
 {
     public class OsuCalculatorService : CalculatorService<OsuScore, OsuDifficulty, OsuPerformance, OsuCalculation>
     {
-        private readonly IConfiguration _configuration;
-        private readonly HttpClient _httpClient = new HttpClient();
+        private readonly IBeatmapProvider _beatmapProvider;
         private OsuRuleset OsuRuleset { get; } = new OsuRuleset();
 
         public override CalculatorInfo Info
@@ -42,20 +38,14 @@ namespace Difficalcy.Osu.Services
             }
         }
 
-        public OsuCalculatorService(IConfiguration configuration, ICache cache) : base(cache)
+        public OsuCalculatorService(ICache cache, IBeatmapProvider beatmapProvider) : base(cache)
         {
-            _configuration = configuration;
+            _beatmapProvider = beatmapProvider;
         }
 
-        protected override async Task EnsureBeatmap(int beatmapId)
+        protected override async Task EnsureBeatmap(string beatmapId)
         {
-            var beatmapPath = Path.Combine(_configuration["BEATMAP_DIRECTORY"], beatmapId.ToString());
-            if (!File.Exists(beatmapPath))
-            {
-                var response = await _httpClient.GetStreamAsync($"https://osu.ppy.sh/osu/{beatmapId}");
-                using (var fs = new FileStream(beatmapPath, FileMode.CreateNew))
-                    await response.CopyToAsync(fs);
-            }
+            await _beatmapProvider.EnsureBeatmap(beatmapId);
         }
 
         protected override (object, string) CalculateDifficultyAttributes(OsuScore score)
@@ -140,10 +130,10 @@ namespace Difficalcy.Osu.Services
             };
         }
 
-        private CalculatorWorkingBeatmap getWorkingBeatmap(int beatmapId)
+        private CalculatorWorkingBeatmap getWorkingBeatmap(string beatmapId)
         {
-            var beatmapPath = Path.Combine(_configuration["BEATMAP_DIRECTORY"], beatmapId.ToString());
-            return new CalculatorWorkingBeatmap(OsuRuleset, beatmapPath, beatmapId);
+            using var beatmapStream = _beatmapProvider.GetBeatmapStream(beatmapId);
+            return new CalculatorWorkingBeatmap(OsuRuleset, beatmapStream, beatmapId);
         }
 
         private Dictionary<HitResult, int> determineHitResults(double targetAccuracy, int hitResultCount, int countMiss, int? countMeh, int? countOk)

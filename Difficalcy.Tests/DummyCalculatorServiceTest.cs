@@ -8,9 +8,9 @@ public class DummyCalculatorServiceTest : CalculatorServiceTest<DummyScore, Dumm
     protected override CalculatorService<DummyScore, DummyDifficulty, DummyPerformance, DummyCalculation> CalculatorService => new DummyCalculatorService(new DummyCache());
 
     [Theory]
-    [InlineData(15, 1500, 100, 50)]
-    [InlineData(10, 1000, 100, 0)]
-    public void Test(double expectedDifficultyTotal, double expectedPerformanceTotal, int beatmapId, int mods)
+    [InlineData(15, 1500, "test 1", 150)]
+    [InlineData(10, 1000, "test 2", 100)]
+    public void Test(double expectedDifficultyTotal, double expectedPerformanceTotal, string beatmapId, int mods)
         => base.TestGetCalculationReturnsCorrectValues(expectedDifficultyTotal, expectedPerformanceTotal, new DummyScore { BeatmapId = beatmapId, Mods = mods });
 }
 
@@ -35,7 +35,7 @@ public class DummyCalculatorService : CalculatorService<DummyScore, DummyDifficu
 
     protected override (object, string) CalculateDifficultyAttributes(DummyScore score)
     {
-        var difficulty = (score.BeatmapId + score.Mods ?? 0) / 10.0;
+        var difficulty = score.Mods / 10.0;
         return (difficulty, difficulty.ToString());
     }
 
@@ -45,8 +45,8 @@ public class DummyCalculatorService : CalculatorService<DummyScore, DummyDifficu
     protected override object DeserialiseDifficultyAttributes(string difficultyAttributesJson) =>
         double.Parse(difficultyAttributesJson);
 
-    protected override Task EnsureBeatmap(int beatmapId) =>
-        Task.CompletedTask;
+    protected override Task<bool> EnsureBeatmap(string beatmapId) =>
+        Task.FromResult(true);
 
     protected override DummyCalculation GetCalculation(DummyDifficulty difficulty, DummyPerformance performance) =>
         new DummyCalculation

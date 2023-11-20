@@ -21,8 +21,7 @@ namespace Difficalcy.Mania.Services
 {
     public class ManiaCalculatorService : CalculatorService<ManiaScore, ManiaDifficulty, ManiaPerformance, ManiaCalculation>
     {
-        private readonly IConfiguration _configuration;
-        private readonly HttpClient _httpClient = new HttpClient();
+        private readonly IBeatmapProvider _beatmapProvider;
         private ManiaRuleset ManiaRuleset { get; } = new ManiaRuleset();
 
         public override CalculatorInfo Info
@@ -42,20 +41,14 @@ namespace Difficalcy.Mania.Services
             }
         }
 
-        public ManiaCalculatorService(IConfiguration configuration, ICache cache) : base(cache)
+        public ManiaCalculatorService(ICache cache, IBeatmapProvider beatmapProvider) : base(cache)
         {
-            _configuration = configuration;
+            _beatmapProvider = beatmapProvider;
         }
 
-        protected override async Task EnsureBeatmap(int beatmapId)
+        protected override async Task EnsureBeatmap(string beatmapId)
         {
-            var beatmapPath = Path.Combine(_configuration["BEATMAP_DIRECTORY"], beatmapId.ToString());
-            if (!File.Exists(beatmapPath))
-            {
-                var response = await _httpClient.GetStreamAsync($"https://osu.ppy.sh/osu/{beatmapId}");
-                using (var fs = new FileStream(beatmapPath, FileMode.CreateNew))
-                    await response.CopyToAsync(fs);
-            }
+            await _beatmapProvider.EnsureBeatmap(beatmapId);
         }
 
         protected override (object, string) CalculateDifficultyAttributes(ManiaScore score)
@@ -138,10 +131,10 @@ namespace Difficalcy.Mania.Services
             };
         }
 
-        private CalculatorWorkingBeatmap getWorkingBeatmap(int beatmapId)
+        private CalculatorWorkingBeatmap getWorkingBeatmap(string beatmapId)
         {
-            var beatmapPath = Path.Combine(_configuration["BEATMAP_DIRECTORY"], beatmapId.ToString());
-            return new CalculatorWorkingBeatmap(ManiaRuleset, beatmapPath, beatmapId);
+            using var beatmapStream = _beatmapProvider.GetBeatmapStream(beatmapId);
+            return new CalculatorWorkingBeatmap(ManiaRuleset, beatmapStream, beatmapId);
         }
 
         private int determineScore(Mod[] mods)

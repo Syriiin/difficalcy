@@ -30,7 +30,7 @@ namespace Difficalcy.Services
         /// <summary>
         /// Ensures the beatmap with the given ID is available locally.
         /// </summary>
-        protected abstract Task EnsureBeatmap(int beatmapId);
+        protected abstract Task EnsureBeatmap(string beatmapId);
 
         /// <summary>
         /// Runs the difficulty calculator and returns the difficulty attributes as both an object and JSON serialised string.
