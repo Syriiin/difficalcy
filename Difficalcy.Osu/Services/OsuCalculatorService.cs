@@ -63,7 +63,9 @@ namespace Difficalcy.Osu.Services
                 MaxCombo = difficultyAttributes.MaxCombo,
                 AimDifficulty = difficultyAttributes.AimDifficulty,
                 SpeedDifficulty = difficultyAttributes.SpeedDifficulty,
+                SpeedNoteCount = difficultyAttributes.SpeedNoteCount,
                 FlashlightDifficulty = difficultyAttributes.FlashlightDifficulty,
+                SliderFactor = difficultyAttributes.SliderFactor,
                 ApproachRate = difficultyAttributes.ApproachRate,
                 OverallDifficulty = difficultyAttributes.OverallDifficulty,
                 DrainRate = difficultyAttributes.DrainRate,
@@ -87,7 +89,7 @@ namespace Difficalcy.Osu.Services
 
         protected override object DeserialiseDifficultyAttributes(string difficultyAttributesJson)
         {
-            return JsonSerializer.Deserialize<OsuDifficultyAttributes>(difficultyAttributesJson, new JsonSerializerOptions() { IncludeFields = true });
+            return JsonSerializer.Deserialize<OsuDifficultyAttributes>(difficultyAttributesJson);
         }
 
         protected override OsuPerformance CalculatePerformance(OsuScore score, object difficultyAttributes)

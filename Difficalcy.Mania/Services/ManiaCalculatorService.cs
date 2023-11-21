@@ -76,7 +76,7 @@ namespace Difficalcy.Mania.Services
 
         protected override object DeserialiseDifficultyAttributes(string difficultyAttributesJson)
         {
-            return JsonSerializer.Deserialize<ManiaDifficultyAttributes>(difficultyAttributesJson, new JsonSerializerOptions() { IncludeFields = true });
+            return JsonSerializer.Deserialize<ManiaDifficultyAttributes>(difficultyAttributesJson);
         }
 
         protected override ManiaPerformance CalculatePerformance(ManiaScore score, object difficultyAttributes)

@@ -83,7 +83,7 @@ namespace Difficalcy.Taiko.Services
 
         protected override object DeserialiseDifficultyAttributes(string difficultyAttributesJson)
         {
-            return JsonSerializer.Deserialize<TaikoDifficultyAttributes>(difficultyAttributesJson, new JsonSerializerOptions() { IncludeFields = true });
+            return JsonSerializer.Deserialize<TaikoDifficultyAttributes>(difficultyAttributesJson);
         }
 
         protected override TaikoPerformance CalculatePerformance(TaikoScore score, object difficultyAttributes)

@@ -77,7 +77,7 @@ namespace Difficalcy.Catch.Services
 
         protected override object DeserialiseDifficultyAttributes(string difficultyAttributesJson)
         {
-            return JsonSerializer.Deserialize<CatchDifficultyAttributes>(difficultyAttributesJson, new JsonSerializerOptions() { IncludeFields = true });
+            return JsonSerializer.Deserialize<CatchDifficultyAttributes>(difficultyAttributesJson);
         }
 
         protected override CatchPerformance CalculatePerformance(CatchScore score, object difficultyAttributes)
