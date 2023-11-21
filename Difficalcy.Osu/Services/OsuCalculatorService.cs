@@ -56,7 +56,7 @@ namespace Difficalcy.Osu.Services
             var difficultyCalculator = OsuRuleset.CreateDifficultyCalculator(workingBeatmap);
             var difficultyAttributes = difficultyCalculator.Calculate(mods) as OsuDifficultyAttributes;
 
-            // Serialising anonymous object with same names because Mods and Skills can't be serialised
+            // Serialising anonymous object with same names because some properties can't be serialised, and the built-in JsonProperty fields aren't on all required fields
             return (difficultyAttributes, JsonSerializer.Serialize(new
             {
                 StarRating = difficultyAttributes.StarRating,
@@ -68,6 +68,7 @@ namespace Difficalcy.Osu.Services
                 OverallDifficulty = difficultyAttributes.OverallDifficulty,
                 DrainRate = difficultyAttributes.DrainRate,
                 HitCircleCount = difficultyAttributes.HitCircleCount,
+                SliderCount = difficultyAttributes.SliderCount,
                 SpinnerCount = difficultyAttributes.SpinnerCount
             }));
         }

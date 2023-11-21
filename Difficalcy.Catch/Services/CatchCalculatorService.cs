@@ -1,15 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Difficalcy.Catch.Models;
 using Difficalcy.Models;
 using Difficalcy.Services;
-using Microsoft.Extensions.Configuration;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.Legacy;
 using osu.Game.Rulesets.Catch;
@@ -60,7 +57,7 @@ namespace Difficalcy.Catch.Services
             var difficultyCalculator = CatchRuleset.CreateDifficultyCalculator(workingBeatmap);
             var difficultyAttributes = difficultyCalculator.Calculate(mods) as CatchDifficultyAttributes;
 
-            // Serialising anonymous object with same names because Mods and Skills can't be serialised
+            // Serialising anonymous object with same names because some properties can't be serialised, and the built-in JsonProperty fields aren't on all required fields
             return (difficultyAttributes, JsonSerializer.Serialize(new
             {
                 StarRating = difficultyAttributes.StarRating,

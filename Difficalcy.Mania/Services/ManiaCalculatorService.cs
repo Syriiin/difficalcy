@@ -1,15 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Difficalcy.Mania.Models;
 using Difficalcy.Models;
 using Difficalcy.Services;
-using Microsoft.Extensions.Configuration;
 using osu.Game.Beatmaps.Legacy;
 using osu.Game.Rulesets.Mania;
 using osu.Game.Rulesets.Mania.Difficulty;
@@ -59,7 +56,7 @@ namespace Difficalcy.Mania.Services
             var difficultyCalculator = ManiaRuleset.CreateDifficultyCalculator(workingBeatmap);
             var difficultyAttributes = difficultyCalculator.Calculate(mods) as ManiaDifficultyAttributes;
 
-            // Serialising anonymous object with same names because Mods and Skills can't be serialised
+            // Serialising anonymous object with same names because some properties can't be serialised, and the built-in JsonProperty fields aren't on all required fields
             return (difficultyAttributes, JsonSerializer.Serialize(new
             {
                 StarRating = difficultyAttributes.StarRating,
