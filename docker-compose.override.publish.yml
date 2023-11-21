@@ -1,0 +1,12 @@
+services:
+  difficalcy-osu:
+    image: ghcr.io/syriiin/difficalcy-osu:${VERSION}
+
+  difficalcy-taiko:
+    image: ghcr.io/syriiin/difficalcy-taiko:${VERSION}
+
+  difficalcy-catch:
+    image: ghcr.io/syriiin/difficalcy-catch:${VERSION}
+
+  difficalcy-mania:
+    image: ghcr.io/syriiin/difficalcy-mania:${VERSION}

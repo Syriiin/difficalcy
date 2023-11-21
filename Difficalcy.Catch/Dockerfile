@@ -1,4 +1,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+
+LABEL org.opencontainers.image.source https://github.com/Syriiin/difficalcy
+
 WORKDIR /app
 EXPOSE 80
 ENV ASPNETCORE_URLS=http://+:80
