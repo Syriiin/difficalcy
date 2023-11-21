@@ -20,9 +20,9 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - USE_TEST_BEATMAP_PROVIDER=true
-      - REDIS_CONFIGURATION=cache:6379
+      - REDIS_CONFIGURATION=e2e-cache:6379
     depends_on:
-      - cache
+      - e2e-cache
 
   e2e-difficalcy-taiko:
     build:
@@ -31,9 +31,9 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - USE_TEST_BEATMAP_PROVIDER=true
-      - REDIS_CONFIGURATION=cache:6379
+      - REDIS_CONFIGURATION=e2e-cache:6379
     depends_on:
-      - cache
+      - e2e-cache
 
   e2e-difficalcy-catch:
     build:
@@ -42,9 +42,9 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - USE_TEST_BEATMAP_PROVIDER=true
-      - REDIS_CONFIGURATION=cache:6379
+      - REDIS_CONFIGURATION=e2e-cache:6379
     depends_on:
-      - cache
+      - e2e-cache
 
   e2e-difficalcy-mania:
     build:
@@ -53,9 +53,9 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - USE_TEST_BEATMAP_PROVIDER=true
-      - REDIS_CONFIGURATION=cache:6379
+      - REDIS_CONFIGURATION=e2e-cache:6379
     depends_on:
-      - cache
+      - e2e-cache
 
-  cache:
+  e2e-cache:
     image: redis:6

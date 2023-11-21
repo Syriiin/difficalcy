@@ -14,7 +14,7 @@ test:	## Runs test suite
 
 test-e2e:	## Runs E2E test suite
 	$(COMPOSE_E2E_RUN)
-	$(COMPOSE_E2E) down --remove-orphans
+	$(COMPOSE_E2E) down
 
 build-dev:	## Builds development docker images
 	$(COMPOSE_APP_DEV) build
