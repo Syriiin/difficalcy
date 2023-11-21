@@ -7,7 +7,7 @@ namespace Difficalcy.Mania.Tests;
 
 public class ManiaCalculatorServiceTest : CalculatorServiceTest<ManiaScore, ManiaDifficulty, ManiaPerformance, ManiaCalculation>
 {
-    protected override CalculatorService<ManiaScore, ManiaDifficulty, ManiaPerformance, ManiaCalculation> CalculatorService => new ManiaCalculatorService(new DummyCache(), new TestBeatmapProvider("osu.Game.Rulesets.Mania"));
+    protected override CalculatorService<ManiaScore, ManiaDifficulty, ManiaPerformance, ManiaCalculation> CalculatorService { get; } = new ManiaCalculatorService(new TestCache(), new TestBeatmapProvider("osu.Game.Rulesets.Mania"));
 
     [Theory]
     [InlineData(2.3493769750220914d, 45.71911573894849d, "diffcalc-test", 0)]

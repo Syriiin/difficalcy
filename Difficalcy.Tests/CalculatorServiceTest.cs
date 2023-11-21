@@ -17,5 +17,10 @@ public abstract class CalculatorServiceTest<TScore, TDifficulty, TPerformance, T
 
         Assert.Equal(expectedDifficultyTotal, calculation.Difficulty.Total, 4);
         Assert.Equal(expectedPerformanceTotal, calculation.Performance.Total, 4);
+
+        var calculationFromCache = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(calculationFromCache.Difficulty.Total, calculation.Difficulty.Total);
+        Assert.Equal(calculationFromCache.Performance.Total, calculation.Performance.Total);
     }
 }

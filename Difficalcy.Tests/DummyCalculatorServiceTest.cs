@@ -5,7 +5,7 @@ using Difficalcy.Services;
 
 public class DummyCalculatorServiceTest : CalculatorServiceTest<DummyScore, DummyDifficulty, DummyPerformance, DummyCalculation>
 {
-    protected override CalculatorService<DummyScore, DummyDifficulty, DummyPerformance, DummyCalculation> CalculatorService => new DummyCalculatorService(new DummyCache());
+    protected override CalculatorService<DummyScore, DummyDifficulty, DummyPerformance, DummyCalculation> CalculatorService { get; } = new DummyCalculatorService(new TestCache());
 
     [Theory]
     [InlineData(15, 1500, "test 1", 150)]
