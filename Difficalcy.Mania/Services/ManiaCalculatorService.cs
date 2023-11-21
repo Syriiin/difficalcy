@@ -64,8 +64,7 @@ namespace Difficalcy.Mania.Services
             {
                 StarRating = difficultyAttributes.StarRating,
                 MaxCombo = difficultyAttributes.MaxCombo,
-                GreatHitWindow = difficultyAttributes.GreatHitWindow,
-                ScoreMultiplier = difficultyAttributes.ScoreMultiplier
+                GreatHitWindow = difficultyAttributes.GreatHitWindow
             }));
         }
 
@@ -110,15 +109,13 @@ namespace Difficalcy.Mania.Services
                 TotalScore = totalScore
             };
 
-            var performanceCalculator = ManiaRuleset.CreatePerformanceCalculator((ManiaDifficultyAttributes)difficultyAttributes, scoreInfo);
-            var categoryAttributes = new Dictionary<string, double>();
-            var performance = performanceCalculator.Calculate(categoryAttributes);
+            var performanceCalculator = ManiaRuleset.CreatePerformanceCalculator();
+            var performanceAttributes = performanceCalculator.Calculate(scoreInfo, (ManiaDifficultyAttributes)difficultyAttributes) as ManiaPerformanceAttributes;
 
             return new ManiaPerformance()
             {
-                Total = performance,
-                Strain = categoryAttributes["Strain"],
-                Accuracy = categoryAttributes["Accuracy"]
+                Total = performanceAttributes.Total,
+                Difficulty = performanceAttributes.Difficulty
             };
         }
 

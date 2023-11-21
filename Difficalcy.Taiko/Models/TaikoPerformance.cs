@@ -4,7 +4,7 @@ namespace Difficalcy.Taiko.Models
 {
     public record TaikoPerformance : Performance
     {
-        public double Strain { get; init; }
+        public double Difficulty { get; init; }
         public double Accuracy { get; init; }
     }
 }

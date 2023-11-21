@@ -21,7 +21,7 @@ namespace Difficalcy.Mania.Services
             _beatmap = beatmap;
 
             // Only valid maps will be either osu! converts or osu!mania maps
-            _beatmap.BeatmapInfo.Ruleset = beatmap.BeatmapInfo.RulesetID == 0 ? (new OsuRuleset()).RulesetInfo : ruleset.RulesetInfo;
+            _beatmap.BeatmapInfo.Ruleset = beatmap.BeatmapInfo.Ruleset.OnlineID == 0 ? (new OsuRuleset()).RulesetInfo : ruleset.RulesetInfo;
         }
 
         private static Beatmap readFromStream(Stream stream)
@@ -31,7 +31,7 @@ namespace Difficalcy.Mania.Services
         }
 
         protected override IBeatmap GetBeatmap() => _beatmap;
-        protected override Texture GetBackground() => null;
+        public override Texture GetBackground() => null;
         protected override Track GetBeatmapTrack() => null;
         protected override ISkin GetSkin() => null;
         public override Stream GetStream(string storagePath) => null;

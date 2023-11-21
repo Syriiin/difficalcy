@@ -102,13 +102,12 @@ namespace Difficalcy.Catch.Services
                 Mods = mods
             };
 
-            var performanceCalculator = CatchRuleset.CreatePerformanceCalculator((CatchDifficultyAttributes)difficultyAttributes, scoreInfo);
-            var categoryAttributes = new Dictionary<string, double>();
-            var performance = performanceCalculator.Calculate(categoryAttributes);
+            var performanceCalculator = CatchRuleset.CreatePerformanceCalculator();
+            var performanceAttributes = performanceCalculator.Calculate(scoreInfo, (CatchDifficultyAttributes)difficultyAttributes) as CatchPerformanceAttributes;
 
             return new CatchPerformance()
             {
-                Total = performance
+                Total = performanceAttributes.Total
             };
         }
 

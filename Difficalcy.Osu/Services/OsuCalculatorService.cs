@@ -61,9 +61,9 @@ namespace Difficalcy.Osu.Services
             {
                 StarRating = difficultyAttributes.StarRating,
                 MaxCombo = difficultyAttributes.MaxCombo,
-                AimStrain = difficultyAttributes.AimStrain,
-                SpeedStrain = difficultyAttributes.SpeedStrain,
-                FlashlightRating = difficultyAttributes.FlashlightRating,
+                AimDifficulty = difficultyAttributes.AimDifficulty,
+                SpeedDifficulty = difficultyAttributes.SpeedDifficulty,
+                FlashlightDifficulty = difficultyAttributes.FlashlightDifficulty,
                 ApproachRate = difficultyAttributes.ApproachRate,
                 OverallDifficulty = difficultyAttributes.OverallDifficulty,
                 DrainRate = difficultyAttributes.DrainRate,
@@ -78,9 +78,9 @@ namespace Difficalcy.Osu.Services
             return new OsuDifficulty()
             {
                 Total = osuDifficultyAttributes.StarRating,
-                Aim = osuDifficultyAttributes.AimStrain,
-                Speed = osuDifficultyAttributes.SpeedStrain,
-                Flashlight = osuDifficultyAttributes.FlashlightRating
+                Aim = osuDifficultyAttributes.AimDifficulty,
+                Speed = osuDifficultyAttributes.SpeedDifficulty,
+                Flashlight = osuDifficultyAttributes.FlashlightDifficulty
             };
         }
 
@@ -107,17 +107,16 @@ namespace Difficalcy.Osu.Services
                 Mods = mods
             };
 
-            var performanceCalculator = OsuRuleset.CreatePerformanceCalculator((OsuDifficultyAttributes)difficultyAttributes, scoreInfo);
-            var categoryAttributes = new Dictionary<string, double>();
-            var performance = performanceCalculator.Calculate(categoryAttributes);
+            var performanceCalculator = OsuRuleset.CreatePerformanceCalculator();
+            var performanceAttributes = performanceCalculator.Calculate(scoreInfo, (OsuDifficultyAttributes)difficultyAttributes) as OsuPerformanceAttributes;
 
             return new OsuPerformance()
             {
-                Total = performance,
-                Aim = categoryAttributes["Aim"],
-                Speed = categoryAttributes["Speed"],
-                Accuracy = categoryAttributes["Accuracy"],
-                Flashlight = categoryAttributes["Flashlight"]
+                Total = performanceAttributes.Total,
+                Aim = performanceAttributes.Aim,
+                Speed = performanceAttributes.Speed,
+                Accuracy = performanceAttributes.Accuracy,
+                Flashlight = performanceAttributes.Flashlight
             };
         }
 

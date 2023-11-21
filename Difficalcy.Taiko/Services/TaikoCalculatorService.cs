@@ -64,10 +64,10 @@ namespace Difficalcy.Taiko.Services
             {
                 StarRating = difficultyAttributes.StarRating,
                 MaxCombo = difficultyAttributes.MaxCombo,
-                StaminaStrain = difficultyAttributes.StaminaStrain,
-                RhythmStrain = difficultyAttributes.RhythmStrain,
-                ColourStrain = difficultyAttributes.ColourStrain,
-                ApproachRate = difficultyAttributes.ApproachRate,
+                StaminaDifficulty = difficultyAttributes.StaminaDifficulty,
+                RhythmDifficulty = difficultyAttributes.RhythmDifficulty,
+                ColourDifficulty = difficultyAttributes.ColourDifficulty,
+                PeakDifficulty = difficultyAttributes.PeakDifficulty,
                 GreatHitWindow = difficultyAttributes.GreatHitWindow
             }));
         }
@@ -78,9 +78,9 @@ namespace Difficalcy.Taiko.Services
             return new TaikoDifficulty()
             {
                 Total = taikoDifficultyAttributes.StarRating,
-                Stamina = taikoDifficultyAttributes.StaminaStrain,
-                Rhythm = taikoDifficultyAttributes.RhythmStrain,
-                Colour = taikoDifficultyAttributes.ColourStrain
+                Stamina = taikoDifficultyAttributes.StaminaDifficulty,
+                Rhythm = taikoDifficultyAttributes.RhythmDifficulty,
+                Colour = taikoDifficultyAttributes.ColourDifficulty
             };
         }
 
@@ -108,15 +108,14 @@ namespace Difficalcy.Taiko.Services
                 Mods = mods
             };
 
-            var performanceCalculator = TaikoRuleset.CreatePerformanceCalculator((TaikoDifficultyAttributes)difficultyAttributes, scoreInfo);
-            var categoryAttributes = new Dictionary<string, double>();
-            var performance = performanceCalculator.Calculate(categoryAttributes);
+            var performanceCalculator = TaikoRuleset.CreatePerformanceCalculator();
+            var performanceAttributes = performanceCalculator.Calculate(scoreInfo, (TaikoDifficultyAttributes)difficultyAttributes) as TaikoPerformanceAttributes;
 
             return new TaikoPerformance()
             {
-                Total = performance,
-                Strain = categoryAttributes["Strain"],
-                Accuracy = categoryAttributes["Accuracy"]
+                Total = performanceAttributes.Total,
+                Difficulty = performanceAttributes.Difficulty,
+                Accuracy = performanceAttributes.Accuracy
             };
         }
 

@@ -4,7 +4,6 @@ namespace Difficalcy.Mania.Models
 {
     public record ManiaPerformance : Performance
     {
-        public double Strain { get; init; }
-        public double Accuracy { get; init; }
+        public double Difficulty { get; init; }
     }
 }

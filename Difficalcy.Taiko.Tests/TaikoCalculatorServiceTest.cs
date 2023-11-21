@@ -10,8 +10,8 @@ public class TaikoCalculatorServiceTest : CalculatorServiceTest<TaikoScore, Taik
     protected override CalculatorService<TaikoScore, TaikoDifficulty, TaikoPerformance, TaikoCalculation> CalculatorService => new TaikoCalculatorService(new DummyCache(), new TestBeatmapProvider("osu.Game.Rulesets.Taiko"));
 
     [Theory]
-    [InlineData(2.2420075288523802d, 100.38891498669157d, "diffcalc-test", 0)]
-    [InlineData(3.134084469440479d, 165.39807330636233d, "diffcalc-test", 64)]
+    [InlineData(3.0920212594351191d, 108.45361131093136d, "diffcalc-test", 0)]
+    [InlineData(4.0789820318081444d, 197.40372508926697d, "diffcalc-test", 64)]
     public void Test(double expectedDifficultyTotal, double expectedPerformanceTotal, string beatmapId, int mods)
         => base.TestGetCalculationReturnsCorrectValues(expectedDifficultyTotal, expectedPerformanceTotal, new TaikoScore { BeatmapId = beatmapId, Mods = mods });
 }
