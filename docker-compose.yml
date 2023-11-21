@@ -1,6 +1,5 @@
 services:
   difficalcy-osu:
-    image: difficalcy-osu
     build:
       context: .
       dockerfile: ./Difficalcy.Osu/Dockerfile
@@ -11,7 +10,6 @@ services:
       - cache
 
   difficalcy-taiko:
-    image: difficalcy-taiko
     build:
       context: .
       dockerfile: ./Difficalcy.Taiko/Dockerfile
@@ -22,7 +20,6 @@ services:
       - cache
 
   difficalcy-catch:
-    image: difficalcy-catch
     build:
       context: .
       dockerfile: ./Difficalcy.Catch/Dockerfile
@@ -33,7 +30,6 @@ services:
       - cache
 
   difficalcy-mania:
-    image: difficalcy-mania
     build:
       context: .
       dockerfile: ./Difficalcy.Mania/Dockerfile
