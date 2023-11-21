@@ -12,6 +12,8 @@ namespace Difficalcy.Catch
 
         public override string OpenApiVersion => "v1";
 
+        protected override string TestBeatmapAssembly => "osu.Game.Rulesets.Catch";
+
         public override void ConfigureCalculatorServices(IServiceCollection services)
         {
             services.AddSingleton(typeof(CatchCalculatorService));

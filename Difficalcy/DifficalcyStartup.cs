@@ -1,3 +1,4 @@
+using System;
 using Difficalcy.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -14,6 +15,11 @@ namespace Difficalcy
         public abstract string OpenApiTitle { get; }
 
         public abstract string OpenApiVersion { get; }
+
+        /// <summary>
+        /// The Assembly to source test beatmap resources from (eg. osu.Game.Rulesets.Osu)
+        /// </summary>
+        protected abstract string TestBeatmapAssembly { get; }
 
         public DifficalcyStartup(IConfiguration configuration)
         {
@@ -32,7 +38,6 @@ namespace Difficalcy
             });
 
             var redisConfig = Configuration["REDIS_CONFIGURATION"];
-
             ICache cache;
             if (redisConfig == null)
                 cache = new DummyCache();
@@ -40,7 +45,11 @@ namespace Difficalcy
                 cache = new RedisCache(ConnectionMultiplexer.Connect(redisConfig));
             services.AddSingleton<ICache>(cache);
 
-            services.AddSingleton(typeof(IBeatmapProvider), typeof(WebBeatmapProvider));
+            var useTestBeatmapProvider = Configuration["USE_TEST_BEATMAP_PROVIDER"];
+            if (useTestBeatmapProvider == "true")
+                services.AddSingleton<IBeatmapProvider>(new TestBeatmapProvider(TestBeatmapAssembly));
+            else
+                services.AddSingleton(typeof(IBeatmapProvider), typeof(WebBeatmapProvider));
 
             ConfigureCalculatorServices(services);
         }

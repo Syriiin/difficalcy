@@ -12,6 +12,8 @@ namespace Difficalcy.Taiko
 
         public override string OpenApiVersion => "v1";
 
+        protected override string TestBeatmapAssembly => "osu.Game.Rulesets.Taiko";
+
         public override void ConfigureCalculatorServices(IServiceCollection services)
         {
             services.AddSingleton(typeof(TaikoCalculatorService));

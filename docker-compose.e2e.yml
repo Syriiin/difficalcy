@@ -1,0 +1,61 @@
+services:
+  e2e-test-runner:
+    image: alpine
+    build: ./e2e
+    environment:
+      - DIFFICALCY_OSU_HOST=e2e-difficalcy-osu:80
+      - DIFFICALCY_TAIKO_HOST=e2e-difficalcy-taiko:80
+      - DIFFICALCY_CATCH_HOST=e2e-difficalcy-catch:80
+      - DIFFICALCY_MANIA_HOST=e2e-difficalcy-mania:80
+    depends_on:
+      - e2e-difficalcy-osu
+      - e2e-difficalcy-taiko
+      - e2e-difficalcy-catch
+      - e2e-difficalcy-mania
+
+  e2e-difficalcy-osu:
+    build:
+      context: .
+      dockerfile: ./Difficalcy.Osu/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - USE_TEST_BEATMAP_PROVIDER=true
+      - REDIS_CONFIGURATION=cache:6379
+    depends_on:
+      - cache
+
+  e2e-difficalcy-taiko:
+    build:
+      context: .
+      dockerfile: ./Difficalcy.Taiko/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - USE_TEST_BEATMAP_PROVIDER=true
+      - REDIS_CONFIGURATION=cache:6379
+    depends_on:
+      - cache
+
+  e2e-difficalcy-catch:
+    build:
+      context: .
+      dockerfile: ./Difficalcy.Catch/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - USE_TEST_BEATMAP_PROVIDER=true
+      - REDIS_CONFIGURATION=cache:6379
+    depends_on:
+      - cache
+
+  e2e-difficalcy-mania:
+    build:
+      context: .
+      dockerfile: ./Difficalcy.Mania/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - USE_TEST_BEATMAP_PROVIDER=true
+      - REDIS_CONFIGURATION=cache:6379
+    depends_on:
+      - cache
+
+  cache:
+    image: redis:6

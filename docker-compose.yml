@@ -12,6 +12,8 @@ services:
       - REDIS_CONFIGURATION=cache:6379
     volumes:
       - ${BEATMAP_DIRECTORY}:/app/beatmaps/external
+    depends_on:
+      - cache
 
   difficalcy-taiko:
     image: difficalcy-taiko
@@ -26,6 +28,8 @@ services:
       - REDIS_CONFIGURATION=cache:6379
     volumes:
       - ${BEATMAP_DIRECTORY}:/app/beatmaps/external
+    depends_on:
+      - cache
 
   difficalcy-catch:
     image: difficalcy-catch
@@ -40,6 +44,8 @@ services:
       - REDIS_CONFIGURATION=cache:6379
     volumes:
       - ${BEATMAP_DIRECTORY}:/app/beatmaps/external
+    depends_on:
+      - cache
 
   difficalcy-mania:
     image: difficalcy-mania
@@ -54,6 +60,8 @@ services:
       - REDIS_CONFIGURATION=cache:6379
     volumes:
       - ${BEATMAP_DIRECTORY}:/app/beatmaps/external
+    depends_on:
+      - cache
 
   cache:
     image: redis:6

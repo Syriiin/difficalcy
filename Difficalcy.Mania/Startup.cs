@@ -12,6 +12,8 @@ namespace Difficalcy.Mania
 
         public override string OpenApiVersion => "v1";
 
+        protected override string TestBeatmapAssembly => "osu.Game.Rulesets.Mania";
+
         public override void ConfigureCalculatorServices(IServiceCollection services)
         {
             services.AddSingleton(typeof(ManiaCalculatorService));

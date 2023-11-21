@@ -12,6 +12,8 @@ namespace Difficalcy.Osu
 
         public override string OpenApiVersion => "v1";
 
+        protected override string TestBeatmapAssembly => "osu.Game.Rulesets.Osu";
+
         public override void ConfigureCalculatorServices(IServiceCollection services)
         {
             services.AddSingleton(typeof(OsuCalculatorService));
