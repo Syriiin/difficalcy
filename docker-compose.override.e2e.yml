@@ -1,0 +1,33 @@
+services:
+  e2e-test-runner:
+    build: ./e2e
+    environment:
+      - DIFFICALCY_OSU_HOST=difficalcy-osu:80
+      - DIFFICALCY_TAIKO_HOST=difficalcy-taiko:80
+      - DIFFICALCY_CATCH_HOST=difficalcy-catch:80
+      - DIFFICALCY_MANIA_HOST=difficalcy-mania:80
+    depends_on:
+      - difficalcy-osu
+      - difficalcy-taiko
+      - difficalcy-catch
+      - difficalcy-mania
+
+  difficalcy-osu:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - USE_TEST_BEATMAP_PROVIDER=true
+
+  difficalcy-taiko:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - USE_TEST_BEATMAP_PROVIDER=true
+
+  difficalcy-catch:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - USE_TEST_BEATMAP_PROVIDER=true
+
+  difficalcy-mania:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - USE_TEST_BEATMAP_PROVIDER=true

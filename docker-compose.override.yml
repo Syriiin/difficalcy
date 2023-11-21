@@ -1,0 +1,32 @@
+services:
+  difficalcy-osu:
+    ports:
+      - 5000:80
+    environment:
+      - BEATMAP_DIRECTORY=/app/beatmaps/external
+    volumes:
+      - ${BEATMAP_DIRECTORY}:/app/beatmaps/external
+
+  difficalcy-taiko:
+    ports:
+      - 5001:80
+    environment:
+      - BEATMAP_DIRECTORY=/app/beatmaps/external
+    volumes:
+      - ${BEATMAP_DIRECTORY}:/app/beatmaps/external
+
+  difficalcy-catch:
+    ports:
+      - 5002:80
+    environment:
+      - BEATMAP_DIRECTORY=/app/beatmaps/external
+    volumes:
+      - ${BEATMAP_DIRECTORY}:/app/beatmaps/external
+
+  difficalcy-mania:
+    ports:
+      - 5003:80
+    environment:
+      - BEATMAP_DIRECTORY=/app/beatmaps/external
+    volumes:
+      - ${BEATMAP_DIRECTORY}:/app/beatmaps/external
