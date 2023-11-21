@@ -19,7 +19,7 @@ test-e2e:	## Runs E2E test suite
 build-dev:	## Builds development docker images
 	$(COMPOSE_APP_DEV) build
 
-start-dev:	## Starts development environment
+start-dev: build-dev	## Starts development environment
 	$(COMPOSE_APP_DEV) up -d
 
 clean-dev:	## Cleans development environment
