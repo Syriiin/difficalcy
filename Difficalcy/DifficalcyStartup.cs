@@ -39,7 +39,7 @@ namespace Difficalcy
             var redisConfig = Configuration["REDIS_CONFIGURATION"];
             ICache cache;
             if (redisConfig == null)
-                cache = new TestCache();
+                cache = new InMemoryCache();
             else
                 cache = new RedisCache(ConnectionMultiplexer.Connect(redisConfig));
             services.AddSingleton<ICache>(cache);

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Difficalcy.Services
 {
-    public class TestCacheDatabase : ICacheDatabase
+    public class InMemoryCacheDatabase : ICacheDatabase
     {
         private readonly Dictionary<string, string> dictionary = [];
 
@@ -12,9 +12,9 @@ namespace Difficalcy.Services
         public void Set(string key, string value) => dictionary.Add(key, value);
     }
 
-    public class TestCache : ICache
+    public class InMemoryCache : ICache
     {
-        private TestCacheDatabase _database = new TestCacheDatabase();
+        private InMemoryCacheDatabase _database = new InMemoryCacheDatabase();
 
         public ICacheDatabase GetDatabase() => _database;
     }

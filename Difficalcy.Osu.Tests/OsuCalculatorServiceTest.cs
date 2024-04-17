@@ -7,7 +7,7 @@ namespace Difficalcy.Osu.Tests;
 
 public class OsuCalculatorServiceTest : CalculatorServiceTest<OsuScore, OsuDifficulty, OsuPerformance, OsuCalculation>
 {
-    protected override CalculatorService<OsuScore, OsuDifficulty, OsuPerformance, OsuCalculation> CalculatorService { get; } = new OsuCalculatorService(new TestCache(), new TestBeatmapProvider("osu.Game.Rulesets.Osu"));
+    protected override CalculatorService<OsuScore, OsuDifficulty, OsuPerformance, OsuCalculation> CalculatorService { get; } = new OsuCalculatorService(new InMemoryCache(), new TestBeatmapProvider("osu.Game.Rulesets.Osu"));
 
     [Theory]
     [InlineData(6.710442985146793d, 288.27290484349686d, "diffcalc-test", 0)]
