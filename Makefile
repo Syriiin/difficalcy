@@ -41,5 +41,6 @@ endif
 	echo $$GITHUB_PAT | docker login ghcr.io --username $$GITHUB_USERNAME --password-stdin
 	VERSION=$(VERSION) $(COMPOSE_PUBLISH) build
 	VERSION=$(VERSION) $(COMPOSE_PUBLISH) push difficalcy-osu difficalcy-taiko difficalcy-catch difficalcy-mania
+	VERSION=latest $(COMPOSE_PUBLISH) build
 	VERSION=latest $(COMPOSE_PUBLISH) push difficalcy-osu difficalcy-taiko difficalcy-catch difficalcy-mania
 	gh release create "$(VERSION)" --generate-notes
