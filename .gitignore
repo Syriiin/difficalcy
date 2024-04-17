@@ -270,3 +270,6 @@ tools/
 .vscode/
 
 .env
+
+# https://github.com/microsoft/vscode-dotnettools/issues/1008
+.mono/
