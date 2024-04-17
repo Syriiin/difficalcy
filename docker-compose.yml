@@ -4,8 +4,9 @@ services:
       context: .
       dockerfile: ./Difficalcy.Osu/Dockerfile
     environment:
-      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - REDIS_CONFIGURATION=cache:6379
+    volumes:
+      - beatmaps:/app/beatmaps
     depends_on:
       - cache
 
@@ -14,8 +15,9 @@ services:
       context: .
       dockerfile: ./Difficalcy.Taiko/Dockerfile
     environment:
-      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - REDIS_CONFIGURATION=cache:6379
+    volumes:
+      - beatmaps:/app/beatmaps
     depends_on:
       - cache
 
@@ -24,8 +26,9 @@ services:
       context: .
       dockerfile: ./Difficalcy.Catch/Dockerfile
     environment:
-      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - REDIS_CONFIGURATION=cache:6379
+    volumes:
+      - beatmaps:/app/beatmaps
     depends_on:
       - cache
 
@@ -34,10 +37,14 @@ services:
       context: .
       dockerfile: ./Difficalcy.Mania/Dockerfile
     environment:
-      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - REDIS_CONFIGURATION=cache:6379
+    volumes:
+      - beatmaps:/app/beatmaps
     depends_on:
       - cache
 
   cache:
     image: redis:6
+
+volumes:
+  beatmaps:

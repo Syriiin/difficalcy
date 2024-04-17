@@ -5,6 +5,8 @@ LABEL org.opencontainers.image.source https://github.com/Syriiin/difficalcy
 WORKDIR /app
 EXPOSE 80
 ENV ASPNETCORE_URLS=http://+:80
+ENV ASPNETCORE_ENVIRONMENT=Production
+ENV BEATMAP_DIRECTORY=/app/beatmaps
 
 RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
 USER appuser
@@ -24,4 +26,5 @@ RUN dotnet build Difficalcy.Mania/Difficalcy.Mania.csproj -c Release -o /app/bui
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app/build .
+RUN mkdir beatmaps
 ENTRYPOINT ["dotnet", "Difficalcy.Mania.dll"]

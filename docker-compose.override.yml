@@ -3,30 +3,22 @@ services:
     ports:
       - 5000:80
     environment:
-      - BEATMAP_DIRECTORY=/app/beatmaps/external
-    volumes:
-      - ${BEATMAP_DIRECTORY}:/app/beatmaps/external
+      - ASPNETCORE_ENVIRONMENT=Development
 
   difficalcy-taiko:
     ports:
       - 5001:80
     environment:
-      - BEATMAP_DIRECTORY=/app/beatmaps/external
-    volumes:
-      - ${BEATMAP_DIRECTORY}:/app/beatmaps/external
+      - ASPNETCORE_ENVIRONMENT=Development
 
   difficalcy-catch:
     ports:
       - 5002:80
     environment:
-      - BEATMAP_DIRECTORY=/app/beatmaps/external
-    volumes:
-      - ${BEATMAP_DIRECTORY}:/app/beatmaps/external
+      - ASPNETCORE_ENVIRONMENT=Development
 
   difficalcy-mania:
     ports:
       - 5003:80
     environment:
-      - BEATMAP_DIRECTORY=/app/beatmaps/external
-    volumes:
-      - ${BEATMAP_DIRECTORY}:/app/beatmaps/external
+      - ASPNETCORE_ENVIRONMENT=Development
