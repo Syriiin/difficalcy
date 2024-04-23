@@ -10,7 +10,12 @@ copyright: |
 nav:
   - index.md
   - getting-started.md
-  - api-reference.md
+  - API Reference:
+    - api-reference/index.md
+    - api-reference/difficalcy-osu.md
+    - api-reference/difficalcy-taiko.md
+    - api-reference/difficalcy-catch.md
+    - api-reference/difficalcy-mania.md
 
 theme:
   name: material
@@ -19,6 +24,7 @@ theme:
   features:
     - navigation.instant
     - navigation.instant.progress
+    - navigation.indexes
     - content.code.copy
 
   icon:
