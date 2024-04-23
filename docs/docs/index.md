@@ -1,17 +1,39 @@
-# Welcome to MkDocs
+# Welcome to difficalcy
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+Difficalcy is a a simple HTTP API interface for the official osu! difficulty calculators.
 
-## Commands
+## Basic usage
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+Run the server:
 
-## Project layout
+```sh
+docker run -p 5000:80 ghcr.io/syriiin/difficalcy-osu:latest
+```
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+Call the API:
+
+```sh
+curl "localhost:5000/api/calculator/calculation?BeatmapId=658127"
+```
+
+Get your lazer powered calculations:
+
+```json
+{
+  "difficulty": {
+    "aim": 3.471503344019442,
+    "speed": 3.4738667283055444,
+    "flashlight": 4.58994045567377,
+    "total": 7.255439646986892
+  },
+  "performance": {
+    "aim": 220.83646290283872,
+    "speed": 231.26239294786578,
+    "accuracy": 142.3199671239901,
+    "flashlight": 0,
+    "total": 614.5217398659557
+  }
+}
+```
+
+See [Getting Started](./getting-started.md) for a full example setup.
