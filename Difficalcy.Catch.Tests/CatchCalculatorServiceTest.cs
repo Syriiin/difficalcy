@@ -7,7 +7,7 @@ namespace Difficalcy.Catch.Tests;
 
 public class CatchCalculatorServiceTest : CalculatorServiceTest<CatchScore, CatchDifficulty, CatchPerformance, CatchCalculation>
 {
-    protected override CalculatorService<CatchScore, CatchDifficulty, CatchPerformance, CatchCalculation> CalculatorService { get; } = new CatchCalculatorService(new InMemoryCache(), new TestBeatmapProvider("osu.Game.Rulesets.Catch"));
+    protected override CalculatorService<CatchScore, CatchDifficulty, CatchPerformance, CatchCalculation> CalculatorService { get; } = new CatchCalculatorService(new InMemoryCache(), new TestBeatmapProvider(typeof(CatchCalculatorService).Assembly.GetName().Name));
 
     [Theory]
     [InlineData(4.0505463516206195d, 164.5770866821372d, "diffcalc-test", 0)]

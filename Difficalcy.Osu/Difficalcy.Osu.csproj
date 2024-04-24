@@ -12,4 +12,8 @@
     <ProjectReference Include="../Difficalcy/Difficalcy.csproj" />
   </ItemGroup>
 
+  <ItemGroup Label="Resources">
+    <EmbeddedResource Include="Resources\**\*.*" />
+  </ItemGroup>
+
 </Project>

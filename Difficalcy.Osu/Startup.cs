@@ -1,3 +1,4 @@
+using System.Reflection;
 using Difficalcy.Osu.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,7 +13,7 @@ namespace Difficalcy.Osu
 
         public override string OpenApiVersion => "v1";
 
-        protected override string TestBeatmapAssembly => "osu.Game.Rulesets.Osu";
+        protected override string TestBeatmapAssembly => Assembly.GetExecutingAssembly().GetName().Name;
 
         public override void ConfigureCalculatorServices(IServiceCollection services)
         {

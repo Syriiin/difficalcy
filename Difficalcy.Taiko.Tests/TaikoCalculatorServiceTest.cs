@@ -7,7 +7,7 @@ namespace Difficalcy.Taiko.Tests;
 
 public class TaikoCalculatorServiceTest : CalculatorServiceTest<TaikoScore, TaikoDifficulty, TaikoPerformance, TaikoCalculation>
 {
-    protected override CalculatorService<TaikoScore, TaikoDifficulty, TaikoPerformance, TaikoCalculation> CalculatorService { get; } = new TaikoCalculatorService(new InMemoryCache(), new TestBeatmapProvider("osu.Game.Rulesets.Taiko"));
+    protected override CalculatorService<TaikoScore, TaikoDifficulty, TaikoPerformance, TaikoCalculation> CalculatorService { get; } = new TaikoCalculatorService(new InMemoryCache(), new TestBeatmapProvider(typeof(TaikoCalculatorService).Assembly.GetName().Name));
 
     [Theory]
     [InlineData(3.0920212594351191d, 108.45361131093136d, "diffcalc-test", 0)]
