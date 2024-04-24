@@ -1,486 +1,486 @@
 {
-    "openapi": "3.0.1",
-    "info": {
-        "title": "Difficalcy.Catch",
-        "version": "v1"
-    },
-    "paths": {
-        "/api/info": {
-            "get": {
-                "tags": [
-                    "CatchCalculator"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/CalculatorInfo"
-                                }
-                            }
-                        }
-                    }
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Difficalcy.Catch",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/info": {
+      "get": {
+        "tags": [
+          "CatchCalculator"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalculatorInfo"
                 }
+              }
             }
-        },
-        "/api/difficulty": {
-            "get": {
-                "tags": [
-                    "CatchCalculator"
-                ],
-                "parameters": [
-                    {
-                        "name": "Accuracy",
-                        "in": "query",
-                        "schema": {
-                            "type": "number",
-                            "format": "double",
-                            "nullable": true
-                        }
-                    },
-                    {
-                        "name": "Combo",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32",
-                            "nullable": true
-                        }
-                    },
-                    {
-                        "name": "Misses",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32",
-                            "nullable": true
-                        }
-                    },
-                    {
-                        "name": "TinyDroplets",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32",
-                            "nullable": true
-                        }
-                    },
-                    {
-                        "name": "Droplets",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32",
-                            "nullable": true
-                        }
-                    },
-                    {
-                        "name": "BeatmapId",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "Mods",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32",
-                            "nullable": true
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/CatchDifficulty"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/performance": {
-            "get": {
-                "tags": [
-                    "CatchCalculator"
-                ],
-                "parameters": [
-                    {
-                        "name": "Accuracy",
-                        "in": "query",
-                        "schema": {
-                            "type": "number",
-                            "format": "double",
-                            "nullable": true
-                        }
-                    },
-                    {
-                        "name": "Combo",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32",
-                            "nullable": true
-                        }
-                    },
-                    {
-                        "name": "Misses",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32",
-                            "nullable": true
-                        }
-                    },
-                    {
-                        "name": "TinyDroplets",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32",
-                            "nullable": true
-                        }
-                    },
-                    {
-                        "name": "Droplets",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32",
-                            "nullable": true
-                        }
-                    },
-                    {
-                        "name": "BeatmapId",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "Mods",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32",
-                            "nullable": true
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/CatchPerformance"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/calculation": {
-            "get": {
-                "tags": [
-                    "CatchCalculator"
-                ],
-                "parameters": [
-                    {
-                        "name": "Accuracy",
-                        "in": "query",
-                        "schema": {
-                            "type": "number",
-                            "format": "double",
-                            "nullable": true
-                        }
-                    },
-                    {
-                        "name": "Combo",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32",
-                            "nullable": true
-                        }
-                    },
-                    {
-                        "name": "Misses",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32",
-                            "nullable": true
-                        }
-                    },
-                    {
-                        "name": "TinyDroplets",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32",
-                            "nullable": true
-                        }
-                    },
-                    {
-                        "name": "Droplets",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32",
-                            "nullable": true
-                        }
-                    },
-                    {
-                        "name": "BeatmapId",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "Mods",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32",
-                            "nullable": true
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/CatchCalculation"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/batch/difficulty": {
-            "post": {
-                "tags": [
-                    "CatchCalculator"
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/components/schemas/CatchScore"
-                                },
-                                "nullable": true
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/CatchDifficulty"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/batch/performance": {
-            "post": {
-                "tags": [
-                    "CatchCalculator"
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/components/schemas/CatchScore"
-                                },
-                                "nullable": true
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/CatchPerformance"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/batch/calculation": {
-            "post": {
-                "tags": [
-                    "CatchCalculator"
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/components/schemas/CatchScore"
-                                },
-                                "nullable": true
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/CatchCalculation"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+          }
         }
+      }
     },
-    "components": {
-        "schemas": {
-            "CalculatorInfo": {
-                "type": "object",
-                "properties": {
-                    "rulesetName": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "calculatorName": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "calculatorPackage": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "calculatorVersion": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "calculatorUrl": {
-                        "type": "string",
-                        "nullable": true
-                    }
-                },
-                "additionalProperties": false
-            },
-            "CatchDifficulty": {
-                "type": "object",
-                "properties": {
-                    "total": {
-                        "type": "number",
-                        "format": "double"
-                    }
-                },
-                "additionalProperties": false
-            },
-            "CatchPerformance": {
-                "type": "object",
-                "properties": {
-                    "total": {
-                        "type": "number",
-                        "format": "double"
-                    }
-                },
-                "additionalProperties": false
-            },
-            "CatchCalculation": {
-                "type": "object",
-                "properties": {
-                    "difficulty": {
-                        "$ref": "#/components/schemas/CatchDifficulty"
-                    },
-                    "performance": {
-                        "$ref": "#/components/schemas/CatchPerformance"
-                    }
-                },
-                "additionalProperties": false
-            },
-            "CatchScore": {
-                "required": [
-                    "beatmapId"
-                ],
-                "type": "object",
-                "properties": {
-                    "beatmapId": {
-                        "type": "string"
-                    },
-                    "mods": {
-                        "type": "integer",
-                        "format": "int32",
-                        "nullable": true
-                    },
-                    "accuracy": {
-                        "type": "number",
-                        "format": "double",
-                        "nullable": true
-                    },
-                    "combo": {
-                        "type": "integer",
-                        "format": "int32",
-                        "nullable": true
-                    },
-                    "misses": {
-                        "type": "integer",
-                        "format": "int32",
-                        "nullable": true
-                    },
-                    "tinyDroplets": {
-                        "type": "integer",
-                        "format": "int32",
-                        "nullable": true
-                    },
-                    "droplets": {
-                        "type": "integer",
-                        "format": "int32",
-                        "nullable": true
-                    }
-                },
-                "additionalProperties": false
+    "/api/difficulty": {
+      "get": {
+        "tags": [
+          "CatchCalculator"
+        ],
+        "parameters": [
+          {
+            "name": "Accuracy",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "nullable": true
             }
+          },
+          {
+            "name": "Combo",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "Misses",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "TinyDroplets",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "Droplets",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "BeatmapId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Mods",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CatchDifficulty"
+                }
+              }
+            }
+          }
         }
+      }
+    },
+    "/api/performance": {
+      "get": {
+        "tags": [
+          "CatchCalculator"
+        ],
+        "parameters": [
+          {
+            "name": "Accuracy",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "nullable": true
+            }
+          },
+          {
+            "name": "Combo",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "Misses",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "TinyDroplets",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "Droplets",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "BeatmapId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Mods",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CatchPerformance"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/calculation": {
+      "get": {
+        "tags": [
+          "CatchCalculator"
+        ],
+        "parameters": [
+          {
+            "name": "Accuracy",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "nullable": true
+            }
+          },
+          {
+            "name": "Combo",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "Misses",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "TinyDroplets",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "Droplets",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "BeatmapId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Mods",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CatchCalculation"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/batch/difficulty": {
+      "post": {
+        "tags": [
+          "CatchCalculator"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CatchScore"
+                },
+                "nullable": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CatchDifficulty"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/batch/performance": {
+      "post": {
+        "tags": [
+          "CatchCalculator"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CatchScore"
+                },
+                "nullable": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CatchPerformance"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/batch/calculation": {
+      "post": {
+        "tags": [
+          "CatchCalculator"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CatchScore"
+                },
+                "nullable": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CatchCalculation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
+  },
+  "components": {
+    "schemas": {
+      "CalculatorInfo": {
+        "type": "object",
+        "properties": {
+          "rulesetName": {
+            "type": "string",
+            "nullable": true
+          },
+          "calculatorName": {
+            "type": "string",
+            "nullable": true
+          },
+          "calculatorPackage": {
+            "type": "string",
+            "nullable": true
+          },
+          "calculatorVersion": {
+            "type": "string",
+            "nullable": true
+          },
+          "calculatorUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CatchDifficulty": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CatchPerformance": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CatchCalculation": {
+        "type": "object",
+        "properties": {
+          "difficulty": {
+            "$ref": "#/components/schemas/CatchDifficulty"
+          },
+          "performance": {
+            "$ref": "#/components/schemas/CatchPerformance"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CatchScore": {
+        "required": [
+          "beatmapId"
+        ],
+        "type": "object",
+        "properties": {
+          "beatmapId": {
+            "type": "string"
+          },
+          "mods": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "accuracy": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "combo": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "misses": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "tinyDroplets": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "droplets": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
 }

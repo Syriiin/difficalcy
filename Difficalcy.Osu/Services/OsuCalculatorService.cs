@@ -100,9 +100,9 @@ namespace Difficalcy.Osu.Services
 
             var combo = score.Combo ?? beatmap.HitObjects.Count + beatmap.HitObjects.OfType<Slider>().Sum(s => s.NestedHitObjects.Count - 1);
             var statistics = determineHitResults(score.Accuracy ?? 1, beatmap.HitObjects.Count, score.Misses ?? 0, score.Mehs, score.Oks);
-            var accuracy = score.Accuracy ?? calculateAccuracy(statistics);
+            var accuracy = calculateAccuracy(statistics);
 
-            var scoreInfo = new ScoreInfo()
+            var scoreInfo = new ScoreInfo(beatmap.BeatmapInfo, OsuRuleset.RulesetInfo)
             {
                 Accuracy = accuracy,
                 MaxCombo = combo,

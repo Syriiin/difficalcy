@@ -89,9 +89,9 @@ namespace Difficalcy.Catch.Services
             var hitResultCount = beatmap.HitObjects.Count(h => h is Fruit) + beatmap.HitObjects.OfType<JuiceStream>().SelectMany(j => j.NestedHitObjects).Count(h => !(h is TinyDroplet));
             var combo = score.Combo ?? hitResultCount;
             var statistics = determineHitResults(score.Accuracy ?? 1, hitResultCount, beatmap, score.Misses ?? 0, score.TinyDroplets, score.Droplets);
-            var accuracy = score.Accuracy ?? calculateAccuracy(statistics);
+            var accuracy = calculateAccuracy(statistics);
 
-            var scoreInfo = new ScoreInfo()
+            var scoreInfo = new ScoreInfo(beatmap.BeatmapInfo, CatchRuleset.RulesetInfo)
             {
                 Accuracy = accuracy,
                 MaxCombo = combo,

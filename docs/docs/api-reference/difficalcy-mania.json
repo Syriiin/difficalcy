@@ -1,362 +1,522 @@
 {
-    "openapi": "3.0.1",
-    "info": {
-        "title": "Difficalcy.Mania",
-        "version": "v1"
-    },
-    "paths": {
-        "/api/info": {
-            "get": {
-                "tags": [
-                    "ManiaCalculator"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/CalculatorInfo"
-                                }
-                            }
-                        }
-                    }
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Difficalcy.Mania",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/info": {
+      "get": {
+        "tags": [
+          "ManiaCalculator"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalculatorInfo"
                 }
+              }
             }
-        },
-        "/api/difficulty": {
-            "get": {
-                "tags": [
-                    "ManiaCalculator"
-                ],
-                "parameters": [
-                    {
-                        "name": "TotalScore",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32",
-                            "nullable": true
-                        }
-                    },
-                    {
-                        "name": "BeatmapId",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "Mods",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32",
-                            "nullable": true
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ManiaDifficulty"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/performance": {
-            "get": {
-                "tags": [
-                    "ManiaCalculator"
-                ],
-                "parameters": [
-                    {
-                        "name": "TotalScore",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32",
-                            "nullable": true
-                        }
-                    },
-                    {
-                        "name": "BeatmapId",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "Mods",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32",
-                            "nullable": true
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ManiaPerformance"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/calculation": {
-            "get": {
-                "tags": [
-                    "ManiaCalculator"
-                ],
-                "parameters": [
-                    {
-                        "name": "TotalScore",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32",
-                            "nullable": true
-                        }
-                    },
-                    {
-                        "name": "BeatmapId",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "Mods",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32",
-                            "nullable": true
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ManiaCalculation"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/batch/difficulty": {
-            "post": {
-                "tags": [
-                    "ManiaCalculator"
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/components/schemas/ManiaScore"
-                                },
-                                "nullable": true
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/ManiaDifficulty"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/batch/performance": {
-            "post": {
-                "tags": [
-                    "ManiaCalculator"
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/components/schemas/ManiaScore"
-                                },
-                                "nullable": true
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/ManiaPerformance"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/batch/calculation": {
-            "post": {
-                "tags": [
-                    "ManiaCalculator"
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/components/schemas/ManiaScore"
-                                },
-                                "nullable": true
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/ManiaCalculation"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+          }
         }
+      }
     },
-    "components": {
-        "schemas": {
-            "CalculatorInfo": {
-                "type": "object",
-                "properties": {
-                    "rulesetName": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "calculatorName": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "calculatorPackage": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "calculatorVersion": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "calculatorUrl": {
-                        "type": "string",
-                        "nullable": true
-                    }
-                },
-                "additionalProperties": false
-            },
-            "ManiaDifficulty": {
-                "type": "object",
-                "properties": {
-                    "total": {
-                        "type": "number",
-                        "format": "double"
-                    }
-                },
-                "additionalProperties": false
-            },
-            "ManiaPerformance": {
-                "type": "object",
-                "properties": {
-                    "total": {
-                        "type": "number",
-                        "format": "double"
-                    },
-                    "difficulty": {
-                        "type": "number",
-                        "format": "double"
-                    }
-                },
-                "additionalProperties": false
-            },
-            "ManiaCalculation": {
-                "type": "object",
-                "properties": {
-                    "difficulty": {
-                        "$ref": "#/components/schemas/ManiaDifficulty"
-                    },
-                    "performance": {
-                        "$ref": "#/components/schemas/ManiaPerformance"
-                    }
-                },
-                "additionalProperties": false
-            },
-            "ManiaScore": {
-                "required": [
-                    "beatmapId"
-                ],
-                "type": "object",
-                "properties": {
-                    "beatmapId": {
-                        "type": "string"
-                    },
-                    "mods": {
-                        "type": "integer",
-                        "format": "int32",
-                        "nullable": true
-                    },
-                    "totalScore": {
-                        "type": "integer",
-                        "format": "int32",
-                        "nullable": true
-                    }
-                },
-                "additionalProperties": false
+    "/api/difficulty": {
+      "get": {
+        "tags": [
+          "ManiaCalculator"
+        ],
+        "parameters": [
+          {
+            "name": "Accuracy",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "nullable": true
             }
+          },
+          {
+            "name": "Misses",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "Mehs",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "Oks",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "Goods",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "Greats",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "BeatmapId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Mods",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManiaDifficulty"
+                }
+              }
+            }
+          }
         }
+      }
+    },
+    "/api/performance": {
+      "get": {
+        "tags": [
+          "ManiaCalculator"
+        ],
+        "parameters": [
+          {
+            "name": "Accuracy",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "nullable": true
+            }
+          },
+          {
+            "name": "Misses",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "Mehs",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "Oks",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "Goods",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "Greats",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "BeatmapId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Mods",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManiaPerformance"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/calculation": {
+      "get": {
+        "tags": [
+          "ManiaCalculator"
+        ],
+        "parameters": [
+          {
+            "name": "Accuracy",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "nullable": true
+            }
+          },
+          {
+            "name": "Misses",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "Mehs",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "Oks",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "Goods",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "Greats",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "BeatmapId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Mods",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManiaCalculation"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/batch/difficulty": {
+      "post": {
+        "tags": [
+          "ManiaCalculator"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ManiaScore"
+                },
+                "nullable": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ManiaDifficulty"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/batch/performance": {
+      "post": {
+        "tags": [
+          "ManiaCalculator"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ManiaScore"
+                },
+                "nullable": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ManiaPerformance"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/batch/calculation": {
+      "post": {
+        "tags": [
+          "ManiaCalculator"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ManiaScore"
+                },
+                "nullable": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ManiaCalculation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
+  },
+  "components": {
+    "schemas": {
+      "CalculatorInfo": {
+        "type": "object",
+        "properties": {
+          "rulesetName": {
+            "type": "string",
+            "nullable": true
+          },
+          "calculatorName": {
+            "type": "string",
+            "nullable": true
+          },
+          "calculatorPackage": {
+            "type": "string",
+            "nullable": true
+          },
+          "calculatorVersion": {
+            "type": "string",
+            "nullable": true
+          },
+          "calculatorUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ManiaDifficulty": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ManiaPerformance": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "number",
+            "format": "double"
+          },
+          "difficulty": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ManiaCalculation": {
+        "type": "object",
+        "properties": {
+          "difficulty": {
+            "$ref": "#/components/schemas/ManiaDifficulty"
+          },
+          "performance": {
+            "$ref": "#/components/schemas/ManiaPerformance"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ManiaScore": {
+        "required": [
+          "beatmapId"
+        ],
+        "type": "object",
+        "properties": {
+          "beatmapId": {
+            "type": "string"
+          },
+          "mods": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "accuracy": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "misses": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "mehs": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "oks": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "goods": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "greats": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
 }
