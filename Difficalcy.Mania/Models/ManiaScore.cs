@@ -4,6 +4,11 @@ namespace Difficalcy.Mania.Models
 {
     public record ManiaScore : Score
     {
-        public int? TotalScore { get; init; }
+        public double? Accuracy { get; init; }
+        public int? Misses { get; init; }
+        public int? Mehs { get; init; }
+        public int? Oks { get; init; }
+        public int? Goods { get; init; }
+        public int? Greats { get; init; }
     }
 }

@@ -10,8 +10,8 @@ public class ManiaCalculatorServiceTest : CalculatorServiceTest<ManiaScore, Mani
     protected override CalculatorService<ManiaScore, ManiaDifficulty, ManiaPerformance, ManiaCalculation> CalculatorService { get; } = new ManiaCalculatorService(new InMemoryCache(), new TestBeatmapProvider("osu.Game.Rulesets.Mania"));
 
     [Theory]
-    [InlineData(2.3493769750220914d, 45.71911573894849d, "diffcalc-test", 0)]
-    [InlineData(2.797245912537965d, 68.73627121504641d, "diffcalc-test", 64)]
+    [InlineData(2.3493769750220914d, 45.76140071089439d, "diffcalc-test", 0)]
+    [InlineData(2.797245912537965d, 68.79984443279172d, "diffcalc-test", 64)]
     public void Test(double expectedDifficultyTotal, double expectedPerformanceTotal, string beatmapId, int mods)
         => base.TestGetCalculationReturnsCorrectValues(expectedDifficultyTotal, expectedPerformanceTotal, new ManiaScore { BeatmapId = beatmapId, Mods = mods });
 }

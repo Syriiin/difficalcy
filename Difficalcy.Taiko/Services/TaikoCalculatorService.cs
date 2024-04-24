@@ -95,7 +95,7 @@ namespace Difficalcy.Taiko.Services
             var hitResultCount = beatmap.HitObjects.OfType<Hit>().Count();
             var combo = score.Combo ?? hitResultCount;
             var statistics = determineHitResults(score.Accuracy ?? 1, hitResultCount, score.Misses ?? 0, score.Oks);
-            var accuracy = score.Accuracy ?? calculateAccuracy(statistics);
+            var accuracy = calculateAccuracy(statistics);
 
             var scoreInfo = new ScoreInfo()
             {
