@@ -91,7 +91,7 @@ namespace Difficalcy.Catch.Services
             var statistics = determineHitResults(score.Accuracy ?? 1, hitResultCount, beatmap, score.Misses ?? 0, score.TinyDroplets, score.Droplets);
             var accuracy = calculateAccuracy(statistics);
 
-            var scoreInfo = new ScoreInfo()
+            var scoreInfo = new ScoreInfo(beatmap.BeatmapInfo, CatchRuleset.RulesetInfo)
             {
                 Accuracy = accuracy,
                 MaxCombo = combo,

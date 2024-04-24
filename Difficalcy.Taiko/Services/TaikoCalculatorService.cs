@@ -97,7 +97,7 @@ namespace Difficalcy.Taiko.Services
             var statistics = determineHitResults(score.Accuracy ?? 1, hitResultCount, score.Misses ?? 0, score.Oks);
             var accuracy = calculateAccuracy(statistics);
 
-            var scoreInfo = new ScoreInfo()
+            var scoreInfo = new ScoreInfo(beatmap.BeatmapInfo, TaikoRuleset.RulesetInfo)
             {
                 Accuracy = accuracy,
                 MaxCombo = combo,

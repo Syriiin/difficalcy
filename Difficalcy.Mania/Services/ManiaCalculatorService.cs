@@ -91,7 +91,7 @@ namespace Difficalcy.Mania.Services
             var statistics = determineHitResults(score.Accuracy ?? 1, hitResultCount, holdNoteCount, score.Misses ?? 0, score.Mehs, score.Oks, score.Goods, score.Greats);
             var accuracy = calculateAccuracy(statistics);
 
-            var scoreInfo = new ScoreInfo()
+            var scoreInfo = new ScoreInfo(beatmap.BeatmapInfo, ManiaRuleset.RulesetInfo)
             {
                 Accuracy = accuracy,
                 MaxCombo = 0,

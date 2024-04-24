@@ -102,7 +102,7 @@ namespace Difficalcy.Osu.Services
             var statistics = determineHitResults(score.Accuracy ?? 1, beatmap.HitObjects.Count, score.Misses ?? 0, score.Mehs, score.Oks);
             var accuracy = calculateAccuracy(statistics);
 
-            var scoreInfo = new ScoreInfo()
+            var scoreInfo = new ScoreInfo(beatmap.BeatmapInfo, OsuRuleset.RulesetInfo)
             {
                 Accuracy = accuracy,
                 MaxCombo = combo,
