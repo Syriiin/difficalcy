@@ -12,10 +12,10 @@ nav:
   - getting-started.md
   - API Reference:
     - api-reference/index.md
-    - api-reference/difficalcy-osu.md
-    - api-reference/difficalcy-taiko.md
-    - api-reference/difficalcy-catch.md
-    - api-reference/difficalcy-mania.md
+    - difficalcy-osu: api-reference/difficalcy-osu.md
+    - difficalcy-taiko: api-reference/difficalcy-taiko.md
+    - difficalcy-catch: api-reference/difficalcy-catch.md
+    - difficalcy-mania: api-reference/difficalcy-mania.md
 
 theme:
   name: material
@@ -48,3 +48,14 @@ markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+
+plugins:
+  - search
+  - neoteroi.mkdocsoad:
+      use_pymdownx: true
+
+extra_css:
+  - "css/mkdocsoad.css"
