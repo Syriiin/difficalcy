@@ -14,4 +14,32 @@ public class TaikoCalculatorServiceTest : CalculatorServiceTest<TaikoScore, Taik
     [InlineData(4.0789820318081444d, 197.40372508926697d, "diffcalc-test", 64)]
     public void Test(double expectedDifficultyTotal, double expectedPerformanceTotal, string beatmapId, int mods)
         => base.TestGetCalculationReturnsCorrectValues(expectedDifficultyTotal, expectedPerformanceTotal, new TaikoScore { BeatmapId = beatmapId, Mods = mods });
+
+    [Fact]
+    public void TestAllParameters()
+    {
+        var score = new TaikoScore
+        {
+            BeatmapId = "diffcalc-test",
+            Mods = 80, // HR, DT
+            Combo = 150,
+            Misses = 5,
+            Oks = 3,
+        };
+        base.TestGetCalculationReturnsCorrectValues(4.0789820318081444d, 176.94088597258678d, score);
+    }
+
+    [Fact]
+    public void TestAccuracyParameter()
+    {
+        var score = new TaikoScore
+        {
+            BeatmapId = "diffcalc-test",
+            Mods = 80, // HR, DT
+            Accuracy = 0.9675,
+            Combo = 150,
+            Misses = 5,
+        };
+        base.TestGetCalculationReturnsCorrectValues(4.0789820318081444d, 176.94088597258678d, score);
+    }
 }
