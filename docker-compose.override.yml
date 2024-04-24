@@ -22,3 +22,7 @@ services:
       - 5003:80
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+
+  docs:
+    ports:
+      - 8000:8000
