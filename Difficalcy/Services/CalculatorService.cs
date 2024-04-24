@@ -91,7 +91,7 @@ namespace Difficalcy.Services
             await EnsureBeatmap(score.BeatmapId);
 
             var db = _cache.GetDatabase();
-            var redisKey = $"{CalculatorDiscriminator}:{score.BeatmapId}:{score.Mods ?? 0}";
+            var redisKey = $"difficalcy:{CalculatorDiscriminator}:{score.BeatmapId}:{score.Mods ?? 0}";
             var difficultyAttributesJson = await db.GetAsync(redisKey);
 
             object difficultyAttributes;
