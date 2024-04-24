@@ -1,6 +1,6 @@
 # difficalcy
 
-Difficalcy is an osu! difficulty and performance calculator REST API.
+difficalcy is an osu! difficulty and performance calculator REST API.
 
 ## Basic usage
 
@@ -57,7 +57,7 @@ services:
     ports:
       - "5000:80"
     volumes:
-      - beatmaps
+      - beatmaps:/app/beatmaps
     depends_on:
       - cache
 
