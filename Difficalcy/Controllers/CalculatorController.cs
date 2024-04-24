@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Difficalcy.Controllers
 {
     [ApiController]
-    [Route("/api/calculator")]
+    [Route("/api")]
+    [Produces("application/json")]
     public abstract class CalculatorController<TScore, TDifficulty, TPerformance, TCalculation, TCalculatorService> : ControllerBase
         where TScore : Score
         where TDifficulty : Difficulty
@@ -62,6 +63,7 @@ namespace Difficalcy.Controllers
         /// Returns difficulty values for a batch of scores.
         /// </summary>
         [HttpPost("batch/difficulty")]
+        [Consumes("application/json")]
         public async Task<ActionResult<TDifficulty[]>> GetDifficultyBatch([FromBody] TScore[] scores)
         {
             return Ok(await Task.WhenAll(scores.Select(score => calculatorService.GetDifficulty(score))));
@@ -71,6 +73,7 @@ namespace Difficalcy.Controllers
         /// Returns performance values for a batch of scores.
         /// </summary>
         [HttpPost("batch/performance")]
+        [Consumes("application/json")]
         public async Task<ActionResult<TPerformance[]>> GetPerformanceBatch([FromBody] TScore[] scores)
         {
             return Ok(await Task.WhenAll(scores.Select(score => calculatorService.GetPerformance(score))));
@@ -80,6 +83,7 @@ namespace Difficalcy.Controllers
         /// Returns difficulty and performance values for a batch of scores.
         /// </summary>
         [HttpPost("batch/calculation")]
+        [Consumes("application/json")]
         public async Task<ActionResult<TCalculation[]>> GetCalculationBatch([FromBody] TScore[] scores)
         {
             return Ok(await Task.WhenAll(scores.Select(score => calculatorService.GetCalculation(score))));
