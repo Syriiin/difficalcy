@@ -1,14 +1,14 @@
 #!/bin/bash
-set -euo pipefail
+set -euxo pipefail
 
-curl --fail "http://$DIFFICALCY_OSU_HOST/api/info" | jq
-curl --fail "http://$DIFFICALCY_OSU_HOST/api/calculation?BeatmapId=diffcalc-test" | jq
+curl --fail --silent --show-error "http://$DIFFICALCY_OSU_HOST/api/info" | jq
+curl --fail --silent --show-error "http://$DIFFICALCY_OSU_HOST/api/calculation?BeatmapId=diffcalc-test" | jq
 
-curl --fail "http://$DIFFICALCY_CATCH_HOST/api/info" | jq
-curl --fail "http://$DIFFICALCY_CATCH_HOST/api/calculation?BeatmapId=diffcalc-test" | jq
+curl --fail --silent --show-error "http://$DIFFICALCY_CATCH_HOST/api/info" | jq
+curl --fail --silent --show-error "http://$DIFFICALCY_CATCH_HOST/api/calculation?BeatmapId=diffcalc-test" | jq
 
-curl --fail "http://$DIFFICALCY_TAIKO_HOST/api/info" | jq
-curl --fail "http://$DIFFICALCY_TAIKO_HOST/api/calculation?BeatmapId=diffcalc-test" | jq
+curl --fail --silent --show-error "http://$DIFFICALCY_TAIKO_HOST/api/info" | jq
+curl --fail --silent --show-error "http://$DIFFICALCY_TAIKO_HOST/api/calculation?BeatmapId=diffcalc-test" | jq
 
-curl --fail "http://$DIFFICALCY_MANIA_HOST/api/info" | jq
-curl --fail "http://$DIFFICALCY_MANIA_HOST/api/calculation?BeatmapId=diffcalc-test" | jq
+curl --fail --silent --show-error "http://$DIFFICALCY_MANIA_HOST/api/info" | jq
+curl --fail --silent --show-error "http://$DIFFICALCY_MANIA_HOST/api/calculation?BeatmapId=diffcalc-test" | jq
