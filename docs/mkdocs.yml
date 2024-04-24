@@ -29,6 +29,7 @@ theme:
 
   icon:
     repo: fontawesome/brands/github
+    logo: material/calculator
 
   palette:
     - media: "(prefers-color-scheme: dark)"
