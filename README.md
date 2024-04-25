@@ -11,7 +11,7 @@ difficalcy is an osu! difficulty and performance calculator REST API.
 1.  Query the API
 
     ```sh
-    curl "localhost:5000/api/calculator/info"
+    curl "localhost:5000/api/info"
     ```
 
     ```json
@@ -25,7 +25,7 @@ difficalcy is an osu! difficulty and performance calculator REST API.
     ```
 
     ```sh
-    curl "localhost:5000/api/calculator/calculation?BeatmapId=658127"
+    curl "localhost:5000/api/calculation?BeatmapId=658127"
     ```
 
     ```json

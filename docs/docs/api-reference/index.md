@@ -11,12 +11,12 @@ Thus, each calculator has it's own API Reference:
 
 In general, each calculator exposes:
 
-| Endpoint                                 | Description                                           |
-| ---------------------------------------- | ----------------------------------------------------- |
-| `GET /api/calculator/info`               | Returns details of the running calculation engine     |
-| `GET /api/calculator/difficulty`         | Calculates difficulty of a beatmap                    |
-| `GET /api/calculator/performance`        | Calculates performance of a score                     |
-| `GET /api/calculator/calculation`        | Calculates both difficulty and performance of a score |
-| `POST /api/calculator/batch/difficulty`  | Calculates a batch of difficulties                    |
-| `POST /api/calculator/batch/performance` | Calculates a batch of performances                    |
-| `POST /api/calculator/batch/calculation` | Calculates a batch of difficulties and performances   |
+| Endpoint                      | Description                                           |
+| ----------------------------- | ----------------------------------------------------- |
+| `GET /api/info`               | Returns details of the running calculation engine     |
+| `GET /api/difficulty`         | Calculates difficulty of a beatmap                    |
+| `GET /api/performance`        | Calculates performance of a score                     |
+| `GET /api/calculation`        | Calculates both difficulty and performance of a score |
+| `POST /api/batch/difficulty`  | Calculates a batch of difficulties                    |
+| `POST /api/batch/performance` | Calculates a batch of performances                    |
+| `POST /api/batch/calculation` | Calculates a batch of difficulties and performances   |
