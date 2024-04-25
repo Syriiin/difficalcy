@@ -2,7 +2,7 @@ services:
   difficalcy-osu:
     build:
       context: .
-      dockerfile: ./Difficalcy.Osu/Dockerfile
+      target: difficalcy-osu
     environment:
       - REDIS_CONFIGURATION=cache:6379
     volumes:
@@ -13,7 +13,7 @@ services:
   difficalcy-taiko:
     build:
       context: .
-      dockerfile: ./Difficalcy.Taiko/Dockerfile
+      target: difficalcy-taiko
     environment:
       - REDIS_CONFIGURATION=cache:6379
     volumes:
@@ -24,7 +24,7 @@ services:
   difficalcy-catch:
     build:
       context: .
-      dockerfile: ./Difficalcy.Catch/Dockerfile
+      target: difficalcy-catch
     environment:
       - REDIS_CONFIGURATION=cache:6379
     volumes:
@@ -35,7 +35,7 @@ services:
   difficalcy-mania:
     build:
       context: .
-      dockerfile: ./Difficalcy.Mania/Dockerfile
+      target: difficalcy-mania
     environment:
       - REDIS_CONFIGURATION=cache:6379
     volumes:

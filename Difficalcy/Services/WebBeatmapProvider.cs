@@ -7,17 +7,18 @@ namespace Difficalcy.Services
 {
     public class WebBeatmapProvider : IBeatmapProvider
     {
-        private IConfiguration _configuration;
+        private string _beatmapDirectory;
         private readonly HttpClient _httpClient = new HttpClient();
 
         public WebBeatmapProvider(IConfiguration configuration)
         {
-            _configuration = configuration;
+            _beatmapDirectory = configuration["BEATMAP_DIRECTORY"];
+            Directory.CreateDirectory(_beatmapDirectory);
         }
 
         public async Task<bool> EnsureBeatmap(string beatmapId)
         {
-            var beatmapPath = Path.Combine(_configuration["BEATMAP_DIRECTORY"], beatmapId);
+            var beatmapPath = Path.Combine(_beatmapDirectory, beatmapId);
             if (!File.Exists(beatmapPath))
             {
                 using var response = await _httpClient.GetAsync($"https://osu.ppy.sh/osu/{beatmapId}");
@@ -34,7 +35,7 @@ namespace Difficalcy.Services
 
         public Stream GetBeatmapStream(string beatmapId)
         {
-            var beatmapPath = Path.Combine(_configuration["BEATMAP_DIRECTORY"], beatmapId);
+            var beatmapPath = Path.Combine(_beatmapDirectory, beatmapId);
             return File.OpenRead(beatmapPath);
         }
     }
