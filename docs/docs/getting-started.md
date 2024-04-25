@@ -76,12 +76,12 @@ By default, the beatmap cache will be lost when the container is restarted, and 
 
 ## How to run a calculation
 
-You can use the `GET /api/calculator/calculation` endpoint to calculate the difficulty and performance of a score.
+You can use the `GET /api/calculation` endpoint to calculate the difficulty and performance of a score.
 
 For example, to calculate an SS on [xi - Blue Zenith [FOUR DIMENSIONS]](https://osu.ppy.sh/beatmapsets/292301#osu/658127):
 
 ```sh
-curl "localhost:5000/api/calculator/calculation?BeatmapId=658127"
+curl "localhost:5000/api/calculation?BeatmapId=658127"
 ```
 
 ```json
@@ -105,7 +105,7 @@ curl "localhost:5000/api/calculator/calculation?BeatmapId=658127"
 With HDHR:
 
 ```sh
-curl "localhost:5000/api/calculator/calculation?BeatmapId=658127&Mods=24"
+curl "localhost:5000/api/calculation?BeatmapId=658127&Mods=24"
 ```
 
 ```json
@@ -129,7 +129,7 @@ curl "localhost:5000/api/calculator/calculation?BeatmapId=658127&Mods=24"
 With [24 100s and 2 misses with a max combo of 2364](https://osu.ppy.sh/scores/453746931):
 
 ```sh
-curl "localhost:5000/api/calculator/calculation?BeatmapId=658127&Mods=24&Oks=24&Misses=2&Combo=2364"
+curl "localhost:5000/api/calculation?BeatmapId=658127&Mods=24&Oks=24&Misses=2&Combo=2364"
 ```
 
 ```json
