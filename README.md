@@ -55,9 +55,9 @@ services:
     environment:
       - REDIS_CONFIGURATION=cache:6379
     ports:
-      - "5000:80"
+      - 5000:80
     volumes:
-      - beatmaps:/app/beatmaps
+      - beatmaps:/home/app/beatmaps
     depends_on:
       - cache
 

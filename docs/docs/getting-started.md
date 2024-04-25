@@ -9,9 +9,9 @@ services:
     environment:
       - REDIS_CONFIGURATION=cache:6379
     ports:
-      - "5000:80"
+      - 5000:80
     volumes:
-      - beatmaps:/app/beatmaps
+      - beatmaps:/home/app/beatmaps
     depends_on:
       - cache
 
@@ -69,10 +69,10 @@ By default, the beatmap cache will be lost when the container is restarted, and 
 
 ### Environment Variables
 
-| Environment variable  | Default         | Description                                                |
-| --------------------- | --------------- | ---------------------------------------------------------- |
-| `BEATMAP_DIRECTORY`   | `/app/beatmaps` | The directory difficalcy uses for storing beatmap files    |
-| `REDIS_CONFIGURATION` |                 | The address of the redis server to use for beatmap caching |
+| Environment variable  | Default              | Description                                                                                     |
+| --------------------- | -------------------- | ----------------------------------------------------------------------------------------------- |
+| `BEATMAP_DIRECTORY`   | `/home/app/beatmaps` | The directory difficalcy uses for storing beatmap files.                                        |
+| `REDIS_CONFIGURATION` |                      | The address of the redis server to use for beatmap caching. By default, there will be no cache. |
 
 ## How to run a calculation
 
