@@ -13,7 +13,6 @@ namespace Difficalcy.Services
         public WebBeatmapProvider(IConfiguration configuration)
         {
             _beatmapDirectory = configuration["BEATMAP_DIRECTORY"];
-            Directory.CreateDirectory(_beatmapDirectory);
         }
 
         public async Task<bool> EnsureBeatmap(string beatmapId)

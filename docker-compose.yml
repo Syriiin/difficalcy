@@ -6,7 +6,7 @@ services:
     environment:
       - REDIS_CONFIGURATION=cache:6379
     volumes:
-      - beatmaps:/app/beatmaps
+      - beatmaps:/home/app/beatmaps
     depends_on:
       - cache
 
@@ -17,7 +17,7 @@ services:
     environment:
       - REDIS_CONFIGURATION=cache:6379
     volumes:
-      - beatmaps:/app/beatmaps
+      - beatmaps:/home/app/beatmaps
     depends_on:
       - cache
 
@@ -28,7 +28,7 @@ services:
     environment:
       - REDIS_CONFIGURATION=cache:6379
     volumes:
-      - beatmaps:/app/beatmaps
+      - beatmaps:/home/app/beatmaps
     depends_on:
       - cache
 
@@ -39,7 +39,7 @@ services:
     environment:
       - REDIS_CONFIGURATION=cache:6379
     volumes:
-      - beatmaps:/app/beatmaps
+      - beatmaps:/home/app/beatmaps
     depends_on:
       - cache
 
