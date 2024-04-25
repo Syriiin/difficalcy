@@ -35,16 +35,16 @@ RUN dotnet publish ./Difficalcy.Taiko/Difficalcy.Taiko.csproj -o /app/difficalcy
 
 FROM base AS difficalcy-catch
 COPY --from=build /app/difficalcy-catch .
-ENTRYPOINT ["dotnet", "Difficalcy.Catch.dll"]
+ENTRYPOINT ["./Difficalcy.Catch"]
 
 FROM base AS difficalcy-mania
 COPY --from=build /app/difficalcy-mania .
-ENTRYPOINT ["dotnet", "Difficalcy.Mania.dll"]
+ENTRYPOINT ["./Difficalcy.Mania"]
 
 FROM base AS difficalcy-osu
 COPY --from=build /app/difficalcy-osu .
-ENTRYPOINT ["dotnet", "Difficalcy.Osu.dll"]
+ENTRYPOINT ["./Difficalcy.Osu"]
 
 FROM base AS difficalcy-taiko
 COPY --from=build /app/difficalcy-taiko .
-ENTRYPOINT ["dotnet", "Difficalcy.Taiko.dll"]
+ENTRYPOINT ["./Difficalcy.Taiko"]
