@@ -1,12 +1,17 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-jammy-chiseled AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine3.19 AS base
 
 LABEL org.opencontainers.image.source https://github.com/Syriiin/difficalcy
+
+USER app
 
 WORKDIR /app
 EXPOSE 80
 ENV ASPNETCORE_URLS=http://+:80
 ENV ASPNETCORE_ENVIRONMENT=Production
-ENV BEATMAP_DIRECTORY=/app/beatmaps
+ENV BEATMAP_DIRECTORY=/home/app/beatmaps
+
+VOLUME ${BEATMAP_DIRECTORY}
+RUN mkdir ${BEATMAP_DIRECTORY}
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0-jammy AS build
 WORKDIR /src
@@ -28,10 +33,10 @@ COPY ./Difficalcy.Mania/ ./Difficalcy.Mania/
 COPY ./Difficalcy.Osu/ ./Difficalcy.Osu/
 COPY ./Difficalcy.Taiko/ ./Difficalcy.Taiko/
 
-RUN dotnet publish ./Difficalcy.Catch/Difficalcy.Catch.csproj -o /app/difficalcy-catch --runtime linux-x64 --self-contained false
-RUN dotnet publish ./Difficalcy.Mania/Difficalcy.Mania.csproj -o /app/difficalcy-mania --runtime linux-x64 --self-contained false
-RUN dotnet publish ./Difficalcy.Osu/Difficalcy.Osu.csproj -o /app/difficalcy-osu --runtime linux-x64 --self-contained false
-RUN dotnet publish ./Difficalcy.Taiko/Difficalcy.Taiko.csproj -o /app/difficalcy-taiko --runtime linux-x64 --self-contained false
+RUN dotnet publish ./Difficalcy.Catch/Difficalcy.Catch.csproj -o /app/difficalcy-catch --runtime linux-musl-x64 --self-contained false
+RUN dotnet publish ./Difficalcy.Mania/Difficalcy.Mania.csproj -o /app/difficalcy-mania --runtime linux-musl-x64 --self-contained false
+RUN dotnet publish ./Difficalcy.Osu/Difficalcy.Osu.csproj -o /app/difficalcy-osu --runtime linux-musl-x64 --self-contained false
+RUN dotnet publish ./Difficalcy.Taiko/Difficalcy.Taiko.csproj -o /app/difficalcy-taiko --runtime linux-musl-x64 --self-contained false
 
 FROM base AS difficalcy-catch
 LABEL org.opencontainers.image.description "Lazer powered osu!catch difficulty calculator API"
