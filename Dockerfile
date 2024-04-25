@@ -34,17 +34,21 @@ RUN dotnet publish ./Difficalcy.Osu/Difficalcy.Osu.csproj -o /app/difficalcy-osu
 RUN dotnet publish ./Difficalcy.Taiko/Difficalcy.Taiko.csproj -o /app/difficalcy-taiko --runtime linux-x64 --self-contained false
 
 FROM base AS difficalcy-catch
+LABEL org.opencontainers.image.description "Lazer powered osu!catch difficulty calculator API"
 COPY --from=build /app/difficalcy-catch .
 ENTRYPOINT ["./Difficalcy.Catch"]
 
 FROM base AS difficalcy-mania
+LABEL org.opencontainers.image.description "Lazer powered osu!mania difficulty calculator API"
 COPY --from=build /app/difficalcy-mania .
 ENTRYPOINT ["./Difficalcy.Mania"]
 
 FROM base AS difficalcy-osu
+LABEL org.opencontainers.image.description "Lazer powered osu! difficulty calculator API"
 COPY --from=build /app/difficalcy-osu .
 ENTRYPOINT ["./Difficalcy.Osu"]
 
 FROM base AS difficalcy-taiko
+LABEL org.opencontainers.image.description "Lazer powered osu!taiko difficulty calculator API"
 COPY --from=build /app/difficalcy-taiko .
 ENTRYPOINT ["./Difficalcy.Taiko"]
