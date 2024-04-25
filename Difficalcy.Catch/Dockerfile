@@ -17,7 +17,7 @@ RUN dotnet restore Difficalcy.Catch/Difficalcy.Catch.csproj
 
 COPY ./Difficalcy/ ./Difficalcy/
 COPY ./Difficalcy.Catch/ ./Difficalcy.Catch/
-RUN dotnet build Difficalcy.Catch/Difficalcy.Catch.csproj -c Release -o /app/build
+RUN dotnet publish Difficalcy.Catch/Difficalcy.Catch.csproj -o /app/build --runtime linux-x64 --self-contained false
 
 FROM base AS final
 WORKDIR /app

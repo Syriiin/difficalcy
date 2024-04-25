@@ -17,7 +17,7 @@ RUN dotnet restore Difficalcy.Mania/Difficalcy.Mania.csproj
 
 COPY ./Difficalcy/ ./Difficalcy/
 COPY ./Difficalcy.Mania/ ./Difficalcy.Mania/
-RUN dotnet build Difficalcy.Mania/Difficalcy.Mania.csproj -c Release -o /app/build
+RUN dotnet publish Difficalcy.Mania/Difficalcy.Mania.csproj -o /app/build --runtime linux-x64 --self-contained false
 
 FROM base AS final
 WORKDIR /app
