@@ -25,5 +25,4 @@ RUN dotnet build Difficalcy.Osu/Difficalcy.Osu.csproj -c Release -o /app/build
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app/build .
-RUN mkdir beatmaps
 ENTRYPOINT ["dotnet", "Difficalcy.Osu.dll"]

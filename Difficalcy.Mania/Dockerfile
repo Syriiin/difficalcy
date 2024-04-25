@@ -25,5 +25,4 @@ RUN dotnet build Difficalcy.Mania/Difficalcy.Mania.csproj -c Release -o /app/bui
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app/build .
-RUN mkdir beatmaps
 ENTRYPOINT ["dotnet", "Difficalcy.Mania.dll"]
