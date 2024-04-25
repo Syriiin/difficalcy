@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine3.19 AS base
 
 LABEL org.opencontainers.image.source https://github.com/Syriiin/difficalcy
 
@@ -15,7 +15,6 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 COPY ./Difficalcy/Difficalcy.csproj ./Difficalcy/
-RUN dotnet restore Difficalcy/Difficalcy.csproj
 COPY ./Difficalcy.Osu/Difficalcy.Osu.csproj ./Difficalcy.Osu/
 RUN dotnet restore Difficalcy.Osu/Difficalcy.Osu.csproj
 
