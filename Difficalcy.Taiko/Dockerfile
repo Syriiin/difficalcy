@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine3.19 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-jammy-chiseled AS base
 
 LABEL org.opencontainers.image.source https://github.com/Syriiin/difficalcy
 
@@ -8,10 +8,7 @@ ENV ASPNETCORE_URLS=http://+:80
 ENV ASPNETCORE_ENVIRONMENT=Production
 ENV BEATMAP_DIRECTORY=/app/beatmaps
 
-RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
-USER appuser
-
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0-jammy AS build
 WORKDIR /src
 
 COPY ./Difficalcy/Difficalcy.csproj ./Difficalcy/
