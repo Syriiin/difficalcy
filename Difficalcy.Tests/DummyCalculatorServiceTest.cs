@@ -35,7 +35,7 @@ public class DummyCalculatorService : CalculatorService<DummyScore, DummyDifficu
 
     protected override (object, string) CalculateDifficultyAttributes(DummyScore score)
     {
-        var difficulty = score.Mods / 10.0 ?? 0;
+        var difficulty = score.Mods / 10.0;
         return (difficulty, difficulty.ToString());
     }
 

@@ -52,7 +52,7 @@ namespace Difficalcy.Catch.Services
         protected override (object, string) CalculateDifficultyAttributes(CatchScore score)
         {
             var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
-            var mods = CatchRuleset.ConvertFromLegacyMods((LegacyMods)(score.Mods ?? 0)).ToArray();
+            var mods = CatchRuleset.ConvertFromLegacyMods((LegacyMods)score.Mods).ToArray();
 
             var difficultyCalculator = CatchRuleset.CreateDifficultyCalculator(workingBeatmap);
             var difficultyAttributes = difficultyCalculator.Calculate(mods) as CatchDifficultyAttributes;
@@ -83,12 +83,11 @@ namespace Difficalcy.Catch.Services
         protected override CatchPerformance CalculatePerformance(CatchScore score, object difficultyAttributes)
         {
             var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
-            var mods = CatchRuleset.ConvertFromLegacyMods((LegacyMods)(score.Mods ?? 0)).ToArray();
+            var mods = CatchRuleset.ConvertFromLegacyMods((LegacyMods)score.Mods).ToArray();
             var beatmap = workingBeatmap.GetPlayableBeatmap(CatchRuleset.RulesetInfo, mods);
 
-            var hitResultCount = beatmap.HitObjects.Count(h => h is Fruit) + beatmap.HitObjects.OfType<JuiceStream>().SelectMany(j => j.NestedHitObjects).Count(h => !(h is TinyDroplet));
-            var combo = score.Combo ?? hitResultCount;
-            var statistics = determineHitResults(score.Accuracy ?? 1, hitResultCount, beatmap, score.Misses ?? 0, score.TinyDroplets, score.Droplets);
+            var combo = score.Combo ?? beatmap.HitObjects.Count(h => h is Fruit) + beatmap.HitObjects.OfType<JuiceStream>().SelectMany(j => j.NestedHitObjects).Count(h => !(h is TinyDroplet));
+            var statistics = getHitResults(beatmap, score.Misses, score.LargeDroplets, score.SmallDroplets);
             var accuracy = calculateAccuracy(statistics);
 
             var scoreInfo = new ScoreInfo(beatmap.BeatmapInfo, CatchRuleset.RulesetInfo)
@@ -123,33 +122,29 @@ namespace Difficalcy.Catch.Services
             return new CalculatorWorkingBeatmap(CatchRuleset, beatmapStream, beatmapId);
         }
 
-        private Dictionary<HitResult, int> determineHitResults(double targetAccuracy, int hitResultCount, IBeatmap beatmap, int countMiss, int? countTinyDroplets, int? countDroplet)
+        private Dictionary<HitResult, int> getHitResults(IBeatmap beatmap, int countMiss, int? countDroplet, int? countTinyDroplet)
         {
-            // Adapted from https://github.com/ppy/osu-tools/blob/cf5410b04f4e2d1ed2c50c7263f98c8fc5f928ab/PerformanceCalculator/Simulate/CatchSimulateCommand.cs#L58-L86
-            int maxTinyDroplets = beatmap.HitObjects.OfType<JuiceStream>().Sum(s => s.NestedHitObjects.OfType<TinyDroplet>().Count());
-            int maxDroplets = beatmap.HitObjects.OfType<JuiceStream>().Sum(s => s.NestedHitObjects.OfType<Droplet>().Count()) - maxTinyDroplets;
-            int maxFruits = beatmap.HitObjects.OfType<Fruit>().Count() + 2 * beatmap.HitObjects.OfType<JuiceStream>().Count() + beatmap.HitObjects.OfType<JuiceStream>().Sum(s => s.RepeatCount);
+            var maxTinyDroplets = beatmap.HitObjects.OfType<JuiceStream>().Sum(s => s.NestedHitObjects.OfType<TinyDroplet>().Count());
+            var maxDroplets = beatmap.HitObjects.OfType<JuiceStream>().Sum(s => s.NestedHitObjects.OfType<Droplet>().Count()) - maxTinyDroplets;
+            var maxFruits = beatmap.HitObjects.OfType<Fruit>().Count() + 2 * beatmap.HitObjects.OfType<JuiceStream>().Count() + beatmap.HitObjects.OfType<JuiceStream>().Sum(s => s.RepeatCount);
 
-            // Either given or max value minus misses
-            int countDroplets = countDroplet ?? Math.Max(0, maxDroplets - countMiss);
+            var countDroplets = countDroplet ?? maxDroplets;
+            var countTinyDroplets = countTinyDroplet ?? maxTinyDroplets;
 
-            // Max value minus whatever misses are left. Negative if impossible missCount
-            int countFruits = maxFruits - (countMiss - (maxDroplets - countDroplets));
+            var countDropletMiss = maxDroplets - countDroplets;
+            var fruitMisses = countMiss - countDropletMiss;
+            var countFruit = maxFruits - fruitMisses;
 
-            // Either given or the max amount of hit objects with respect to accuracy minus the already calculated fruits and drops.
-            // Negative if accuracy not feasable with missCount.
-            int countTinyDroplet = countTinyDroplets ?? (int)Math.Round(targetAccuracy * (hitResultCount + maxTinyDroplets)) - countFruits - countDroplets;
-
-            // Whatever droplets are left
-            int countTinyMisses = maxTinyDroplets - countTinyDroplet;
+            var countTinyDropletMiss = maxTinyDroplets - countTinyDroplets;
 
             return new Dictionary<HitResult, int>
             {
-                { HitResult.Great, countFruits },
+                { HitResult.Great, countFruit },
                 { HitResult.LargeTickHit, countDroplets },
-                { HitResult.SmallTickHit, countTinyDroplet },
-                { HitResult.SmallTickMiss, countTinyMisses },
-                { HitResult.Miss, countMiss }
+                { HitResult.SmallTickHit, countTinyDroplets },
+                { HitResult.Miss, countMiss }, // fruit + large droplet misses
+                // { HitResult.LargeTickMiss, countDropletMiss }, // included in misses for legacy compatibility
+                { HitResult.SmallTickMiss, countTinyDropletMiss },
             };
         }
 

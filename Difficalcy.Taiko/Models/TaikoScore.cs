@@ -6,23 +6,20 @@ namespace Difficalcy.Taiko.Models
 {
     public record TaikoScore : Score, IValidatableObject
     {
-        [Range(0, 1)]
-        public double? Accuracy { get; init; }
-
         [Range(0, int.MaxValue)]
         public int? Combo { get; init; }
 
         [Range(0, int.MaxValue)]
-        public int? Misses { get; init; }
+        public int Misses { get; init; } = 0;
 
         [Range(0, int.MaxValue)]
-        public int? Oks { get; init; }
+        public int Oks { get; init; } = 0;
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (Misses is not null && Combo is null)
+            if (Misses > 0 && Combo is null)
             {
-                yield return new ValidationResult("Combo must be specified if Misses are specified.", [nameof(Combo)]);
+                yield return new ValidationResult("Combo must be specified if Misses are greater than 0.", [nameof(Combo)]);
             }
         }
     }

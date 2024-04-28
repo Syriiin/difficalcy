@@ -51,7 +51,7 @@ namespace Difficalcy.Taiko.Services
         protected override (object, string) CalculateDifficultyAttributes(TaikoScore score)
         {
             var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
-            var mods = TaikoRuleset.ConvertFromLegacyMods((LegacyMods)(score.Mods ?? 0)).ToArray();
+            var mods = TaikoRuleset.ConvertFromLegacyMods((LegacyMods)score.Mods).ToArray();
 
             var difficultyCalculator = TaikoRuleset.CreateDifficultyCalculator(workingBeatmap);
             var difficultyAttributes = difficultyCalculator.Calculate(mods) as TaikoDifficultyAttributes;
@@ -89,12 +89,12 @@ namespace Difficalcy.Taiko.Services
         protected override TaikoPerformance CalculatePerformance(TaikoScore score, object difficultyAttributes)
         {
             var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
-            var mods = TaikoRuleset.ConvertFromLegacyMods((LegacyMods)(score.Mods ?? 0)).ToArray();
+            var mods = TaikoRuleset.ConvertFromLegacyMods((LegacyMods)score.Mods).ToArray();
             var beatmap = workingBeatmap.GetPlayableBeatmap(TaikoRuleset.RulesetInfo, mods);
 
             var hitResultCount = beatmap.HitObjects.OfType<Hit>().Count();
             var combo = score.Combo ?? hitResultCount;
-            var statistics = determineHitResults(score.Accuracy ?? 1, hitResultCount, score.Misses ?? 0, score.Oks);
+            var statistics = getHitResults(hitResultCount, score.Misses, score.Oks);
             var accuracy = calculateAccuracy(statistics);
 
             var scoreInfo = new ScoreInfo(beatmap.BeatmapInfo, TaikoRuleset.RulesetInfo)
@@ -131,28 +131,14 @@ namespace Difficalcy.Taiko.Services
             return new CalculatorWorkingBeatmap(TaikoRuleset, beatmapStream, beatmapId);
         }
 
-        private Dictionary<HitResult, int> determineHitResults(double targetAccuracy, int hitResultCount, int countMiss, int? countOk)
+        private Dictionary<HitResult, int> getHitResults(int hitResultCount, int countMiss, int countOk)
         {
-            // Adapted from https://github.com/ppy/osu-tools/blob/cf5410b04f4e2d1ed2c50c7263f98c8fc5f928ab/PerformanceCalculator/Simulate/TaikoSimulateCommand.cs#L53-L79
-            int countGreat;
-
-            if (countOk != null)
-            {
-                countGreat = (int)(hitResultCount - countOk - countMiss);
-            }
-            else
-            {
-                // Let Great=2, Good=1, Miss=0. The total should be this.
-                var targetTotal = (int)Math.Round(targetAccuracy * hitResultCount * 2);
-
-                countGreat = targetTotal - (hitResultCount - countMiss);
-                countOk = hitResultCount - countGreat - countMiss;
-            }
+            var countGreat = hitResultCount - countOk - countMiss;
 
             return new Dictionary<HitResult, int>
             {
                 { HitResult.Great, countGreat },
-                { HitResult.Ok, (int)countOk },
+                { HitResult.Ok, countOk },
                 { HitResult.Meh, 0 },
                 { HitResult.Miss, countMiss }
             };

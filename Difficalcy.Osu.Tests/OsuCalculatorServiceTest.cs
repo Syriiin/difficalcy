@@ -29,18 +29,4 @@ public class OsuCalculatorServiceTest : CalculatorServiceTest<OsuScore, OsuDiffi
         };
         base.TestGetCalculationReturnsCorrectValues(10.07270907570737d, 553.1423675531603d, score);
     }
-
-    [Fact]
-    public void TestAccuracyParameter()
-    {
-        var score = new OsuScore
-        {
-            BeatmapId = "diffcalc-test",
-            Mods = 1112, // HD, HR, DT, FL
-            Accuracy = 0.9166666666666666,
-            Combo = 200,
-            Misses = 5,
-        };
-        base.TestGetCalculationReturnsCorrectValues(10.07270907570737d, 553.1423675531603d, score);
-    }
 }

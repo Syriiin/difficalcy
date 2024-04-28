@@ -24,22 +24,8 @@ public class CatchCalculatorServiceTest : CalculatorServiceTest<CatchScore, Catc
             Mods = 80, // HR, DT
             Combo = 100,
             Misses = 5,
-            TinyDroplets = 200,
-            Droplets = 3,
-        };
-        base.TestGetCalculationReturnsCorrectValues(5.739025024925009d, 241.19384779497875d, score);
-    }
-
-    [Fact]
-    public void TestAccuracyParameter()
-    {
-        var score = new CatchScore
-        {
-            BeatmapId = "diffcalc-test",
-            Mods = 80, // HR, DT
-            Accuracy = 0.9583333333333334,
-            Combo = 100,
-            Misses = 5,
+            LargeDroplets = 18,
+            SmallDroplets = 200,
         };
         base.TestGetCalculationReturnsCorrectValues(5.739025024925009d, 241.19384779497875d, score);
     }

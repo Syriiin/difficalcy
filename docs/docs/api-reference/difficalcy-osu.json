@@ -31,18 +31,11 @@
         ],
         "parameters": [
           {
-            "name": "Accuracy",
-            "in": "query",
-            "schema": {
-              "type": "number",
-              "format": "double",
-              "nullable": true
-            }
-          },
-          {
             "name": "Combo",
             "in": "query",
             "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
               "type": "integer",
               "format": "int32",
               "nullable": true
@@ -52,27 +45,30 @@
             "name": "Misses",
             "in": "query",
             "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
               "type": "integer",
-              "format": "int32",
-              "nullable": true
+              "format": "int32"
             }
           },
           {
             "name": "Mehs",
             "in": "query",
             "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
               "type": "integer",
-              "format": "int32",
-              "nullable": true
+              "format": "int32"
             }
           },
           {
             "name": "Oks",
             "in": "query",
             "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
               "type": "integer",
-              "format": "int32",
-              "nullable": true
+              "format": "int32"
             }
           },
           {
@@ -87,9 +83,10 @@
             "name": "Mods",
             "in": "query",
             "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
               "type": "integer",
-              "format": "int32",
-              "nullable": true
+              "format": "int32"
             }
           }
         ],
@@ -114,18 +111,11 @@
         ],
         "parameters": [
           {
-            "name": "Accuracy",
-            "in": "query",
-            "schema": {
-              "type": "number",
-              "format": "double",
-              "nullable": true
-            }
-          },
-          {
             "name": "Combo",
             "in": "query",
             "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
               "type": "integer",
               "format": "int32",
               "nullable": true
@@ -135,27 +125,30 @@
             "name": "Misses",
             "in": "query",
             "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
               "type": "integer",
-              "format": "int32",
-              "nullable": true
+              "format": "int32"
             }
           },
           {
             "name": "Mehs",
             "in": "query",
             "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
               "type": "integer",
-              "format": "int32",
-              "nullable": true
+              "format": "int32"
             }
           },
           {
             "name": "Oks",
             "in": "query",
             "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
               "type": "integer",
-              "format": "int32",
-              "nullable": true
+              "format": "int32"
             }
           },
           {
@@ -170,9 +163,10 @@
             "name": "Mods",
             "in": "query",
             "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
               "type": "integer",
-              "format": "int32",
-              "nullable": true
+              "format": "int32"
             }
           }
         ],
@@ -197,18 +191,11 @@
         ],
         "parameters": [
           {
-            "name": "Accuracy",
-            "in": "query",
-            "schema": {
-              "type": "number",
-              "format": "double",
-              "nullable": true
-            }
-          },
-          {
             "name": "Combo",
             "in": "query",
             "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
               "type": "integer",
               "format": "int32",
               "nullable": true
@@ -218,27 +205,30 @@
             "name": "Misses",
             "in": "query",
             "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
               "type": "integer",
-              "format": "int32",
-              "nullable": true
+              "format": "int32"
             }
           },
           {
             "name": "Mehs",
             "in": "query",
             "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
               "type": "integer",
-              "format": "int32",
-              "nullable": true
+              "format": "int32"
             }
           },
           {
             "name": "Oks",
             "in": "query",
             "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
               "type": "integer",
-              "format": "int32",
-              "nullable": true
+              "format": "int32"
             }
           },
           {
@@ -253,9 +243,10 @@
             "name": "Mods",
             "in": "query",
             "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
               "type": "integer",
-              "format": "int32",
-              "nullable": true
+              "format": "int32"
             }
           }
         ],
@@ -477,34 +468,35 @@
             "type": "string"
           },
           "mods": {
+            "maximum": 2147483647,
+            "minimum": 0,
             "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "accuracy": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
+            "format": "int32"
           },
           "combo": {
+            "maximum": 2147483647,
+            "minimum": 0,
             "type": "integer",
             "format": "int32",
             "nullable": true
           },
           "misses": {
+            "maximum": 2147483647,
+            "minimum": 0,
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "mehs": {
+            "maximum": 2147483647,
+            "minimum": 0,
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "oks": {
+            "maximum": 2147483647,
+            "minimum": 0,
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           }
         },
         "additionalProperties": false

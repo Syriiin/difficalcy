@@ -5,22 +5,19 @@ namespace Difficalcy.Mania.Models
 {
     public record ManiaScore : Score
     {
-        [Range(0, 1)]
-        public double? Accuracy { get; init; }
+        [Range(0, int.MaxValue)]
+        public int Misses { get; init; } = 0;
 
         [Range(0, int.MaxValue)]
-        public int? Misses { get; init; }
+        public int Mehs { get; init; } = 0;
 
         [Range(0, int.MaxValue)]
-        public int? Mehs { get; init; }
+        public int Oks { get; init; } = 0;
 
         [Range(0, int.MaxValue)]
-        public int? Oks { get; init; }
+        public int Goods { get; init; } = 0;
 
         [Range(0, int.MaxValue)]
-        public int? Goods { get; init; }
-
-        [Range(0, int.MaxValue)]
-        public int? Greats { get; init; }
+        public int Greats { get; init; } = 0;
     }
 }

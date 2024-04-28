@@ -51,7 +51,7 @@ namespace Difficalcy.Osu.Services
         protected override (object, string) CalculateDifficultyAttributes(OsuScore score)
         {
             var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
-            var mods = OsuRuleset.ConvertFromLegacyMods((LegacyMods)(score.Mods ?? 0)).ToArray();
+            var mods = OsuRuleset.ConvertFromLegacyMods((LegacyMods)score.Mods).ToArray();
 
             var difficultyCalculator = OsuRuleset.CreateDifficultyCalculator(workingBeatmap);
             var difficultyAttributes = difficultyCalculator.Calculate(mods) as OsuDifficultyAttributes;
@@ -95,11 +95,11 @@ namespace Difficalcy.Osu.Services
         protected override OsuPerformance CalculatePerformance(OsuScore score, object difficultyAttributes)
         {
             var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
-            var mods = OsuRuleset.ConvertFromLegacyMods((LegacyMods)(score.Mods ?? 0)).ToArray();
+            var mods = OsuRuleset.ConvertFromLegacyMods((LegacyMods)score.Mods).ToArray();
             var beatmap = workingBeatmap.GetPlayableBeatmap(OsuRuleset.RulesetInfo, mods);
 
             var combo = score.Combo ?? beatmap.HitObjects.Count + beatmap.HitObjects.OfType<Slider>().Sum(s => s.NestedHitObjects.Count - 1);
-            var statistics = determineHitResults(score.Accuracy ?? 1, beatmap.HitObjects.Count, score.Misses ?? 0, score.Mehs, score.Oks);
+            var statistics = getHitResults(beatmap.HitObjects.Count, score.Misses, score.Mehs, score.Oks);
             var accuracy = calculateAccuracy(statistics);
 
             var scoreInfo = new ScoreInfo(beatmap.BeatmapInfo, OsuRuleset.RulesetInfo)
@@ -138,37 +138,15 @@ namespace Difficalcy.Osu.Services
             return new CalculatorWorkingBeatmap(OsuRuleset, beatmapStream, beatmapId);
         }
 
-        private Dictionary<HitResult, int> determineHitResults(double targetAccuracy, int hitResultCount, int countMiss, int? countMeh, int? countOk)
+        private Dictionary<HitResult, int> getHitResults(int hitResultCount, int countMiss, int countMeh, int countOk)
         {
-            // Adapted from https://github.com/ppy/osu-tools/blob/cf5410b04f4e2d1ed2c50c7263f98c8fc5f928ab/PerformanceCalculator/Simulate/OsuSimulateCommand.cs#L57-L91
-            int countGreat;
-
-            if (countMeh != null || countOk != null)
-            {
-                countGreat = hitResultCount - (countOk ?? 0) - (countMeh ?? 0) - countMiss;
-            }
-            else
-            {
-                // Let Great=6, Ok=2, Meh=1, Miss=0. The total should be this.
-                var targetTotal = (int)Math.Round(targetAccuracy * hitResultCount * 6);
-
-                // Start by assuming every non miss is a meh
-                // This is how much increase is needed by greats and oks
-                var delta = targetTotal - (hitResultCount - countMiss);
-
-                // Each great increases total by 5 (great-meh=5)
-                countGreat = delta / 5;
-                // Each ok increases total by 1 (ok-meh=1). Covers remaining difference.
-                countOk = delta % 5;
-                // Mehs are left over. Could be negative if impossible value of amountMiss chosen
-                countMeh = hitResultCount - countGreat - countOk - countMiss;
-            }
+            var countGreat = hitResultCount - countOk - countMeh - countMiss;
 
             return new Dictionary<HitResult, int>
             {
                 { HitResult.Great, countGreat },
-                { HitResult.Ok, countOk ?? 0 },
-                { HitResult.Meh, countMeh ?? 0 },
+                { HitResult.Ok, countOk },
+                { HitResult.Meh, countMeh },
                 { HitResult.Miss, countMiss }
             };
         }
