@@ -17,9 +17,8 @@ using osu.Game.Scoring;
 
 namespace Difficalcy.Catch.Services
 {
-    public class CatchCalculatorService : CalculatorService<CatchScore, CatchDifficulty, CatchPerformance, CatchCalculation>
+    public class CatchCalculatorService(ICache cache, IBeatmapProvider beatmapProvider) : CalculatorService<CatchScore, CatchDifficulty, CatchPerformance, CatchCalculation>(cache)
     {
-        private readonly IBeatmapProvider _beatmapProvider;
         private CatchRuleset CatchRuleset { get; } = new CatchRuleset();
 
         public override CalculatorInfo Info
@@ -39,19 +38,14 @@ namespace Difficalcy.Catch.Services
             }
         }
 
-        public CatchCalculatorService(ICache cache, IBeatmapProvider beatmapProvider) : base(cache)
-        {
-            _beatmapProvider = beatmapProvider;
-        }
-
         protected override async Task EnsureBeatmap(string beatmapId)
         {
-            await _beatmapProvider.EnsureBeatmap(beatmapId);
+            await beatmapProvider.EnsureBeatmap(beatmapId);
         }
 
         protected override (object, string) CalculateDifficultyAttributes(CatchScore score)
         {
-            var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
+            var workingBeatmap = GetWorkingBeatmap(score.BeatmapId);
             var mods = CatchRuleset.ConvertFromLegacyMods((LegacyMods)score.Mods).ToArray();
 
             var difficultyCalculator = CatchRuleset.CreateDifficultyCalculator(workingBeatmap);
@@ -60,9 +54,9 @@ namespace Difficalcy.Catch.Services
             // Serialising anonymous object with same names because some properties can't be serialised, and the built-in JsonProperty fields aren't on all required fields
             return (difficultyAttributes, JsonSerializer.Serialize(new
             {
-                StarRating = difficultyAttributes.StarRating,
-                MaxCombo = difficultyAttributes.MaxCombo,
-                ApproachRate = difficultyAttributes.ApproachRate
+                difficultyAttributes.StarRating,
+                difficultyAttributes.MaxCombo,
+                difficultyAttributes.ApproachRate
             }));
         }
 
@@ -75,13 +69,13 @@ namespace Difficalcy.Catch.Services
         {
             var catchDifficultyAttributes = (CatchDifficultyAttributes)difficultyAttributes;
 
-            var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
+            var workingBeatmap = GetWorkingBeatmap(score.BeatmapId);
             var mods = CatchRuleset.ConvertFromLegacyMods((LegacyMods)score.Mods).ToArray();
             var beatmap = workingBeatmap.GetPlayableBeatmap(CatchRuleset.RulesetInfo, mods);
 
             var combo = score.Combo ?? beatmap.HitObjects.Count(h => h is Fruit) + beatmap.HitObjects.OfType<JuiceStream>().SelectMany(j => j.NestedHitObjects).Count(h => !(h is TinyDroplet));
-            var statistics = getHitResults(beatmap, score.Misses, score.LargeDroplets, score.SmallDroplets);
-            var accuracy = calculateAccuracy(statistics);
+            var statistics = GetHitResults(beatmap, score.Misses, score.LargeDroplets, score.SmallDroplets);
+            var accuracy = CalculateAccuracy(statistics);
 
             var scoreInfo = new ScoreInfo(beatmap.BeatmapInfo, CatchRuleset.RulesetInfo)
             {
@@ -103,13 +97,13 @@ namespace Difficalcy.Catch.Services
             };
         }
 
-        private CalculatorWorkingBeatmap getWorkingBeatmap(string beatmapId)
+        private CalculatorWorkingBeatmap GetWorkingBeatmap(string beatmapId)
         {
-            using var beatmapStream = _beatmapProvider.GetBeatmapStream(beatmapId);
+            using var beatmapStream = beatmapProvider.GetBeatmapStream(beatmapId);
             return new CalculatorWorkingBeatmap(CatchRuleset, beatmapStream, beatmapId);
         }
 
-        private Dictionary<HitResult, int> getHitResults(IBeatmap beatmap, int countMiss, int? countDroplet, int? countTinyDroplet)
+        private static Dictionary<HitResult, int> GetHitResults(IBeatmap beatmap, int countMiss, int? countDroplet, int? countTinyDroplet)
         {
             var maxTinyDroplets = beatmap.HitObjects.OfType<JuiceStream>().Sum(s => s.NestedHitObjects.OfType<TinyDroplet>().Count());
             var maxDroplets = beatmap.HitObjects.OfType<JuiceStream>().Sum(s => s.NestedHitObjects.OfType<Droplet>().Count()) - maxTinyDroplets;
@@ -135,7 +129,7 @@ namespace Difficalcy.Catch.Services
             };
         }
 
-        private double calculateAccuracy(Dictionary<HitResult, int> statistics)
+        private static double CalculateAccuracy(Dictionary<HitResult, int> statistics)
         {
             double hits = statistics[HitResult.Great] + statistics[HitResult.LargeTickHit] + statistics[HitResult.SmallTickHit];
             double total = hits + statistics[HitResult.Miss] + statistics[HitResult.SmallTickMiss];
@@ -143,7 +137,7 @@ namespace Difficalcy.Catch.Services
             return hits / total;
         }
 
-        private CatchDifficulty GetDifficultyFromDifficultyAttributes(CatchDifficultyAttributes difficultyAttributes)
+        private static CatchDifficulty GetDifficultyFromDifficultyAttributes(CatchDifficultyAttributes difficultyAttributes)
         {
             return new CatchDifficulty()
             {
@@ -151,7 +145,7 @@ namespace Difficalcy.Catch.Services
             };
         }
 
-        private CatchPerformance GetPerformanceFromPerformanceAttributes(CatchPerformanceAttributes performanceAttributes)
+        private static CatchPerformance GetPerformanceFromPerformanceAttributes(CatchPerformanceAttributes performanceAttributes)
         {
             return new CatchPerformance()
             {

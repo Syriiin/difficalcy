@@ -50,7 +50,7 @@ namespace Difficalcy.Taiko.Services
 
         protected override (object, string) CalculateDifficultyAttributes(TaikoScore score)
         {
-            var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
+            var workingBeatmap = GetWorkingBeatmap(score.BeatmapId);
             var mods = TaikoRuleset.ConvertFromLegacyMods((LegacyMods)score.Mods).ToArray();
 
             var difficultyCalculator = TaikoRuleset.CreateDifficultyCalculator(workingBeatmap);
@@ -59,13 +59,13 @@ namespace Difficalcy.Taiko.Services
             // Serialising anonymous object with same names because some properties can't be serialised, and the built-in JsonProperty fields aren't on all required fields
             return (difficultyAttributes, JsonSerializer.Serialize(new
             {
-                StarRating = difficultyAttributes.StarRating,
-                MaxCombo = difficultyAttributes.MaxCombo,
-                StaminaDifficulty = difficultyAttributes.StaminaDifficulty,
-                RhythmDifficulty = difficultyAttributes.RhythmDifficulty,
-                ColourDifficulty = difficultyAttributes.ColourDifficulty,
-                PeakDifficulty = difficultyAttributes.PeakDifficulty,
-                GreatHitWindow = difficultyAttributes.GreatHitWindow
+                difficultyAttributes.StarRating,
+                difficultyAttributes.MaxCombo,
+                difficultyAttributes.StaminaDifficulty,
+                difficultyAttributes.RhythmDifficulty,
+                difficultyAttributes.ColourDifficulty,
+                difficultyAttributes.PeakDifficulty,
+                difficultyAttributes.GreatHitWindow
             }));
         }
 
@@ -78,14 +78,14 @@ namespace Difficalcy.Taiko.Services
         {
             var taikoDifficultyAttributes = (TaikoDifficultyAttributes)difficultyAttributes;
 
-            var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
+            var workingBeatmap = GetWorkingBeatmap(score.BeatmapId);
             var mods = TaikoRuleset.ConvertFromLegacyMods((LegacyMods)score.Mods).ToArray();
             var beatmap = workingBeatmap.GetPlayableBeatmap(TaikoRuleset.RulesetInfo, mods);
 
             var hitResultCount = beatmap.HitObjects.OfType<Hit>().Count();
             var combo = score.Combo ?? hitResultCount;
-            var statistics = getHitResults(hitResultCount, score.Misses, score.Oks);
-            var accuracy = calculateAccuracy(statistics);
+            var statistics = GetHitResults(hitResultCount, score.Misses, score.Oks);
+            var accuracy = CalculateAccuracy(statistics);
 
             var scoreInfo = new ScoreInfo(beatmap.BeatmapInfo, TaikoRuleset.RulesetInfo)
             {
@@ -107,13 +107,13 @@ namespace Difficalcy.Taiko.Services
             };
         }
 
-        private CalculatorWorkingBeatmap getWorkingBeatmap(string beatmapId)
+        private CalculatorWorkingBeatmap GetWorkingBeatmap(string beatmapId)
         {
             using var beatmapStream = _beatmapProvider.GetBeatmapStream(beatmapId);
             return new CalculatorWorkingBeatmap(TaikoRuleset, beatmapStream, beatmapId);
         }
 
-        private Dictionary<HitResult, int> getHitResults(int hitResultCount, int countMiss, int countOk)
+        private static Dictionary<HitResult, int> GetHitResults(int hitResultCount, int countMiss, int countOk)
         {
             var countGreat = hitResultCount - countOk - countMiss;
 
@@ -126,7 +126,7 @@ namespace Difficalcy.Taiko.Services
             };
         }
 
-        private double calculateAccuracy(Dictionary<HitResult, int> statistics)
+        private static double CalculateAccuracy(Dictionary<HitResult, int> statistics)
         {
             var countGreat = statistics[HitResult.Great];
             var countOk = statistics[HitResult.Ok];
@@ -136,7 +136,7 @@ namespace Difficalcy.Taiko.Services
             return (double)((2 * countGreat) + countOk) / (2 * total);
         }
 
-        private TaikoDifficulty GetDifficultyFromDifficultyAttributes(TaikoDifficultyAttributes difficultyAttributes)
+        private static TaikoDifficulty GetDifficultyFromDifficultyAttributes(TaikoDifficultyAttributes difficultyAttributes)
         {
             return new TaikoDifficulty()
             {
@@ -147,7 +147,7 @@ namespace Difficalcy.Taiko.Services
             };
         }
 
-        private TaikoPerformance GetPerformanceFromPerformanceAttributes(TaikoPerformanceAttributes performanceAttributes)
+        private static TaikoPerformance GetPerformanceFromPerformanceAttributes(TaikoPerformanceAttributes performanceAttributes)
         {
             return new TaikoPerformance()
             {

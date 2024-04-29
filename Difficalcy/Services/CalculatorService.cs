@@ -3,7 +3,7 @@ using Difficalcy.Models;
 
 namespace Difficalcy.Services
 {
-    public abstract class CalculatorService<TScore, TDifficulty, TPerformance, TCalculation>
+    public abstract class CalculatorService<TScore, TDifficulty, TPerformance, TCalculation>(ICache cache)
         where TScore : Score
         where TDifficulty : Difficulty
         where TPerformance : Performance
@@ -19,13 +19,6 @@ namespace Difficalcy.Services
         /// Should be unique for calculator that might return differing results.
         /// </summary>
         public string CalculatorDiscriminator => $"{Info.CalculatorPackage}:{Info.CalculatorVersion}";
-
-        private readonly ICache _cache;
-
-        public CalculatorService(ICache cache)
-        {
-            _cache = cache;
-        }
 
         /// <summary>
         /// Ensures the beatmap with the given ID is available locally.
@@ -60,7 +53,7 @@ namespace Difficalcy.Services
         {
             await EnsureBeatmap(score.BeatmapId);
 
-            var db = _cache.GetDatabase();
+            var db = cache.GetDatabase();
             var redisKey = $"difficalcy:{CalculatorDiscriminator}:{score.BeatmapId}:{score.Mods}";
             var difficultyAttributesJson = await db.GetAsync(redisKey);
 
