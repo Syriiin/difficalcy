@@ -13,7 +13,7 @@ public class ManiaCalculatorServiceTest : CalculatorServiceTest<ManiaScore, Mani
     [InlineData(2.3493769750220914d, 45.76140071089439d, "diffcalc-test", 0)]
     [InlineData(2.797245912537965d, 68.79984443279172d, "diffcalc-test", 64)]
     public void Test(double expectedDifficultyTotal, double expectedPerformanceTotal, string beatmapId, int mods)
-        => base.TestGetCalculationReturnsCorrectValues(expectedDifficultyTotal, expectedPerformanceTotal, new ManiaScore { BeatmapId = beatmapId, Mods = mods });
+        => TestGetCalculationReturnsCorrectValues(expectedDifficultyTotal, expectedPerformanceTotal, new ManiaScore { BeatmapId = beatmapId, Mods = mods });
 
     [Fact]
     public void TestAllParameters()
@@ -28,21 +28,6 @@ public class ManiaCalculatorServiceTest : CalculatorServiceTest<ManiaScore, Mani
             Goods = 2,
             Greats = 1,
         };
-        base.TestGetCalculationReturnsCorrectValues(2.797245912537965d, 43.17076331130473d, score);
-    }
-
-    [Fact]
-    public void TestAccuracyParameter()
-    {
-        var score = new ManiaScore
-        {
-            BeatmapId = "diffcalc-test",
-            Mods = 64, // DT
-            Accuracy = 0.9271523178807947,
-            Misses = 5,
-        };
-        // expected pp is slightly higher than above test because there is a different solution to
-        //  the hitresult distribution that yields the same accuracy but gives slightly higher pp
-        base.TestGetCalculationReturnsCorrectValues(2.797245912537965d, 43.455530879321245d, score);
+        TestGetCalculationReturnsCorrectValues(2.797245912537965d, 43.17076331130473d, score);
     }
 }

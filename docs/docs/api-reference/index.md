@@ -14,9 +14,5 @@ In general, each calculator exposes:
 | Endpoint                      | Description                                           |
 | ----------------------------- | ----------------------------------------------------- |
 | `GET /api/info`               | Returns details of the running calculation engine     |
-| `GET /api/difficulty`         | Calculates difficulty of a beatmap                    |
-| `GET /api/performance`        | Calculates performance of a score                     |
 | `GET /api/calculation`        | Calculates both difficulty and performance of a score |
-| `POST /api/batch/difficulty`  | Calculates a batch of difficulties                    |
-| `POST /api/batch/performance` | Calculates a batch of performances                    |
 | `POST /api/batch/calculation` | Calculates a batch of difficulties and performances   |

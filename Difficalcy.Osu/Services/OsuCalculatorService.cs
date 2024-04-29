@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -16,9 +15,8 @@ using osu.Game.Scoring;
 
 namespace Difficalcy.Osu.Services
 {
-    public class OsuCalculatorService : CalculatorService<OsuScore, OsuDifficulty, OsuPerformance, OsuCalculation>
+    public class OsuCalculatorService(ICache cache, IBeatmapProvider beatmapProvider) : CalculatorService<OsuScore, OsuDifficulty, OsuPerformance, OsuCalculation>(cache)
     {
-        private readonly IBeatmapProvider _beatmapProvider;
         private OsuRuleset OsuRuleset { get; } = new OsuRuleset();
 
         public override CalculatorInfo Info
@@ -38,20 +36,15 @@ namespace Difficalcy.Osu.Services
             }
         }
 
-        public OsuCalculatorService(ICache cache, IBeatmapProvider beatmapProvider) : base(cache)
-        {
-            _beatmapProvider = beatmapProvider;
-        }
-
         protected override async Task EnsureBeatmap(string beatmapId)
         {
-            await _beatmapProvider.EnsureBeatmap(beatmapId);
+            await beatmapProvider.EnsureBeatmap(beatmapId);
         }
 
         protected override (object, string) CalculateDifficultyAttributes(OsuScore score)
         {
-            var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
-            var mods = OsuRuleset.ConvertFromLegacyMods((LegacyMods)(score.Mods ?? 0)).ToArray();
+            var workingBeatmap = GetWorkingBeatmap(score.BeatmapId);
+            var mods = OsuRuleset.ConvertFromLegacyMods((LegacyMods)score.Mods).ToArray();
 
             var difficultyCalculator = OsuRuleset.CreateDifficultyCalculator(workingBeatmap);
             var difficultyAttributes = difficultyCalculator.Calculate(mods) as OsuDifficultyAttributes;
@@ -59,32 +52,20 @@ namespace Difficalcy.Osu.Services
             // Serialising anonymous object with same names because some properties can't be serialised, and the built-in JsonProperty fields aren't on all required fields
             return (difficultyAttributes, JsonSerializer.Serialize(new
             {
-                StarRating = difficultyAttributes.StarRating,
-                MaxCombo = difficultyAttributes.MaxCombo,
-                AimDifficulty = difficultyAttributes.AimDifficulty,
-                SpeedDifficulty = difficultyAttributes.SpeedDifficulty,
-                SpeedNoteCount = difficultyAttributes.SpeedNoteCount,
-                FlashlightDifficulty = difficultyAttributes.FlashlightDifficulty,
-                SliderFactor = difficultyAttributes.SliderFactor,
-                ApproachRate = difficultyAttributes.ApproachRate,
-                OverallDifficulty = difficultyAttributes.OverallDifficulty,
-                DrainRate = difficultyAttributes.DrainRate,
-                HitCircleCount = difficultyAttributes.HitCircleCount,
-                SliderCount = difficultyAttributes.SliderCount,
-                SpinnerCount = difficultyAttributes.SpinnerCount
+                difficultyAttributes.StarRating,
+                difficultyAttributes.MaxCombo,
+                difficultyAttributes.AimDifficulty,
+                difficultyAttributes.SpeedDifficulty,
+                difficultyAttributes.SpeedNoteCount,
+                difficultyAttributes.FlashlightDifficulty,
+                difficultyAttributes.SliderFactor,
+                difficultyAttributes.ApproachRate,
+                difficultyAttributes.OverallDifficulty,
+                difficultyAttributes.DrainRate,
+                difficultyAttributes.HitCircleCount,
+                difficultyAttributes.SliderCount,
+                difficultyAttributes.SpinnerCount
             }));
-        }
-
-        protected override OsuDifficulty GetDifficultyFromDifficultyAttributes(object difficultyAttributes)
-        {
-            var osuDifficultyAttributes = (OsuDifficultyAttributes)difficultyAttributes;
-            return new OsuDifficulty()
-            {
-                Total = osuDifficultyAttributes.StarRating,
-                Aim = osuDifficultyAttributes.AimDifficulty,
-                Speed = osuDifficultyAttributes.SpeedDifficulty,
-                Flashlight = osuDifficultyAttributes.FlashlightDifficulty
-            };
         }
 
         protected override object DeserialiseDifficultyAttributes(string difficultyAttributesJson)
@@ -92,15 +73,17 @@ namespace Difficalcy.Osu.Services
             return JsonSerializer.Deserialize<OsuDifficultyAttributes>(difficultyAttributesJson);
         }
 
-        protected override OsuPerformance CalculatePerformance(OsuScore score, object difficultyAttributes)
+        protected override OsuCalculation CalculatePerformance(OsuScore score, object difficultyAttributes)
         {
-            var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
-            var mods = OsuRuleset.ConvertFromLegacyMods((LegacyMods)(score.Mods ?? 0)).ToArray();
+            var osuDifficultyAttributes = (OsuDifficultyAttributes)difficultyAttributes;
+
+            var workingBeatmap = GetWorkingBeatmap(score.BeatmapId);
+            var mods = OsuRuleset.ConvertFromLegacyMods((LegacyMods)score.Mods).ToArray();
             var beatmap = workingBeatmap.GetPlayableBeatmap(OsuRuleset.RulesetInfo, mods);
 
             var combo = score.Combo ?? beatmap.HitObjects.Count + beatmap.HitObjects.OfType<Slider>().Sum(s => s.NestedHitObjects.Count - 1);
-            var statistics = determineHitResults(score.Accuracy ?? 1, beatmap.HitObjects.Count, score.Misses ?? 0, score.Mehs, score.Oks);
-            var accuracy = calculateAccuracy(statistics);
+            var statistics = GetHitResults(beatmap.HitObjects.Count, score.Misses, score.Mehs, score.Oks);
+            var accuracy = CalculateAccuracy(statistics);
 
             var scoreInfo = new ScoreInfo(beatmap.BeatmapInfo, OsuRuleset.RulesetInfo)
             {
@@ -111,69 +94,37 @@ namespace Difficalcy.Osu.Services
             };
 
             var performanceCalculator = OsuRuleset.CreatePerformanceCalculator();
-            var performanceAttributes = performanceCalculator.Calculate(scoreInfo, (OsuDifficultyAttributes)difficultyAttributes) as OsuPerformanceAttributes;
+            var performanceAttributes = performanceCalculator.Calculate(scoreInfo, osuDifficultyAttributes) as OsuPerformanceAttributes;
 
-            return new OsuPerformance()
-            {
-                Total = performanceAttributes.Total,
-                Aim = performanceAttributes.Aim,
-                Speed = performanceAttributes.Speed,
-                Accuracy = performanceAttributes.Accuracy,
-                Flashlight = performanceAttributes.Flashlight
-            };
-        }
-
-        protected override OsuCalculation GetCalculation(OsuDifficulty difficulty, OsuPerformance performance)
-        {
             return new OsuCalculation()
             {
-                Difficulty = difficulty,
-                Performance = performance
+                Difficulty = GetDifficultyFromDifficultyAttributes(osuDifficultyAttributes),
+                Performance = GetPerformanceFromPerformanceAttributes(performanceAttributes),
+                Accuracy = accuracy,
+                Combo = combo
             };
         }
 
-        private CalculatorWorkingBeatmap getWorkingBeatmap(string beatmapId)
+        private CalculatorWorkingBeatmap GetWorkingBeatmap(string beatmapId)
         {
-            using var beatmapStream = _beatmapProvider.GetBeatmapStream(beatmapId);
+            using var beatmapStream = beatmapProvider.GetBeatmapStream(beatmapId);
             return new CalculatorWorkingBeatmap(OsuRuleset, beatmapStream, beatmapId);
         }
 
-        private Dictionary<HitResult, int> determineHitResults(double targetAccuracy, int hitResultCount, int countMiss, int? countMeh, int? countOk)
+        private static Dictionary<HitResult, int> GetHitResults(int hitResultCount, int countMiss, int countMeh, int countOk)
         {
-            // Adapted from https://github.com/ppy/osu-tools/blob/cf5410b04f4e2d1ed2c50c7263f98c8fc5f928ab/PerformanceCalculator/Simulate/OsuSimulateCommand.cs#L57-L91
-            int countGreat;
-
-            if (countMeh != null || countOk != null)
-            {
-                countGreat = hitResultCount - (countOk ?? 0) - (countMeh ?? 0) - countMiss;
-            }
-            else
-            {
-                // Let Great=6, Ok=2, Meh=1, Miss=0. The total should be this.
-                var targetTotal = (int)Math.Round(targetAccuracy * hitResultCount * 6);
-
-                // Start by assuming every non miss is a meh
-                // This is how much increase is needed by greats and oks
-                var delta = targetTotal - (hitResultCount - countMiss);
-
-                // Each great increases total by 5 (great-meh=5)
-                countGreat = delta / 5;
-                // Each ok increases total by 1 (ok-meh=1). Covers remaining difference.
-                countOk = delta % 5;
-                // Mehs are left over. Could be negative if impossible value of amountMiss chosen
-                countMeh = hitResultCount - countGreat - countOk - countMiss;
-            }
+            var countGreat = hitResultCount - countOk - countMeh - countMiss;
 
             return new Dictionary<HitResult, int>
             {
                 { HitResult.Great, countGreat },
-                { HitResult.Ok, countOk ?? 0 },
-                { HitResult.Meh, countMeh ?? 0 },
+                { HitResult.Ok, countOk },
+                { HitResult.Meh, countMeh },
                 { HitResult.Miss, countMiss }
             };
         }
 
-        private double calculateAccuracy(Dictionary<HitResult, int> statistics)
+        private static double CalculateAccuracy(Dictionary<HitResult, int> statistics)
         {
             var countGreat = statistics[HitResult.Great];
             var countOk = statistics[HitResult.Ok];
@@ -182,6 +133,29 @@ namespace Difficalcy.Osu.Services
             var total = countGreat + countOk + countMeh + countMiss;
 
             return (double)((6 * countGreat) + (2 * countOk) + countMeh) / (6 * total);
+        }
+
+        private static OsuDifficulty GetDifficultyFromDifficultyAttributes(OsuDifficultyAttributes difficultyAttributes)
+        {
+            return new OsuDifficulty()
+            {
+                Total = difficultyAttributes.StarRating,
+                Aim = difficultyAttributes.AimDifficulty,
+                Speed = difficultyAttributes.SpeedDifficulty,
+                Flashlight = difficultyAttributes.FlashlightDifficulty
+            };
+        }
+
+        private static OsuPerformance GetPerformanceFromPerformanceAttributes(OsuPerformanceAttributes performanceAttributes)
+        {
+            return new OsuPerformance()
+            {
+                Total = performanceAttributes.Total,
+                Aim = performanceAttributes.Aim,
+                Speed = performanceAttributes.Speed,
+                Accuracy = performanceAttributes.Accuracy,
+                Flashlight = performanceAttributes.Flashlight
+            };
         }
     }
 }

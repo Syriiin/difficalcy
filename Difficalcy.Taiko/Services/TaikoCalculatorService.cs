@@ -50,8 +50,8 @@ namespace Difficalcy.Taiko.Services
 
         protected override (object, string) CalculateDifficultyAttributes(TaikoScore score)
         {
-            var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
-            var mods = TaikoRuleset.ConvertFromLegacyMods((LegacyMods)(score.Mods ?? 0)).ToArray();
+            var workingBeatmap = GetWorkingBeatmap(score.BeatmapId);
+            var mods = TaikoRuleset.ConvertFromLegacyMods((LegacyMods)score.Mods).ToArray();
 
             var difficultyCalculator = TaikoRuleset.CreateDifficultyCalculator(workingBeatmap);
             var difficultyAttributes = difficultyCalculator.Calculate(mods) as TaikoDifficultyAttributes;
@@ -59,26 +59,14 @@ namespace Difficalcy.Taiko.Services
             // Serialising anonymous object with same names because some properties can't be serialised, and the built-in JsonProperty fields aren't on all required fields
             return (difficultyAttributes, JsonSerializer.Serialize(new
             {
-                StarRating = difficultyAttributes.StarRating,
-                MaxCombo = difficultyAttributes.MaxCombo,
-                StaminaDifficulty = difficultyAttributes.StaminaDifficulty,
-                RhythmDifficulty = difficultyAttributes.RhythmDifficulty,
-                ColourDifficulty = difficultyAttributes.ColourDifficulty,
-                PeakDifficulty = difficultyAttributes.PeakDifficulty,
-                GreatHitWindow = difficultyAttributes.GreatHitWindow
+                difficultyAttributes.StarRating,
+                difficultyAttributes.MaxCombo,
+                difficultyAttributes.StaminaDifficulty,
+                difficultyAttributes.RhythmDifficulty,
+                difficultyAttributes.ColourDifficulty,
+                difficultyAttributes.PeakDifficulty,
+                difficultyAttributes.GreatHitWindow
             }));
-        }
-
-        protected override TaikoDifficulty GetDifficultyFromDifficultyAttributes(object difficultyAttributes)
-        {
-            var taikoDifficultyAttributes = (TaikoDifficultyAttributes)difficultyAttributes;
-            return new TaikoDifficulty()
-            {
-                Total = taikoDifficultyAttributes.StarRating,
-                Stamina = taikoDifficultyAttributes.StaminaDifficulty,
-                Rhythm = taikoDifficultyAttributes.RhythmDifficulty,
-                Colour = taikoDifficultyAttributes.ColourDifficulty
-            };
         }
 
         protected override object DeserialiseDifficultyAttributes(string difficultyAttributesJson)
@@ -86,16 +74,18 @@ namespace Difficalcy.Taiko.Services
             return JsonSerializer.Deserialize<TaikoDifficultyAttributes>(difficultyAttributesJson);
         }
 
-        protected override TaikoPerformance CalculatePerformance(TaikoScore score, object difficultyAttributes)
+        protected override TaikoCalculation CalculatePerformance(TaikoScore score, object difficultyAttributes)
         {
-            var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
-            var mods = TaikoRuleset.ConvertFromLegacyMods((LegacyMods)(score.Mods ?? 0)).ToArray();
+            var taikoDifficultyAttributes = (TaikoDifficultyAttributes)difficultyAttributes;
+
+            var workingBeatmap = GetWorkingBeatmap(score.BeatmapId);
+            var mods = TaikoRuleset.ConvertFromLegacyMods((LegacyMods)score.Mods).ToArray();
             var beatmap = workingBeatmap.GetPlayableBeatmap(TaikoRuleset.RulesetInfo, mods);
 
             var hitResultCount = beatmap.HitObjects.OfType<Hit>().Count();
             var combo = score.Combo ?? hitResultCount;
-            var statistics = determineHitResults(score.Accuracy ?? 1, hitResultCount, score.Misses ?? 0, score.Oks);
-            var accuracy = calculateAccuracy(statistics);
+            var statistics = GetHitResults(hitResultCount, score.Misses, score.Oks);
+            var accuracy = CalculateAccuracy(statistics);
 
             var scoreInfo = new ScoreInfo(beatmap.BeatmapInfo, TaikoRuleset.RulesetInfo)
             {
@@ -106,59 +96,37 @@ namespace Difficalcy.Taiko.Services
             };
 
             var performanceCalculator = TaikoRuleset.CreatePerformanceCalculator();
-            var performanceAttributes = performanceCalculator.Calculate(scoreInfo, (TaikoDifficultyAttributes)difficultyAttributes) as TaikoPerformanceAttributes;
+            var performanceAttributes = performanceCalculator.Calculate(scoreInfo, taikoDifficultyAttributes) as TaikoPerformanceAttributes;
 
-            return new TaikoPerformance()
-            {
-                Total = performanceAttributes.Total,
-                Difficulty = performanceAttributes.Difficulty,
-                Accuracy = performanceAttributes.Accuracy
-            };
-        }
-
-        protected override TaikoCalculation GetCalculation(TaikoDifficulty difficulty, TaikoPerformance performance)
-        {
             return new TaikoCalculation()
             {
-                Difficulty = difficulty,
-                Performance = performance
+                Difficulty = GetDifficultyFromDifficultyAttributes(taikoDifficultyAttributes),
+                Performance = GetPerformanceFromPerformanceAttributes(performanceAttributes),
+                Accuracy = accuracy,
+                Combo = combo
             };
         }
 
-        private CalculatorWorkingBeatmap getWorkingBeatmap(string beatmapId)
+        private CalculatorWorkingBeatmap GetWorkingBeatmap(string beatmapId)
         {
             using var beatmapStream = _beatmapProvider.GetBeatmapStream(beatmapId);
             return new CalculatorWorkingBeatmap(TaikoRuleset, beatmapStream, beatmapId);
         }
 
-        private Dictionary<HitResult, int> determineHitResults(double targetAccuracy, int hitResultCount, int countMiss, int? countOk)
+        private static Dictionary<HitResult, int> GetHitResults(int hitResultCount, int countMiss, int countOk)
         {
-            // Adapted from https://github.com/ppy/osu-tools/blob/cf5410b04f4e2d1ed2c50c7263f98c8fc5f928ab/PerformanceCalculator/Simulate/TaikoSimulateCommand.cs#L53-L79
-            int countGreat;
-
-            if (countOk != null)
-            {
-                countGreat = (int)(hitResultCount - countOk - countMiss);
-            }
-            else
-            {
-                // Let Great=2, Good=1, Miss=0. The total should be this.
-                var targetTotal = (int)Math.Round(targetAccuracy * hitResultCount * 2);
-
-                countGreat = targetTotal - (hitResultCount - countMiss);
-                countOk = hitResultCount - countGreat - countMiss;
-            }
+            var countGreat = hitResultCount - countOk - countMiss;
 
             return new Dictionary<HitResult, int>
             {
                 { HitResult.Great, countGreat },
-                { HitResult.Ok, (int)countOk },
+                { HitResult.Ok, countOk },
                 { HitResult.Meh, 0 },
                 { HitResult.Miss, countMiss }
             };
         }
 
-        private double calculateAccuracy(Dictionary<HitResult, int> statistics)
+        private static double CalculateAccuracy(Dictionary<HitResult, int> statistics)
         {
             var countGreat = statistics[HitResult.Great];
             var countOk = statistics[HitResult.Ok];
@@ -166,6 +134,27 @@ namespace Difficalcy.Taiko.Services
             var total = countGreat + countOk + countMiss;
 
             return (double)((2 * countGreat) + countOk) / (2 * total);
+        }
+
+        private static TaikoDifficulty GetDifficultyFromDifficultyAttributes(TaikoDifficultyAttributes difficultyAttributes)
+        {
+            return new TaikoDifficulty()
+            {
+                Total = difficultyAttributes.StarRating,
+                Stamina = difficultyAttributes.StaminaDifficulty,
+                Rhythm = difficultyAttributes.RhythmDifficulty,
+                Colour = difficultyAttributes.ColourDifficulty
+            };
+        }
+
+        private static TaikoPerformance GetPerformanceFromPerformanceAttributes(TaikoPerformanceAttributes performanceAttributes)
+        {
+            return new TaikoPerformance()
+            {
+                Total = performanceAttributes.Total,
+                Difficulty = performanceAttributes.Difficulty,
+                Accuracy = performanceAttributes.Accuracy
+            };
         }
     }
 }

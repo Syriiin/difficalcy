@@ -3,7 +3,7 @@ using Difficalcy.Models;
 
 namespace Difficalcy.Services
 {
-    public abstract class CalculatorService<TScore, TDifficulty, TPerformance, TCalculation>
+    public abstract class CalculatorService<TScore, TDifficulty, TPerformance, TCalculation>(ICache cache)
         where TScore : Score
         where TDifficulty : Difficulty
         where TPerformance : Performance
@@ -20,13 +20,6 @@ namespace Difficalcy.Services
         /// </summary>
         public string CalculatorDiscriminator => $"{Info.CalculatorPackage}:{Info.CalculatorVersion}";
 
-        private readonly ICache _cache;
-
-        public CalculatorService(ICache cache)
-        {
-            _cache = cache;
-        }
-
         /// <summary>
         /// Ensures the beatmap with the given ID is available locally.
         /// </summary>
@@ -38,11 +31,6 @@ namespace Difficalcy.Services
         protected abstract (object, string) CalculateDifficultyAttributes(TScore score);
 
         /// <summary>
-        /// Returns the difficulty within a given difficulty attributes object.
-        /// </summary>
-        protected abstract TDifficulty GetDifficultyFromDifficultyAttributes(object difficultyAttributes);
-
-        /// <summary>
         /// Returns the deserialised object for a given JSON serialised difficulty attributes object.
         /// </summary>
         protected abstract object DeserialiseDifficultyAttributes(string difficultyAttributesJson);
@@ -50,48 +38,23 @@ namespace Difficalcy.Services
         /// <summary>
         /// Runs the performance calculator on a given score with pre-calculated difficulty attributes and returns the performance.
         /// </summary>
-        protected abstract TPerformance CalculatePerformance(TScore score, object difficultyAttributes);
+        protected abstract TCalculation CalculatePerformance(TScore score, object difficultyAttributes);
 
         /// <summary>
-        /// Returns a calculation object that contains the passed difficulty and performance.
-        /// </summary>
-        protected abstract TCalculation GetCalculation(TDifficulty difficulty, TPerformance performance);
-
-        /// <summary>
-        /// Returns the difficulty of a given score.
-        /// </summary>
-        public async Task<TDifficulty> GetDifficulty(TScore score)
-        {
-            var difficultyAttributes = await GetDifficultyAttributes(score);
-            return GetDifficultyFromDifficultyAttributes(difficultyAttributes);
-        }
-
-        /// <summary>
-        /// Returns the performance of a given score.
-        /// </summary>
-        public async Task<TPerformance> GetPerformance(TScore score)
-        {
-            var difficultyAttributes = await GetDifficultyAttributes(score);
-            return CalculatePerformance(score, difficultyAttributes);
-        }
-
-        /// <summary>
-        /// Returns the difficulty and performance of a given score.
+        /// Returns the calculation of a given score.
         /// </summary>
         public async Task<TCalculation> GetCalculation(TScore score)
         {
             var difficultyAttributes = await GetDifficultyAttributes(score);
-            var difficulty = GetDifficultyFromDifficultyAttributes(difficultyAttributes);
-            var performance = CalculatePerformance(score, difficultyAttributes);
-            return GetCalculation(difficulty, performance);
+            return CalculatePerformance(score, difficultyAttributes);
         }
 
         private async Task<object> GetDifficultyAttributes(TScore score)
         {
             await EnsureBeatmap(score.BeatmapId);
 
-            var db = _cache.GetDatabase();
-            var redisKey = $"difficalcy:{CalculatorDiscriminator}:{score.BeatmapId}:{score.Mods ?? 0}";
+            var db = cache.GetDatabase();
+            var redisKey = $"difficalcy:{CalculatorDiscriminator}:{score.BeatmapId}:{score.Mods}";
             var difficultyAttributesJson = await db.GetAsync(redisKey);
 
             object difficultyAttributes;

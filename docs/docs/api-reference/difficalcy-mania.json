@@ -24,190 +24,6 @@
         }
       }
     },
-    "/api/difficulty": {
-      "get": {
-        "tags": [
-          "ManiaCalculator"
-        ],
-        "parameters": [
-          {
-            "name": "Accuracy",
-            "in": "query",
-            "schema": {
-              "type": "number",
-              "format": "double",
-              "nullable": true
-            }
-          },
-          {
-            "name": "Misses",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            }
-          },
-          {
-            "name": "Mehs",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            }
-          },
-          {
-            "name": "Oks",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            }
-          },
-          {
-            "name": "Goods",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            }
-          },
-          {
-            "name": "Greats",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            }
-          },
-          {
-            "name": "BeatmapId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Mods",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ManiaDifficulty"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/performance": {
-      "get": {
-        "tags": [
-          "ManiaCalculator"
-        ],
-        "parameters": [
-          {
-            "name": "Accuracy",
-            "in": "query",
-            "schema": {
-              "type": "number",
-              "format": "double",
-              "nullable": true
-            }
-          },
-          {
-            "name": "Misses",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            }
-          },
-          {
-            "name": "Mehs",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            }
-          },
-          {
-            "name": "Oks",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            }
-          },
-          {
-            "name": "Goods",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            }
-          },
-          {
-            "name": "Greats",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            }
-          },
-          {
-            "name": "BeatmapId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Mods",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ManiaPerformance"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/calculation": {
       "get": {
         "tags": [
@@ -215,57 +31,53 @@
         ],
         "parameters": [
           {
-            "name": "Accuracy",
-            "in": "query",
-            "schema": {
-              "type": "number",
-              "format": "double",
-              "nullable": true
-            }
-          },
-          {
             "name": "Misses",
             "in": "query",
             "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
               "type": "integer",
-              "format": "int32",
-              "nullable": true
+              "format": "int32"
             }
           },
           {
             "name": "Mehs",
             "in": "query",
             "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
               "type": "integer",
-              "format": "int32",
-              "nullable": true
+              "format": "int32"
             }
           },
           {
             "name": "Oks",
             "in": "query",
             "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
               "type": "integer",
-              "format": "int32",
-              "nullable": true
+              "format": "int32"
             }
           },
           {
             "name": "Goods",
             "in": "query",
             "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
               "type": "integer",
-              "format": "int32",
-              "nullable": true
+              "format": "int32"
             }
           },
           {
             "name": "Greats",
             "in": "query",
             "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
               "type": "integer",
-              "format": "int32",
-              "nullable": true
+              "format": "int32"
             }
           },
           {
@@ -280,9 +92,10 @@
             "name": "Mods",
             "in": "query",
             "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
               "type": "integer",
-              "format": "int32",
-              "nullable": true
+              "format": "int32"
             }
           }
         ],
@@ -293,76 +106,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ManiaCalculation"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/batch/difficulty": {
-      "post": {
-        "tags": [
-          "ManiaCalculator"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ManiaScore"
-                },
-                "nullable": true
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ManiaDifficulty"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/batch/performance": {
-      "post": {
-        "tags": [
-          "ManiaCalculator"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ManiaScore"
-                },
-                "nullable": true
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ManiaPerformance"
-                  }
                 }
               }
             }
@@ -466,6 +209,10 @@
           },
           "performance": {
             "$ref": "#/components/schemas/ManiaPerformance"
+          },
+          "accuracy": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false
@@ -480,39 +227,40 @@
             "type": "string"
           },
           "mods": {
+            "maximum": 2147483647,
+            "minimum": 0,
             "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "accuracy": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
+            "format": "int32"
           },
           "misses": {
+            "maximum": 2147483647,
+            "minimum": 0,
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "mehs": {
+            "maximum": 2147483647,
+            "minimum": 0,
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "oks": {
+            "maximum": 2147483647,
+            "minimum": 0,
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "goods": {
+            "maximum": 2147483647,
+            "minimum": 0,
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "greats": {
+            "maximum": 2147483647,
+            "minimum": 0,
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           }
         },
         "additionalProperties": false

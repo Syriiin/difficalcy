@@ -6,6 +6,8 @@ namespace Difficalcy.Models
     {
         [Required]
         public string BeatmapId { get; init; }
-        public int? Mods { get; init; }
+
+        [Range(0, int.MaxValue)]
+        public int Mods { get; init; } = 0;
     }
 }

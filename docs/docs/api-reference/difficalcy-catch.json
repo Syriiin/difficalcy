@@ -24,172 +24,6 @@
         }
       }
     },
-    "/api/difficulty": {
-      "get": {
-        "tags": [
-          "CatchCalculator"
-        ],
-        "parameters": [
-          {
-            "name": "Accuracy",
-            "in": "query",
-            "schema": {
-              "type": "number",
-              "format": "double",
-              "nullable": true
-            }
-          },
-          {
-            "name": "Combo",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            }
-          },
-          {
-            "name": "Misses",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            }
-          },
-          {
-            "name": "TinyDroplets",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            }
-          },
-          {
-            "name": "Droplets",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            }
-          },
-          {
-            "name": "BeatmapId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Mods",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CatchDifficulty"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/performance": {
-      "get": {
-        "tags": [
-          "CatchCalculator"
-        ],
-        "parameters": [
-          {
-            "name": "Accuracy",
-            "in": "query",
-            "schema": {
-              "type": "number",
-              "format": "double",
-              "nullable": true
-            }
-          },
-          {
-            "name": "Combo",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            }
-          },
-          {
-            "name": "Misses",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            }
-          },
-          {
-            "name": "TinyDroplets",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            }
-          },
-          {
-            "name": "Droplets",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            }
-          },
-          {
-            "name": "BeatmapId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Mods",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CatchPerformance"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/calculation": {
       "get": {
         "tags": [
@@ -197,18 +31,11 @@
         ],
         "parameters": [
           {
-            "name": "Accuracy",
-            "in": "query",
-            "schema": {
-              "type": "number",
-              "format": "double",
-              "nullable": true
-            }
-          },
-          {
             "name": "Combo",
             "in": "query",
             "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
               "type": "integer",
               "format": "int32",
               "nullable": true
@@ -218,24 +45,29 @@
             "name": "Misses",
             "in": "query",
             "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "SmallDroplets",
+            "in": "query",
+            "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
               "type": "integer",
               "format": "int32",
               "nullable": true
             }
           },
           {
-            "name": "TinyDroplets",
+            "name": "LargeDroplets",
             "in": "query",
             "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            }
-          },
-          {
-            "name": "Droplets",
-            "in": "query",
-            "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
               "type": "integer",
               "format": "int32",
               "nullable": true
@@ -253,9 +85,10 @@
             "name": "Mods",
             "in": "query",
             "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
               "type": "integer",
-              "format": "int32",
-              "nullable": true
+              "format": "int32"
             }
           }
         ],
@@ -266,76 +99,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CatchCalculation"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/batch/difficulty": {
-      "post": {
-        "tags": [
-          "CatchCalculator"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/CatchScore"
-                },
-                "nullable": true
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CatchDifficulty"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/batch/performance": {
-      "post": {
-        "tags": [
-          "CatchCalculator"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/CatchScore"
-                },
-                "nullable": true
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CatchPerformance"
-                  }
                 }
               }
             }
@@ -435,6 +198,14 @@
           },
           "performance": {
             "$ref": "#/components/schemas/CatchPerformance"
+          },
+          "accuracy": {
+            "type": "number",
+            "format": "double"
+          },
+          "combo": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false
@@ -449,31 +220,34 @@
             "type": "string"
           },
           "mods": {
+            "maximum": 2147483647,
+            "minimum": 0,
             "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "accuracy": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
+            "format": "int32"
           },
           "combo": {
+            "maximum": 2147483647,
+            "minimum": 0,
             "type": "integer",
             "format": "int32",
             "nullable": true
           },
           "misses": {
+            "maximum": 2147483647,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "smallDroplets": {
+            "maximum": 2147483647,
+            "minimum": 0,
             "type": "integer",
             "format": "int32",
             "nullable": true
           },
-          "tinyDroplets": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "droplets": {
+          "largeDroplets": {
+            "maximum": 2147483647,
+            "minimum": 0,
             "type": "integer",
             "format": "int32",
             "nullable": true
