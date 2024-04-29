@@ -69,25 +69,15 @@ namespace Difficalcy.Taiko.Services
             }));
         }
 
-        protected override TaikoDifficulty GetDifficultyFromDifficultyAttributes(object difficultyAttributes)
-        {
-            var taikoDifficultyAttributes = (TaikoDifficultyAttributes)difficultyAttributes;
-            return new TaikoDifficulty()
-            {
-                Total = taikoDifficultyAttributes.StarRating,
-                Stamina = taikoDifficultyAttributes.StaminaDifficulty,
-                Rhythm = taikoDifficultyAttributes.RhythmDifficulty,
-                Colour = taikoDifficultyAttributes.ColourDifficulty
-            };
-        }
-
         protected override object DeserialiseDifficultyAttributes(string difficultyAttributesJson)
         {
             return JsonSerializer.Deserialize<TaikoDifficultyAttributes>(difficultyAttributesJson);
         }
 
-        protected override TaikoPerformance CalculatePerformance(TaikoScore score, object difficultyAttributes)
+        protected override TaikoCalculation CalculatePerformance(TaikoScore score, object difficultyAttributes)
         {
+            var taikoDifficultyAttributes = (TaikoDifficultyAttributes)difficultyAttributes;
+
             var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
             var mods = TaikoRuleset.ConvertFromLegacyMods((LegacyMods)score.Mods).ToArray();
             var beatmap = workingBeatmap.GetPlayableBeatmap(TaikoRuleset.RulesetInfo, mods);
@@ -106,22 +96,12 @@ namespace Difficalcy.Taiko.Services
             };
 
             var performanceCalculator = TaikoRuleset.CreatePerformanceCalculator();
-            var performanceAttributes = performanceCalculator.Calculate(scoreInfo, (TaikoDifficultyAttributes)difficultyAttributes) as TaikoPerformanceAttributes;
+            var performanceAttributes = performanceCalculator.Calculate(scoreInfo, taikoDifficultyAttributes) as TaikoPerformanceAttributes;
 
-            return new TaikoPerformance()
-            {
-                Total = performanceAttributes.Total,
-                Difficulty = performanceAttributes.Difficulty,
-                Accuracy = performanceAttributes.Accuracy
-            };
-        }
-
-        protected override TaikoCalculation GetCalculation(TaikoDifficulty difficulty, TaikoPerformance performance)
-        {
             return new TaikoCalculation()
             {
-                Difficulty = difficulty,
-                Performance = performance
+                Difficulty = GetDifficultyFromDifficultyAttributes(taikoDifficultyAttributes),
+                Performance = GetPerformanceFromPerformanceAttributes(performanceAttributes)
             };
         }
 
@@ -152,6 +132,27 @@ namespace Difficalcy.Taiko.Services
             var total = countGreat + countOk + countMiss;
 
             return (double)((2 * countGreat) + countOk) / (2 * total);
+        }
+
+        private TaikoDifficulty GetDifficultyFromDifficultyAttributes(TaikoDifficultyAttributes difficultyAttributes)
+        {
+            return new TaikoDifficulty()
+            {
+                Total = difficultyAttributes.StarRating,
+                Stamina = difficultyAttributes.StaminaDifficulty,
+                Rhythm = difficultyAttributes.RhythmDifficulty,
+                Colour = difficultyAttributes.ColourDifficulty
+            };
+        }
+
+        private TaikoPerformance GetPerformanceFromPerformanceAttributes(TaikoPerformanceAttributes performanceAttributes)
+        {
+            return new TaikoPerformance()
+            {
+                Total = performanceAttributes.Total,
+                Difficulty = performanceAttributes.Difficulty,
+                Accuracy = performanceAttributes.Accuracy
+            };
         }
     }
 }

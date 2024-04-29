@@ -66,22 +66,15 @@ namespace Difficalcy.Catch.Services
             }));
         }
 
-        protected override CatchDifficulty GetDifficultyFromDifficultyAttributes(object difficultyAttributes)
-        {
-            var catchDifficultyAttributes = (CatchDifficultyAttributes)difficultyAttributes;
-            return new CatchDifficulty()
-            {
-                Total = catchDifficultyAttributes.StarRating
-            };
-        }
-
         protected override object DeserialiseDifficultyAttributes(string difficultyAttributesJson)
         {
             return JsonSerializer.Deserialize<CatchDifficultyAttributes>(difficultyAttributesJson);
         }
 
-        protected override CatchPerformance CalculatePerformance(CatchScore score, object difficultyAttributes)
+        protected override CatchCalculation CalculatePerformance(CatchScore score, object difficultyAttributes)
         {
+            var catchDifficultyAttributes = (CatchDifficultyAttributes)difficultyAttributes;
+
             var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
             var mods = CatchRuleset.ConvertFromLegacyMods((LegacyMods)score.Mods).ToArray();
             var beatmap = workingBeatmap.GetPlayableBeatmap(CatchRuleset.RulesetInfo, mods);
@@ -99,20 +92,12 @@ namespace Difficalcy.Catch.Services
             };
 
             var performanceCalculator = CatchRuleset.CreatePerformanceCalculator();
-            var performanceAttributes = performanceCalculator.Calculate(scoreInfo, (CatchDifficultyAttributes)difficultyAttributes) as CatchPerformanceAttributes;
+            var performanceAttributes = performanceCalculator.Calculate(scoreInfo, catchDifficultyAttributes) as CatchPerformanceAttributes;
 
-            return new CatchPerformance()
-            {
-                Total = performanceAttributes.Total
-            };
-        }
-
-        protected override CatchCalculation GetCalculation(CatchDifficulty difficulty, CatchPerformance performance)
-        {
             return new CatchCalculation()
             {
-                Difficulty = difficulty,
-                Performance = performance
+                Difficulty = GetDifficultyFromDifficultyAttributes(catchDifficultyAttributes),
+                Performance = GetPerformanceFromPerformanceAttributes(performanceAttributes)
             };
         }
 
@@ -154,6 +139,22 @@ namespace Difficalcy.Catch.Services
             double total = hits + statistics[HitResult.Miss] + statistics[HitResult.SmallTickMiss];
 
             return hits / total;
+        }
+
+        private CatchDifficulty GetDifficultyFromDifficultyAttributes(CatchDifficultyAttributes difficultyAttributes)
+        {
+            return new CatchDifficulty()
+            {
+                Total = difficultyAttributes.StarRating
+            };
+        }
+
+        private CatchPerformance GetPerformanceFromPerformanceAttributes(CatchPerformanceAttributes performanceAttributes)
+        {
+            return new CatchPerformance()
+            {
+                Total = performanceAttributes.Total
+            };
         }
     }
 }

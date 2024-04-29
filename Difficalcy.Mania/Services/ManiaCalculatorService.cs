@@ -11,7 +11,6 @@ using osu.Game.Beatmaps.Legacy;
 using osu.Game.Rulesets.Mania;
 using osu.Game.Rulesets.Mania.Difficulty;
 using osu.Game.Rulesets.Mania.Objects;
-using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Scoring;
 
@@ -66,22 +65,14 @@ namespace Difficalcy.Mania.Services
             }));
         }
 
-        protected override ManiaDifficulty GetDifficultyFromDifficultyAttributes(object difficultyAttributes)
-        {
-            var maniaDifficultyAttributes = (ManiaDifficultyAttributes)difficultyAttributes;
-            return new ManiaDifficulty()
-            {
-                Total = maniaDifficultyAttributes.StarRating
-            };
-        }
-
         protected override object DeserialiseDifficultyAttributes(string difficultyAttributesJson)
         {
             return JsonSerializer.Deserialize<ManiaDifficultyAttributes>(difficultyAttributesJson);
         }
 
-        protected override ManiaPerformance CalculatePerformance(ManiaScore score, object difficultyAttributes)
+        protected override ManiaCalculation CalculatePerformance(ManiaScore score, object difficultyAttributes)
         {
+            var maniaDifficultyAttributes = (ManiaDifficultyAttributes)difficultyAttributes;
             var workingBeatmap = getWorkingBeatmap(score.BeatmapId);
             var mods = ManiaRuleset.ConvertFromLegacyMods((LegacyMods)score.Mods).ToArray();
             var beatmap = workingBeatmap.GetPlayableBeatmap(ManiaRuleset.RulesetInfo, mods);
@@ -100,21 +91,12 @@ namespace Difficalcy.Mania.Services
             };
 
             var performanceCalculator = ManiaRuleset.CreatePerformanceCalculator();
-            var performanceAttributes = performanceCalculator.Calculate(scoreInfo, (ManiaDifficultyAttributes)difficultyAttributes) as ManiaPerformanceAttributes;
+            var performanceAttributes = performanceCalculator.Calculate(scoreInfo, maniaDifficultyAttributes) as ManiaPerformanceAttributes;
 
-            return new ManiaPerformance()
-            {
-                Total = performanceAttributes.Total,
-                Difficulty = performanceAttributes.Difficulty
-            };
-        }
-
-        protected override ManiaCalculation GetCalculation(ManiaDifficulty difficulty, ManiaPerformance performance)
-        {
             return new ManiaCalculation()
             {
-                Difficulty = difficulty,
-                Performance = performance
+                Difficulty = GetDifficultyFromDifficultyAttributes(maniaDifficultyAttributes),
+                Performance = GetPerformanceFromPerformanceAttributes(performanceAttributes)
             };
         }
 
@@ -150,6 +132,23 @@ namespace Difficalcy.Mania.Services
             var total = countPerfect + countGreat + countGood + countOk + countMeh + countMiss;
 
             return (double)((6 * countPerfect) + (6 * countGreat) + (4 * countGood) + (2 * countOk) + countMeh) / (6 * total);
+        }
+
+        private ManiaDifficulty GetDifficultyFromDifficultyAttributes(ManiaDifficultyAttributes difficultyAttributes)
+        {
+            return new ManiaDifficulty()
+            {
+                Total = difficultyAttributes.StarRating
+            };
+        }
+
+        private ManiaPerformance GetPerformanceFromPerformanceAttributes(ManiaPerformanceAttributes performanceAttributes)
+        {
+            return new ManiaPerformance()
+            {
+                Total = performanceAttributes.Total,
+                Difficulty = performanceAttributes.Difficulty
+            };
         }
     }
 }

@@ -39,27 +39,18 @@ public class DummyCalculatorService : CalculatorService<DummyScore, DummyDifficu
         return (difficulty, difficulty.ToString());
     }
 
-    protected override DummyPerformance CalculatePerformance(DummyScore score, object difficultyAttributes) =>
-        new DummyPerformance { Total = (double)difficultyAttributes * 100 };
+    protected override DummyCalculation CalculatePerformance(DummyScore score, object difficultyAttributes) =>
+        new DummyCalculation()
+        {
+            Difficulty = new DummyDifficulty() { Total = (double)difficultyAttributes },
+            Performance = new DummyPerformance() { Total = (double)difficultyAttributes * 100 }
+        };
 
     protected override object DeserialiseDifficultyAttributes(string difficultyAttributesJson) =>
         double.Parse(difficultyAttributesJson);
 
     protected override Task<bool> EnsureBeatmap(string beatmapId) =>
         Task.FromResult(true);
-
-    protected override DummyCalculation GetCalculation(DummyDifficulty difficulty, DummyPerformance performance) =>
-        new DummyCalculation
-        {
-            Difficulty = difficulty,
-            Performance = performance
-        };
-
-    protected override DummyDifficulty GetDifficultyFromDifficultyAttributes(object difficultyAttributes) =>
-        new DummyDifficulty
-        {
-            Total = (double)difficultyAttributes
-        };
 }
 
 public record DummyScore : Score { }
