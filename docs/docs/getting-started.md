@@ -86,11 +86,13 @@ curl "localhost:5000/api/calculation?BeatmapId=658127"
 
 ```json
 {
+  "accuracy": 1,
+  "combo": 2402,
   "difficulty": {
-    "aim": 3.471503344019442,
+    "aim": 3.4715033440194416,
     "speed": 3.4738667283055444,
-    "flashlight": 4.58994045567377,
-    "total": 7.255439646986892
+    "flashlight": 0,
+    "total": 7.25543964698689
   },
   "performance": {
     "aim": 220.83646290283872,
@@ -110,11 +112,13 @@ curl "localhost:5000/api/calculation?BeatmapId=658127&Mods=24"
 
 ```json
 {
+  "accuracy": 1,
+  "combo": 2402,
   "difficulty": {
     "aim": 3.765456925600854,
     "speed": 3.72396422087254,
-    "flashlight": 6.263638574855112,
-    "total": 7.824058505624836
+    "flashlight": 0,
+    "total": 7.824058505624834
   },
   "performance": {
     "aim": 307.7860998424521,
@@ -134,11 +138,13 @@ curl "localhost:5000/api/calculation?BeatmapId=658127&Mods=24&Oks=24&Misses=2&Co
 
 ```json
 {
+  "accuracy": 0.9908768373035985,
+  "combo": 2364,
   "difficulty": {
     "aim": 3.765456925600854,
     "speed": 3.72396422087254,
-    "flashlight": 6.263638574855112,
-    "total": 7.824058505624836
+    "flashlight": 0,
+    "total": 7.824058505624834
   },
   "performance": {
     "aim": 287.9789267544456,

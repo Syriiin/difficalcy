@@ -20,11 +20,13 @@ Get your lazer powered calculations:
 
 ```json
 {
+  "accuracy": 1,
+  "combo": 2402,
   "difficulty": {
-    "aim": 3.471503344019442,
+    "aim": 3.4715033440194416,
     "speed": 3.4738667283055444,
-    "flashlight": 4.58994045567377,
-    "total": 7.255439646986892
+    "flashlight": 0,
+    "total": 7.25543964698689
   },
   "performance": {
     "aim": 220.83646290283872,
