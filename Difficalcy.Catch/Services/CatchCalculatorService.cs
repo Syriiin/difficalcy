@@ -97,7 +97,9 @@ namespace Difficalcy.Catch.Services
             return new CatchCalculation()
             {
                 Difficulty = GetDifficultyFromDifficultyAttributes(catchDifficultyAttributes),
-                Performance = GetPerformanceFromPerformanceAttributes(performanceAttributes)
+                Performance = GetPerformanceFromPerformanceAttributes(performanceAttributes),
+                Accuracy = accuracy,
+                Combo = combo
             };
         }
 

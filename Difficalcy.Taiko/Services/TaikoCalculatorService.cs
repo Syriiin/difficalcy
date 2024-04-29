@@ -101,7 +101,9 @@ namespace Difficalcy.Taiko.Services
             return new TaikoCalculation()
             {
                 Difficulty = GetDifficultyFromDifficultyAttributes(taikoDifficultyAttributes),
-                Performance = GetPerformanceFromPerformanceAttributes(performanceAttributes)
+                Performance = GetPerformanceFromPerformanceAttributes(performanceAttributes),
+                Accuracy = accuracy,
+                Combo = combo
             };
         }
 

@@ -105,7 +105,9 @@ namespace Difficalcy.Osu.Services
             return new OsuCalculation()
             {
                 Difficulty = GetDifficultyFromDifficultyAttributes(osuDifficultyAttributes),
-                Performance = GetPerformanceFromPerformanceAttributes(performanceAttributes)
+                Performance = GetPerformanceFromPerformanceAttributes(performanceAttributes),
+                Accuracy = accuracy,
+                Combo = combo
             };
         }
 

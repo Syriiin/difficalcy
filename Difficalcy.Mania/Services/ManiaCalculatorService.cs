@@ -96,7 +96,8 @@ namespace Difficalcy.Mania.Services
             return new ManiaCalculation()
             {
                 Difficulty = GetDifficultyFromDifficultyAttributes(maniaDifficultyAttributes),
-                Performance = GetPerformanceFromPerformanceAttributes(performanceAttributes)
+                Performance = GetPerformanceFromPerformanceAttributes(performanceAttributes),
+                Accuracy = accuracy
             };
         }
 
