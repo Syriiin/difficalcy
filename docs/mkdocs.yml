@@ -16,6 +16,7 @@ nav:
     - difficalcy-taiko: api-reference/difficalcy-taiko.md
     - difficalcy-catch: api-reference/difficalcy-catch.md
     - difficalcy-mania: api-reference/difficalcy-mania.md
+  - custom-calculators.md
 
 theme:
   name: material
