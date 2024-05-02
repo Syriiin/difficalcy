@@ -11,15 +11,18 @@ services:
     ports:
       - 5000:80
     volumes:
-      - beatmaps:/home/app/beatmaps
+      - beatmaps:/beatmaps
     depends_on:
       - cache
 
   cache:
     image: redis:latest
+    volumes:
+      - redis-data:/data
 
   volumes:
     beatmaps:
+    redis-data:
 ```
 
 See [API Reference](./api-reference/index.md) for available endpoints.
@@ -65,14 +68,15 @@ services:
 
 difficalcy is designed to be simple to get up and running, so there are no _required_ configurations.
 
-By default, the beatmap cache will be lost when the container is restarted, and there will be no caching for calculations.
+By default, the beatmap cache will be on an anonymous volume, and there will be no caching for calculations.
 
 ### Environment Variables
 
-| Environment variable  | Default              | Description                                                                                     |
-| --------------------- | -------------------- | ----------------------------------------------------------------------------------------------- |
-| `BEATMAP_DIRECTORY`   | `/home/app/beatmaps` | The directory difficalcy uses for storing beatmap files.                                        |
-| `REDIS_CONFIGURATION` |                      | The address of the redis server to use for beatmap caching. By default, there will be no cache. |
+| Environment variable  | Default | Description                                                                                     |
+| --------------------- | ------- | ----------------------------------------------------------------------------------------------- |
+| `REDIS_CONFIGURATION` |         | The address of the redis server to use for beatmap caching. By default, there will be no cache. |
+
+## Recommended setup
 
 ## How to run a calculation
 
