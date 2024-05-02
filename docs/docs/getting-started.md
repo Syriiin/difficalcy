@@ -11,7 +11,7 @@ services:
     ports:
       - 5000:80
     volumes:
-      - beatmaps:/home/app/beatmaps
+      - beatmaps:/beatmaps
     depends_on:
       - cache
 
@@ -72,10 +72,9 @@ By default, the beatmap cache will be on an anonymous volume, and there will be 
 
 ### Environment Variables
 
-| Environment variable  | Default              | Description                                                                                     |
-| --------------------- | -------------------- | ----------------------------------------------------------------------------------------------- |
-| `BEATMAP_DIRECTORY`   | `/home/app/beatmaps` | The directory difficalcy uses for storing beatmap files.                                        |
-| `REDIS_CONFIGURATION` |                      | The address of the redis server to use for beatmap caching. By default, there will be no cache. |
+| Environment variable  | Default | Description                                                                                     |
+| --------------------- | ------- | ----------------------------------------------------------------------------------------------- |
+| `REDIS_CONFIGURATION` |         | The address of the redis server to use for beatmap caching. By default, there will be no cache. |
 
 ## Recommended setup
 

@@ -57,15 +57,18 @@ services:
     ports:
       - 5000:80
     volumes:
-      - beatmaps:/home/app/beatmaps
+      - beatmaps:/beatmaps
     depends_on:
       - cache
 
   cache:
     image: redis:latest
+    volumes:
+      - redis-data:/data
 
   volumes:
     beatmaps:
+    redis-data:
 ```
 
 ## Development Setup
