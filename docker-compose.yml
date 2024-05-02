@@ -45,6 +45,8 @@ services:
 
   cache:
     image: redis:7
+    volumes:
+      - redis-data:/data
 
   docs:
     build: ./docs
@@ -53,3 +55,4 @@ services:
 
 volumes:
   beatmaps:
+  redis-data:
