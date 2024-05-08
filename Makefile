@@ -2,6 +2,7 @@ COMPOSE_TOOLING_RUN = docker compose -f docker-compose.tooling.yml run --rm --bu
 COMPOSE_E2E = docker compose -f docker-compose.yml -f docker-compose.override.e2e.yml
 COMPOSE_E2E_RUN = $(COMPOSE_E2E) run --rm --build e2e-test-runner
 COMPOSE_APP_DEV = docker compose -f docker-compose.yml -f docker-compose.override.yml
+COMPOSE_RUN_DOCS = docker compose -f docker-compose.yml -f docker-compose.override.yml run docs
 COMPOSE_PUBLISH = docker compose -f docker-compose.yml -f docker-compose.override.publish.yml
 
 help:	## Show this help
@@ -31,6 +32,9 @@ update-openapi-schemas:	## Updates OpenAPI schemas in docs site
 	curl localhost:5001/swagger/v1/swagger.json -o docs/docs/api-reference/difficalcy-taiko.json
 	curl localhost:5002/swagger/v1/swagger.json -o docs/docs/api-reference/difficalcy-catch.json
 	curl localhost:5003/swagger/v1/swagger.json -o docs/docs/api-reference/difficalcy-mania.json
+
+build-docs:	## Builds documentation site
+	$(COMPOSE_RUN_DOCS) build --strict --clean
 
 # TODO: move gh into tooling container (requires env var considerations)
 VERSION =
