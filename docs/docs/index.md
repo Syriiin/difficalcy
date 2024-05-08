@@ -1,6 +1,6 @@
 # Welcome to difficalcy
 
-Difficalcy is a a simple HTTP API interface for the official osu! difficulty calculators.
+Difficalcy is a simple HTTP API interface for the official osu! difficulty calculators.
 
 ## Basic usage
 
