@@ -1,0 +1,16 @@
+version: 2
+updates:
+  - package-ecosystem: "nuget"
+    directories:
+      - "/Difficalcy"
+      - "/Difficalcy.Catch"
+      - "/Difficalcy.Catch.Tests"
+      - "/Difficalcy.Mania"
+      - "/Difficalcy.Mania.Tests"
+      - "/Difficalcy.Osu"
+      - "/Difficalcy.Osu.Tests"
+      - "/Difficalcy.Taiko"
+      - "/Difficalcy.Taiko.Tests"
+      - "/Difficalcy.Tests"
+    schedule:
+      interval: "daily"
