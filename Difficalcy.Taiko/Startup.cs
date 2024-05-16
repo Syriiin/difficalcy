@@ -5,10 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Difficalcy.Taiko
 {
-    public class Startup : DifficalcyStartup
+    public class Startup(IConfiguration configuration) : DifficalcyStartup(configuration)
     {
-        public Startup(IConfiguration configuration) : base(configuration) { }
-
         public override string OpenApiTitle => "Difficalcy.Taiko";
 
         public override string OpenApiVersion => "v1";

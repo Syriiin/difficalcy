@@ -16,9 +16,9 @@ using osu.Game.Scoring;
 
 namespace Difficalcy.Taiko.Services
 {
-    public class TaikoCalculatorService : CalculatorService<TaikoScore, TaikoDifficulty, TaikoPerformance, TaikoCalculation>
+    public class TaikoCalculatorService(ICache cache, IBeatmapProvider beatmapProvider) : CalculatorService<TaikoScore, TaikoDifficulty, TaikoPerformance, TaikoCalculation>(cache)
     {
-        private readonly IBeatmapProvider _beatmapProvider;
+        private readonly IBeatmapProvider _beatmapProvider = beatmapProvider;
         private TaikoRuleset TaikoRuleset { get; } = new TaikoRuleset();
 
         public override CalculatorInfo Info
@@ -36,11 +36,6 @@ namespace Difficalcy.Taiko.Services
                     CalculatorUrl = $"https://nuget.org/packages/ppy.{packageName}/{packageVersion}"
                 };
             }
-        }
-
-        public TaikoCalculatorService(ICache cache, IBeatmapProvider beatmapProvider) : base(cache)
-        {
-            _beatmapProvider = beatmapProvider;
         }
 
         protected override async Task EnsureBeatmap(string beatmapId)

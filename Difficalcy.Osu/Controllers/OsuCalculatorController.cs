@@ -4,8 +4,7 @@ using Difficalcy.Osu.Services;
 
 namespace Difficalcy.Osu.Controllers
 {
-    public class OsuCalculatorController : CalculatorController<OsuScore, OsuDifficulty, OsuPerformance, OsuCalculation, OsuCalculatorService>
+    public class OsuCalculatorController(OsuCalculatorService calculatorService) : CalculatorController<OsuScore, OsuDifficulty, OsuPerformance, OsuCalculation, OsuCalculatorService>(calculatorService)
     {
-        public OsuCalculatorController(OsuCalculatorService calculatorService) : base(calculatorService) { }
     }
 }

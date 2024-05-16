@@ -5,19 +5,14 @@ using Microsoft.Extensions.Configuration;
 
 namespace Difficalcy.Services
 {
-    public class WebBeatmapProvider : IBeatmapProvider
+    public class WebBeatmapProvider(IConfiguration configuration) : IBeatmapProvider
     {
-        private string _beatmapDirectory;
-        private readonly HttpClient _httpClient = new HttpClient();
-
-        public WebBeatmapProvider(IConfiguration configuration)
-        {
-            _beatmapDirectory = configuration["BEATMAP_DIRECTORY"];
-        }
+        private readonly string _beatmapDirectory = configuration["BEATMAP_DIRECTORY"];
+        private readonly HttpClient _httpClient = new();
 
         public async Task<bool> EnsureBeatmap(string beatmapId)
         {
-            var beatmapPath = Path.Combine(_beatmapDirectory, beatmapId);
+            var beatmapPath = Path.Combine(_beatmapDirectory, $"{beatmapId}.osu");
             if (!File.Exists(beatmapPath))
             {
                 using var response = await _httpClient.GetAsync($"https://osu.ppy.sh/osu/{beatmapId}");

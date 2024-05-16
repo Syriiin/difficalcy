@@ -3,18 +3,11 @@ using StackExchange.Redis;
 
 namespace Difficalcy.Services
 {
-    public class RedisCacheDatabase : ICacheDatabase
+    public class RedisCacheDatabase(IDatabase redisDatabase) : ICacheDatabase
     {
-        private IDatabase _redisDatabase;
-
-        public RedisCacheDatabase(IDatabase redisDatabase)
-        {
-            _redisDatabase = redisDatabase;
-        }
-
         public async Task<string> GetAsync(string key)
         {
-            var redisValue = await _redisDatabase.StringGetAsync(key);
+            var redisValue = await redisDatabase.StringGetAsync(key);
 
             if (redisValue.IsNull)
                 return null;
@@ -24,18 +17,13 @@ namespace Difficalcy.Services
 
         public void Set(string key, string value)
         {
-            _redisDatabase.StringSet(key, value, flags: CommandFlags.FireAndForget);
+            redisDatabase.StringSet(key, value, flags: CommandFlags.FireAndForget);
         }
     }
 
-    public class RedisCache : ICache
+    public class RedisCache(IConnectionMultiplexer redis) : ICache
     {
-        private IConnectionMultiplexer _redis;
-
-        public RedisCache(IConnectionMultiplexer redis)
-        {
-            _redis = redis;
-        }
+        private readonly IConnectionMultiplexer _redis = redis;
 
         public ICacheDatabase GetDatabase()
         {

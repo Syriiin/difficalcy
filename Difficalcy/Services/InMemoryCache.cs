@@ -14,7 +14,7 @@ namespace Difficalcy.Services
 
     public class InMemoryCache : ICache
     {
-        private InMemoryCacheDatabase _database = new InMemoryCacheDatabase();
+        private readonly InMemoryCacheDatabase _database = new();
 
         public ICacheDatabase GetDatabase() => _database;
     }

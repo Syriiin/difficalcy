@@ -5,18 +5,11 @@ using System.Threading.Tasks;
 
 namespace Difficalcy.Services
 {
-    public class TestBeatmapProvider : IBeatmapProvider
+    public class TestBeatmapProvider(string resourceAssemblyName) : IBeatmapProvider
     {
-        private string _resourceAssemblyName;
-
-        public TestBeatmapProvider(string resourceAssemblyName)
-        {
-            _resourceAssemblyName = resourceAssemblyName;
-        }
-
         public Task<bool> EnsureBeatmap(string beatmapId)
         {
-            var resourceName = $"{_resourceAssemblyName}.Resources.{beatmapId}";
+            var resourceName = $"{resourceAssemblyName}.Resources.{beatmapId}";
             var info = ResourceAssembly.GetManifestResourceInfo(resourceName);
             return Task.FromResult(info != null);
         }
@@ -25,10 +18,10 @@ namespace Difficalcy.Services
         {
             var resourceNamespace = "Testing.Beatmaps";
             var resourceName = $"{resourceNamespace}.{beatmapId}.osu";
-            var fullResourceName = $"{_resourceAssemblyName}.Resources.{resourceName}";
+            var fullResourceName = $"{resourceAssemblyName}.Resources.{resourceName}";
             var stream = ResourceAssembly.GetManifestResourceStream(fullResourceName);
             if (stream == null)
-                throw new Exception($@"Unable to find resource ""{fullResourceName}"" in assembly ""{_resourceAssemblyName}""");
+                throw new Exception($@"Unable to find resource ""{fullResourceName}"" in assembly ""{resourceAssemblyName}""");
             return stream;
         }
 
@@ -37,7 +30,7 @@ namespace Difficalcy.Services
             get
             {
                 string localPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
-                return Assembly.LoadFrom(Path.Combine(localPath, $"{_resourceAssemblyName}.dll"));
+                return Assembly.LoadFrom(Path.Combine(localPath, $"{resourceAssemblyName}.dll"));
             }
         }
     }

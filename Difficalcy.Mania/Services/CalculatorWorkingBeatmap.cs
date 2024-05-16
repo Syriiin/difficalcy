@@ -14,7 +14,7 @@ namespace Difficalcy.Mania.Services
     {
         private readonly Beatmap _beatmap;
 
-        public CalculatorWorkingBeatmap(Ruleset ruleset, Stream beatmapStream, string beatmapId) : this(ruleset, readFromStream(beatmapStream), beatmapId) { }
+        public CalculatorWorkingBeatmap(Ruleset ruleset, Stream beatmapStream, string beatmapId) : this(ruleset, ReadFromStream(beatmapStream), beatmapId) { }
 
         private CalculatorWorkingBeatmap(Ruleset ruleset, Beatmap beatmap, string beatmapId) : base(beatmap.BeatmapInfo, null)
         {
@@ -24,7 +24,7 @@ namespace Difficalcy.Mania.Services
             _beatmap.BeatmapInfo.Ruleset = beatmap.BeatmapInfo.Ruleset.OnlineID == 0 ? (new OsuRuleset()).RulesetInfo : ruleset.RulesetInfo;
         }
 
-        private static Beatmap readFromStream(Stream stream)
+        private static Beatmap ReadFromStream(Stream stream)
         {
             using var reader = new LineBufferedReader(stream);
             return Decoder.GetDecoder<Beatmap>(reader).Decode(reader);

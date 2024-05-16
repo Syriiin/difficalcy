@@ -10,6 +10,7 @@ copyright: |
 nav:
   - index.md
   - getting-started.md
+  - configuration.md
   - API Reference:
     - api-reference/index.md
     - difficalcy-osu: api-reference/difficalcy-osu.md

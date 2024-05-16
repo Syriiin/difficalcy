@@ -4,8 +4,7 @@ using Difficalcy.Taiko.Services;
 
 namespace Difficalcy.Taiko.Controllers
 {
-    public class TaikoCalculatorController : CalculatorController<TaikoScore, TaikoDifficulty, TaikoPerformance, TaikoCalculation, TaikoCalculatorService>
+    public class TaikoCalculatorController(TaikoCalculatorService calculatorService) : CalculatorController<TaikoScore, TaikoDifficulty, TaikoPerformance, TaikoCalculation, TaikoCalculatorService>(calculatorService)
     {
-        public TaikoCalculatorController(TaikoCalculatorService calculatorService) : base(calculatorService) { }
     }
 }

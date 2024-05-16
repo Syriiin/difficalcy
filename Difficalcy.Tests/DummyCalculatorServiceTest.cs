@@ -11,20 +11,16 @@ public class DummyCalculatorServiceTest : CalculatorServiceTest<DummyScore, Dumm
     [InlineData(15, 1500, "test 1", 150)]
     [InlineData(10, 1000, "test 2", 100)]
     public void Test(double expectedDifficultyTotal, double expectedPerformanceTotal, string beatmapId, int mods)
-        => base.TestGetCalculationReturnsCorrectValues(expectedDifficultyTotal, expectedPerformanceTotal, new DummyScore { BeatmapId = beatmapId, Mods = mods });
+        => TestGetCalculationReturnsCorrectValues(expectedDifficultyTotal, expectedPerformanceTotal, new DummyScore { BeatmapId = beatmapId, Mods = mods });
 }
 
 /// <summary>
 /// A dummy calculator service implementation that calculates difficulty as (beatmap id + mods) / 10 and performance as difficulty * 100
 /// </summary>
-public class DummyCalculatorService : CalculatorService<DummyScore, DummyDifficulty, DummyPerformance, DummyCalculation>
+public class DummyCalculatorService(ICache cache) : CalculatorService<DummyScore, DummyDifficulty, DummyPerformance, DummyCalculation>(cache)
 {
-    public DummyCalculatorService(ICache cache) : base(cache)
-    {
-    }
-
     public override CalculatorInfo Info =>
-        new CalculatorInfo
+        new()
         {
             RulesetName = "Dummy",
             CalculatorName = "Dummy calculator",
@@ -40,7 +36,7 @@ public class DummyCalculatorService : CalculatorService<DummyScore, DummyDifficu
     }
 
     protected override DummyCalculation CalculatePerformance(DummyScore score, object difficultyAttributes) =>
-        new DummyCalculation()
+        new()
         {
             Difficulty = new DummyDifficulty() { Total = (double)difficultyAttributes },
             Performance = new DummyPerformance() { Total = (double)difficultyAttributes * 100 }
