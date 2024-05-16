@@ -16,9 +16,9 @@ using osu.Game.Scoring;
 
 namespace Difficalcy.Mania.Services
 {
-    public class ManiaCalculatorService : CalculatorService<ManiaScore, ManiaDifficulty, ManiaPerformance, ManiaCalculation>
+    public class ManiaCalculatorService(ICache cache, IBeatmapProvider beatmapProvider) : CalculatorService<ManiaScore, ManiaDifficulty, ManiaPerformance, ManiaCalculation>(cache)
     {
-        private readonly IBeatmapProvider _beatmapProvider;
+        private readonly IBeatmapProvider _beatmapProvider = beatmapProvider;
         private ManiaRuleset ManiaRuleset { get; } = new ManiaRuleset();
 
         public override CalculatorInfo Info
@@ -36,11 +36,6 @@ namespace Difficalcy.Mania.Services
                     CalculatorUrl = $"https://nuget.org/packages/ppy.{packageName}/{packageVersion}"
                 };
             }
-        }
-
-        public ManiaCalculatorService(ICache cache, IBeatmapProvider beatmapProvider) : base(cache)
-        {
-            _beatmapProvider = beatmapProvider;
         }
 
         protected override async Task EnsureBeatmap(string beatmapId)
