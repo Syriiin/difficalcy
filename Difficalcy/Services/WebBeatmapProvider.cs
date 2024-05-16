@@ -12,7 +12,7 @@ namespace Difficalcy.Services
 
         public async Task<bool> EnsureBeatmap(string beatmapId)
         {
-            var beatmapPath = Path.Combine(_beatmapDirectory, $"{beatmapId}.osu");
+            var beatmapPath = GetBeatmapPath(beatmapId);
             if (!File.Exists(beatmapPath))
             {
                 using var response = await _httpClient.GetAsync($"https://osu.ppy.sh/osu/{beatmapId}");
@@ -29,8 +29,13 @@ namespace Difficalcy.Services
 
         public Stream GetBeatmapStream(string beatmapId)
         {
-            var beatmapPath = Path.Combine(_beatmapDirectory, beatmapId);
+            var beatmapPath = GetBeatmapPath(beatmapId);
             return File.OpenRead(beatmapPath);
+        }
+
+        private string GetBeatmapPath(string beatmapId)
+        {
+            return Path.Combine(_beatmapDirectory, $"{beatmapId}.osu");
         }
     }
 }
