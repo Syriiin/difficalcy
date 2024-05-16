@@ -31,10 +31,10 @@ See [API Reference](./api-reference/index.md) for available endpoints.
 
 difficalcy is available for all four official osu! rulesets:
 
-- osu! - `ghcr.io/syriiin/difficalcy-osu:latest`
-- osu!taiko - `ghcr.io/syriiin/difficalcy-taiko:latest`
-- osu!catch - `ghcr.io/syriiin/difficalcy-catch:latest`
-- osu!mania - `ghcr.io/syriiin/difficalcy-mania:latest`
+- osu! - `ghcr.io/syriiin/difficalcy-osu`
+- osu!taiko - `ghcr.io/syriiin/difficalcy-taiko`
+- osu!catch - `ghcr.io/syriiin/difficalcy-catch`
+- osu!mania - `ghcr.io/syriiin/difficalcy-mania`
 
 See [the github packages](https://github.com/Syriiin?tab=packages&repo_name=difficalcy) for the latest list.
 
@@ -63,20 +63,6 @@ services:
     ports:
       - "5000:80"
 ```
-
-## Configuration
-
-difficalcy is designed to be simple to get up and running, so there are no _required_ configurations.
-
-By default, the beatmap cache will be on an anonymous volume, and there will be no caching for calculations.
-
-### Environment Variables
-
-| Environment variable  | Default | Description                                                                                     |
-| --------------------- | ------- | ----------------------------------------------------------------------------------------------- |
-| `REDIS_CONFIGURATION` |         | The address of the redis server to use for beatmap caching. By default, there will be no cache. |
-
-## Recommended setup
 
 ## How to run a calculation
 
@@ -159,3 +145,35 @@ curl "localhost:5000/api/calculation?BeatmapId=658127&Mods=24&Oks=24&Misses=2&Co
   }
 }
 ```
+
+## Recommended setup
+
+In a real deployment, caching is important, so including a redis instance and persistent volumes for both beatmaps and redis data will help you a lot.
+
+For real deployments, I also recommend you NOT use the `latest` tag, as this could cause issues if there is a major version released.
+You are better off checking for the current latest version in the [releases](https://github.com/Syriiin/difficalcy/releases) and pinning it manually.
+
+```yaml
+services:
+  difficalcy-osu:
+    image: ghcr.io/syriiin/difficalcy-osu:latest
+    environment:
+      - REDIS_CONFIGURATION=cache:6379
+    ports:
+      - 5000:80
+    volumes:
+      - beatmaps:/beatmaps
+    depends_on:
+      - cache
+
+  cache:
+    image: redis:latest
+    volumes:
+      - redis-data:/data
+
+  volumes:
+    beatmaps:
+    redis-data:
+```
+
+See [Configuration](./configuration.md) for a full list of configuration options.
