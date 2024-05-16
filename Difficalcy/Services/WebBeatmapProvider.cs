@@ -17,7 +17,7 @@ namespace Difficalcy.Services
 
         public async Task<bool> EnsureBeatmap(string beatmapId)
         {
-            var beatmapPath = Path.Combine(_beatmapDirectory, beatmapId);
+            var beatmapPath = Path.Combine(_beatmapDirectory, $"{beatmapId}.osu");
             if (!File.Exists(beatmapPath))
             {
                 using var response = await _httpClient.GetAsync($"https://osu.ppy.sh/osu/{beatmapId}");
