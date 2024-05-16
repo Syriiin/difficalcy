@@ -99,7 +99,7 @@ namespace Difficalcy.Mania.Services
         private CalculatorWorkingBeatmap GetWorkingBeatmap(string beatmapId)
         {
             using var beatmapStream = _beatmapProvider.GetBeatmapStream(beatmapId);
-            return new CalculatorWorkingBeatmap(ManiaRuleset, beatmapStream, beatmapId);
+            return new CalculatorWorkingBeatmap(ManiaRuleset, beatmapStream);
         }
 
         private static Dictionary<HitResult, int> GetHitResults(int hitResultCount, int countMiss, int countMeh, int countOk, int countGood, int countGreat)

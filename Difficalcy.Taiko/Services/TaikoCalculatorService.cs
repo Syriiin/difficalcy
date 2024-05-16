@@ -105,7 +105,7 @@ namespace Difficalcy.Taiko.Services
         private CalculatorWorkingBeatmap GetWorkingBeatmap(string beatmapId)
         {
             using var beatmapStream = _beatmapProvider.GetBeatmapStream(beatmapId);
-            return new CalculatorWorkingBeatmap(TaikoRuleset, beatmapStream, beatmapId);
+            return new CalculatorWorkingBeatmap(TaikoRuleset, beatmapStream);
         }
 
         private static Dictionary<HitResult, int> GetHitResults(int hitResultCount, int countMiss, int countOk)

@@ -100,7 +100,7 @@ namespace Difficalcy.Catch.Services
         private CalculatorWorkingBeatmap GetWorkingBeatmap(string beatmapId)
         {
             using var beatmapStream = beatmapProvider.GetBeatmapStream(beatmapId);
-            return new CalculatorWorkingBeatmap(CatchRuleset, beatmapStream, beatmapId);
+            return new CalculatorWorkingBeatmap(CatchRuleset, beatmapStream);
         }
 
         private static Dictionary<HitResult, int> GetHitResults(IBeatmap beatmap, int countMiss, int? countDroplet, int? countTinyDroplet)
