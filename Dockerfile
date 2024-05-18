@@ -4,9 +4,10 @@ LABEL org.opencontainers.image.source https://github.com/Syriiin/difficalcy
 
 WORKDIR /app
 EXPOSE 80
-ENV ASPNETCORE_URLS=http://+:80
-ENV ASPNETCORE_ENVIRONMENT=Production
-ENV BEATMAP_DIRECTORY=/beatmaps
+ENV ASPNETCORE_URLS="http://+:80"
+ENV ASPNETCORE_ENVIRONMENT="Production"
+ENV BEATMAP_DIRECTORY="/beatmaps"
+ENV DOWNLOAD_MISSING_BEATMAPS="true"
 
 VOLUME ${BEATMAP_DIRECTORY}
 # chmod 777 so that this volume can be read/written by other containers that might use different uids

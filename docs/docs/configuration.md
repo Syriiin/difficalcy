@@ -6,9 +6,10 @@ However it would be a good idea to consider these configuration options for a re
 
 ## Environment Variables
 
-| Environment variable  | Default | Description                                                                                     |
-| --------------------- | ------- | ----------------------------------------------------------------------------------------------- |
-| `REDIS_CONFIGURATION` |         | The address of the redis server to use for beatmap caching. By default, there will be no cache. |
+| Environment variable        | Default | Description                                                                                     |
+| --------------------------- | ------- | ----------------------------------------------------------------------------------------------- |
+| `REDIS_CONFIGURATION`       |         | The address of the redis server to use for beatmap caching. By default, there will be no cache. |
+| `DOWNLOAD_MISSING_BEATMAPS` | true    | Whether or not to attempt to download missing beatmaps.                                         |
 
 ## Docker volumes
 
