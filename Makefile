@@ -27,11 +27,11 @@ start-dev: build-dev	## Starts development environment
 clean-dev:	## Cleans development environment
 	$(COMPOSE_APP_DEV) down --remove-orphans
 
-update-api-reference: start-dev	## Updates OpenAPI schemas in docs site
-	@scripts/update-api-reference.sh
+update-api-reference:	## Updates OpenAPI schemas in docs site
+	$(COMPOSE_TOOLING_RUN) scripts/update-api-reference.sh
 
-check-api-reference: start-dev ## Checks OpenAPI schemas are updated
-	@scripts/check-api-reference.sh
+check-api-reference: ## Checks OpenAPI schemas are updated
+	$(COMPOSE_TOOLING_RUN) scripts/check-api-reference.sh
 
 build-docs:	## Builds documentation site
 	$(COMPOSE_RUN_DOCS) build --strict --clean
