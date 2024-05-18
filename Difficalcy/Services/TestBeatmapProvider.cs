@@ -2,27 +2,30 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Difficalcy.Services
 {
     public class TestBeatmapProvider(string resourceAssemblyName) : IBeatmapProvider
     {
-        public Task<bool> EnsureBeatmap(string beatmapId)
+        public Task EnsureBeatmap(string beatmapId)
         {
-            var resourceName = $"{resourceAssemblyName}.Resources.{beatmapId}";
-            var info = ResourceAssembly.GetManifestResourceInfo(resourceName);
-            return Task.FromResult(info != null);
+            var resourceName = GetResourceName(beatmapId);
+            _ = ResourceAssembly.GetManifestResourceInfo(resourceName) ?? throw new BadHttpRequestException($"Beatmap not found: {beatmapId}");
+            return Task.CompletedTask;
         }
 
         public Stream GetBeatmapStream(string beatmapId)
         {
+            var resourceName = GetResourceName(beatmapId);
+            return ResourceAssembly.GetManifestResourceStream(resourceName);
+        }
+
+        private string GetResourceName(string beatmapId)
+        {
             var resourceNamespace = "Testing.Beatmaps";
             var resourceName = $"{resourceNamespace}.{beatmapId}.osu";
-            var fullResourceName = $"{resourceAssemblyName}.Resources.{resourceName}";
-            var stream = ResourceAssembly.GetManifestResourceStream(fullResourceName);
-            if (stream == null)
-                throw new Exception($@"Unable to find resource ""{fullResourceName}"" in assembly ""{resourceAssemblyName}""");
-            return stream;
+            return $"{resourceAssemblyName}.Resources.{resourceName}";
         }
 
         private Assembly ResourceAssembly
