@@ -8,6 +8,10 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | d
 
 WORKDIR /app
 
+COPY .config/dotnet-tools.json ./.config/
+
+RUN dotnet tool restore
+
 COPY Difficalcy.sln .
 COPY Difficalcy/Difficalcy.csproj ./Difficalcy/
 COPY Difficalcy.Catch/Difficalcy.Catch.csproj ./Difficalcy.Catch/

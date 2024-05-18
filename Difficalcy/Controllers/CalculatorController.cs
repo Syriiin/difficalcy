@@ -33,7 +33,14 @@ namespace Difficalcy.Controllers
         [HttpGet("calculation")]
         public async Task<ActionResult<TCalculation>> GetCalculation([FromQuery] TScore score)
         {
-            return Ok(await calculatorService.GetCalculation(score));
+            try
+            {
+                return Ok(await calculatorService.GetCalculation(score));
+            }
+            catch (BeatmapNotFoundException e)
+            {
+                return BadRequest(new { error = e.Message });
+            }
         }
 
         /// <summary>
@@ -43,7 +50,14 @@ namespace Difficalcy.Controllers
         [Consumes("application/json")]
         public async Task<ActionResult<TCalculation[]>> GetCalculationBatch([FromBody] TScore[] scores)
         {
-            return Ok(await Task.WhenAll(scores.Select(score => calculatorService.GetCalculation(score))));
+            try
+            {
+                return Ok(await Task.WhenAll(scores.Select(calculatorService.GetCalculation)));
+            }
+            catch (BeatmapNotFoundException e)
+            {
+                return BadRequest(new { error = e.Message });
+            }
         }
     }
 }

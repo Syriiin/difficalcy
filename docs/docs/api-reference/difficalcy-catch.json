@@ -12,7 +12,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -37,8 +37,7 @@
               "maximum": 2147483647,
               "minimum": 0,
               "type": "integer",
-              "format": "int32",
-              "nullable": true
+              "format": "int32"
             }
           },
           {
@@ -58,8 +57,7 @@
               "maximum": 2147483647,
               "minimum": 0,
               "type": "integer",
-              "format": "int32",
-              "nullable": true
+              "format": "int32"
             }
           },
           {
@@ -69,8 +67,7 @@
               "maximum": 2147483647,
               "minimum": 0,
               "type": "integer",
-              "format": "int32",
-              "nullable": true
+              "format": "int32"
             }
           },
           {
@@ -94,7 +91,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -118,15 +115,14 @@
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/CatchScore"
-                },
-                "nullable": true
+                }
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -170,26 +166,6 @@
         },
         "additionalProperties": false
       },
-      "CatchDifficulty": {
-        "type": "object",
-        "properties": {
-          "total": {
-            "type": "number",
-            "format": "double"
-          }
-        },
-        "additionalProperties": false
-      },
-      "CatchPerformance": {
-        "type": "object",
-        "properties": {
-          "total": {
-            "type": "number",
-            "format": "double"
-          }
-        },
-        "additionalProperties": false
-      },
       "CatchCalculation": {
         "type": "object",
         "properties": {
@@ -210,6 +186,26 @@
         },
         "additionalProperties": false
       },
+      "CatchDifficulty": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CatchPerformance": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
       "CatchScore": {
         "required": [
           "beatmapId"
@@ -217,6 +213,7 @@
         "type": "object",
         "properties": {
           "beatmapId": {
+            "minLength": 1,
             "type": "string"
           },
           "mods": {

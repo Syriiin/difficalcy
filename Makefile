@@ -27,11 +27,11 @@ start-dev: build-dev	## Starts development environment
 clean-dev:	## Cleans development environment
 	$(COMPOSE_APP_DEV) down --remove-orphans
 
-update-openapi-schemas:	## Updates OpenAPI schemas in docs site
-	curl localhost:5000/swagger/v1/swagger.json -o docs/docs/api-reference/difficalcy-osu.json
-	curl localhost:5001/swagger/v1/swagger.json -o docs/docs/api-reference/difficalcy-taiko.json
-	curl localhost:5002/swagger/v1/swagger.json -o docs/docs/api-reference/difficalcy-catch.json
-	curl localhost:5003/swagger/v1/swagger.json -o docs/docs/api-reference/difficalcy-mania.json
+update-api-reference:	## Updates OpenAPI schemas in docs site
+	$(COMPOSE_TOOLING_RUN) scripts/update-api-reference.sh
+
+check-api-reference: ## Checks OpenAPI schemas are updated
+	$(COMPOSE_TOOLING_RUN) scripts/check-api-reference.sh
 
 build-docs:	## Builds documentation site
 	$(COMPOSE_RUN_DOCS) build --strict --clean
