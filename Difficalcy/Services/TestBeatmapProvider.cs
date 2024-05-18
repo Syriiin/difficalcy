@@ -1,8 +1,6 @@
-using System;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 
 namespace Difficalcy.Services
 {
@@ -11,7 +9,7 @@ namespace Difficalcy.Services
         public Task EnsureBeatmap(string beatmapId)
         {
             var resourceName = GetResourceName(beatmapId);
-            _ = ResourceAssembly.GetManifestResourceInfo(resourceName) ?? throw new BadHttpRequestException($"Beatmap not found: {beatmapId}");
+            _ = ResourceAssembly.GetManifestResourceInfo(resourceName) ?? throw new BeatmapNotFoundException(beatmapId);
             return Task.CompletedTask;
         }
 

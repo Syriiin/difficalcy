@@ -1,7 +1,6 @@
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
 namespace Difficalcy.Services
@@ -18,16 +17,20 @@ namespace Difficalcy.Services
             if (!File.Exists(beatmapPath))
             {
                 if (_downloadMissingBeatmaps != "true")
-                    throw new BadHttpRequestException("Beatmap not found");
+                    throw new BeatmapNotFoundException(beatmapId);
 
                 using var response = await _httpClient.GetAsync($"https://osu.ppy.sh/osu/{beatmapId}");
                 if (!response.IsSuccessStatusCode || response.Content.Headers.ContentLength == 0)
-                    throw new BadHttpRequestException("Beatmap not found");
+                    throw new BeatmapNotFoundException(beatmapId);
 
                 using var fs = new FileStream(beatmapPath, FileMode.CreateNew);
                 await response.Content.CopyToAsync(fs);
                 if (fs.Length == 0)
-                    throw new BadHttpRequestException("Beatmap not found");
+                {
+                    fs.Close();
+                    File.Delete(beatmapPath);
+                    throw new BeatmapNotFoundException(beatmapId);
+                }
             }
         }
 
