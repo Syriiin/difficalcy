@@ -7,7 +7,7 @@ namespace Difficalcy.Services
 {
     public class TestBeatmapProvider(string resourceAssemblyName) : IBeatmapProvider
     {
-        public Task<bool> EnsureBeatmap(string beatmapId)
+        public Task EnsureBeatmap(string beatmapId)
         {
             var resourceName = $"{resourceAssemblyName}.Resources.{beatmapId}";
             var info = ResourceAssembly.GetManifestResourceInfo(resourceName);

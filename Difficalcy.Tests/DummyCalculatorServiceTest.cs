@@ -45,7 +45,7 @@ public class DummyCalculatorService(ICache cache) : CalculatorService<DummyScore
     protected override object DeserialiseDifficultyAttributes(string difficultyAttributesJson) =>
         double.Parse(difficultyAttributesJson);
 
-    protected override Task<bool> EnsureBeatmap(string beatmapId) =>
+    protected override Task EnsureBeatmap(string beatmapId) =>
         Task.FromResult(true);
 }
 
