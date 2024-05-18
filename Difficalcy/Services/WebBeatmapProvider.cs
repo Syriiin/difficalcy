@@ -17,14 +17,13 @@ namespace Difficalcy.Services
             if (!File.Exists(beatmapPath))
             {
                 using var response = await _httpClient.GetAsync($"https://osu.ppy.sh/osu/{beatmapId}");
-                if (!response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode || response.Content.Headers.ContentLength == 0)
                     throw new BadHttpRequestException("Beatmap not found");
 
                 using var fs = new FileStream(beatmapPath, FileMode.CreateNew);
+                await response.Content.CopyToAsync(fs);
                 if (fs.Length == 0)
                     throw new BadHttpRequestException("Beatmap not found");
-
-                await response.Content.CopyToAsync(fs);
             }
         }
 
