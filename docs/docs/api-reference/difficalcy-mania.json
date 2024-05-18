@@ -12,7 +12,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -101,7 +101,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -125,15 +125,14 @@
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/ManiaScore"
-                },
-                "nullable": true
+                }
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -177,6 +176,22 @@
         },
         "additionalProperties": false
       },
+      "ManiaCalculation": {
+        "type": "object",
+        "properties": {
+          "difficulty": {
+            "$ref": "#/components/schemas/ManiaDifficulty"
+          },
+          "performance": {
+            "$ref": "#/components/schemas/ManiaPerformance"
+          },
+          "accuracy": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
       "ManiaDifficulty": {
         "type": "object",
         "properties": {
@@ -201,22 +216,6 @@
         },
         "additionalProperties": false
       },
-      "ManiaCalculation": {
-        "type": "object",
-        "properties": {
-          "difficulty": {
-            "$ref": "#/components/schemas/ManiaDifficulty"
-          },
-          "performance": {
-            "$ref": "#/components/schemas/ManiaPerformance"
-          },
-          "accuracy": {
-            "type": "number",
-            "format": "double"
-          }
-        },
-        "additionalProperties": false
-      },
       "ManiaScore": {
         "required": [
           "beatmapId"
@@ -224,6 +223,7 @@
         "type": "object",
         "properties": {
           "beatmapId": {
+            "minLength": 1,
             "type": "string"
           },
           "mods": {

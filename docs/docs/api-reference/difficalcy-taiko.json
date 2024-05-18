@@ -12,7 +12,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -37,8 +37,7 @@
               "maximum": 2147483647,
               "minimum": 0,
               "type": "integer",
-              "format": "int32",
-              "nullable": true
+              "format": "int32"
             }
           },
           {
@@ -82,7 +81,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -106,15 +105,14 @@
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/TaikoScore"
-                },
-                "nullable": true
+                }
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -154,6 +152,26 @@
           "calculatorUrl": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TaikoCalculation": {
+        "type": "object",
+        "properties": {
+          "difficulty": {
+            "$ref": "#/components/schemas/TaikoDifficulty"
+          },
+          "performance": {
+            "$ref": "#/components/schemas/TaikoPerformance"
+          },
+          "accuracy": {
+            "type": "number",
+            "format": "double"
+          },
+          "combo": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false
@@ -198,26 +216,6 @@
         },
         "additionalProperties": false
       },
-      "TaikoCalculation": {
-        "type": "object",
-        "properties": {
-          "difficulty": {
-            "$ref": "#/components/schemas/TaikoDifficulty"
-          },
-          "performance": {
-            "$ref": "#/components/schemas/TaikoPerformance"
-          },
-          "accuracy": {
-            "type": "number",
-            "format": "double"
-          },
-          "combo": {
-            "type": "number",
-            "format": "double"
-          }
-        },
-        "additionalProperties": false
-      },
       "TaikoScore": {
         "required": [
           "beatmapId"
@@ -225,6 +223,7 @@
         "type": "object",
         "properties": {
           "beatmapId": {
+            "minLength": 1,
             "type": "string"
           },
           "mods": {
