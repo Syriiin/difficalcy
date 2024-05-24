@@ -43,10 +43,10 @@ namespace Difficalcy.Taiko.Services
             await _beatmapProvider.EnsureBeatmap(beatmapId);
         }
 
-        protected override (object, string) CalculateDifficultyAttributes(TaikoScore score)
+        protected override (object, string) CalculateDifficultyAttributes(string beatmapId, int bitMods)
         {
-            var workingBeatmap = GetWorkingBeatmap(score.BeatmapId);
-            var mods = TaikoRuleset.ConvertFromLegacyMods((LegacyMods)score.Mods).ToArray();
+            var workingBeatmap = GetWorkingBeatmap(beatmapId);
+            var mods = TaikoRuleset.ConvertFromLegacyMods((LegacyMods)bitMods).ToArray();
 
             var difficultyCalculator = TaikoRuleset.CreateDifficultyCalculator(workingBeatmap);
             var difficultyAttributes = difficultyCalculator.Calculate(mods) as TaikoDifficultyAttributes;
