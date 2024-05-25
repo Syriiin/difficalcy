@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Threading.Tasks;
 using Difficalcy.Models;
 using Difficalcy.Services;
@@ -52,7 +51,7 @@ namespace Difficalcy.Controllers
         {
             try
             {
-                return Ok(await Task.WhenAll(scores.Select(calculatorService.GetCalculation)));
+                return Ok(await calculatorService.GetCalculationBatch(scores));
             }
             catch (BeatmapNotFoundException e)
             {

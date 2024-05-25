@@ -43,10 +43,10 @@ namespace Difficalcy.Catch.Services
             await beatmapProvider.EnsureBeatmap(beatmapId);
         }
 
-        protected override (object, string) CalculateDifficultyAttributes(CatchScore score)
+        protected override (object, string) CalculateDifficultyAttributes(string beatmapId, int bitMods)
         {
-            var workingBeatmap = GetWorkingBeatmap(score.BeatmapId);
-            var mods = CatchRuleset.ConvertFromLegacyMods((LegacyMods)score.Mods).ToArray();
+            var workingBeatmap = GetWorkingBeatmap(beatmapId);
+            var mods = CatchRuleset.ConvertFromLegacyMods((LegacyMods)bitMods).ToArray();
 
             var difficultyCalculator = CatchRuleset.CreateDifficultyCalculator(workingBeatmap);
             var difficultyAttributes = difficultyCalculator.Calculate(mods) as CatchDifficultyAttributes;

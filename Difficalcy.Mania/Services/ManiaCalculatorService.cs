@@ -43,10 +43,10 @@ namespace Difficalcy.Mania.Services
             await _beatmapProvider.EnsureBeatmap(beatmapId);
         }
 
-        protected override (object, string) CalculateDifficultyAttributes(ManiaScore score)
+        protected override (object, string) CalculateDifficultyAttributes(string beatmapId, int bitMods)
         {
-            var workingBeatmap = GetWorkingBeatmap(score.BeatmapId);
-            var mods = ManiaRuleset.ConvertFromLegacyMods((LegacyMods)score.Mods).ToArray();
+            var workingBeatmap = GetWorkingBeatmap(beatmapId);
+            var mods = ManiaRuleset.ConvertFromLegacyMods((LegacyMods)bitMods).ToArray();
 
             var difficultyCalculator = ManiaRuleset.CreateDifficultyCalculator(workingBeatmap);
             var difficultyAttributes = difficultyCalculator.Calculate(mods) as ManiaDifficultyAttributes;
