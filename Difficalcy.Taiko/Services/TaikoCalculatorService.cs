@@ -128,6 +128,9 @@ namespace Difficalcy.Taiko.Services
             var countMiss = statistics[HitResult.Miss];
             var total = countGreat + countOk + countMiss;
 
+            if (total == 0)
+                return 1;
+
             return (double)((2 * countGreat) + countOk) / (2 * total);
         }
 

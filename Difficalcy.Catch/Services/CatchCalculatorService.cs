@@ -134,6 +134,9 @@ namespace Difficalcy.Catch.Services
             double hits = statistics[HitResult.Great] + statistics[HitResult.LargeTickHit] + statistics[HitResult.SmallTickHit];
             double total = hits + statistics[HitResult.Miss] + statistics[HitResult.SmallTickMiss];
 
+            if (total == 0)
+                return 1;
+
             return hits / total;
         }
 

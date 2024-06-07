@@ -132,6 +132,9 @@ namespace Difficalcy.Osu.Services
             var countMiss = statistics[HitResult.Miss];
             var total = countGreat + countOk + countMeh + countMiss;
 
+            if (total == 0)
+                return 1;
+
             return (double)((6 * countGreat) + (2 * countOk) + countMeh) / (6 * total);
         }
 
