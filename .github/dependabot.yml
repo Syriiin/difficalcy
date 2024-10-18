@@ -19,3 +19,7 @@ updates:
         applies-to: version-updates
         patterns:
           - "xunit*"
+      osu-rulesets:
+        applies-to: version-updates
+        patterns:
+          - "ppy.osu.Game.Rulesets*"
