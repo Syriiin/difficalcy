@@ -59,6 +59,8 @@ namespace Difficalcy.Osu.Services
                 difficultyAttributes.SpeedNoteCount,
                 difficultyAttributes.FlashlightDifficulty,
                 difficultyAttributes.SliderFactor,
+                difficultyAttributes.AimDifficultStrainCount,
+                difficultyAttributes.SpeedDifficultStrainCount,
                 difficultyAttributes.ApproachRate,
                 difficultyAttributes.OverallDifficulty,
                 difficultyAttributes.DrainRate,
