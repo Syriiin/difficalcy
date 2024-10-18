@@ -60,7 +60,8 @@ namespace Difficalcy.Taiko.Services
                 difficultyAttributes.RhythmDifficulty,
                 difficultyAttributes.ColourDifficulty,
                 difficultyAttributes.PeakDifficulty,
-                difficultyAttributes.GreatHitWindow
+                difficultyAttributes.GreatHitWindow,
+                difficultyAttributes.OkHitWindow
             }));
         }
 
