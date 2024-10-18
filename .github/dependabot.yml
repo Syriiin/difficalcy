@@ -14,3 +14,8 @@ updates:
       - "/Difficalcy.Tests"
     schedule:
       interval: "daily"
+    groups:
+      xunit:
+        applies-to: version-updates
+        patterns:
+          - "xunit"
