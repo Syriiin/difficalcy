@@ -10,8 +10,8 @@ public class OsuCalculatorServiceTest : CalculatorServiceTest<OsuScore, OsuDiffi
     protected override CalculatorService<OsuScore, OsuDifficulty, OsuPerformance, OsuCalculation> CalculatorService { get; } = new OsuCalculatorService(new InMemoryCache(), new TestBeatmapProvider(typeof(OsuCalculatorService).Assembly.GetName().Name));
 
     [Theory]
-    [InlineData(6.7171144000821119d, 291.6916492167043d, "diffcalc-test", 0)]
-    [InlineData(8.9825709931204205d, 718.5552449511403d, "diffcalc-test", 64)]
+    [InlineData(6.7171144000821119d, 291.34799376682508d, "diffcalc-test", 0)]
+    [InlineData(8.9825709931204205d, 717.13844713272601d, "diffcalc-test", 64)]
     public void Test(double expectedDifficultyTotal, double expectedPerformanceTotal, string beatmapId, int mods)
         => TestGetCalculationReturnsCorrectValues(expectedDifficultyTotal, expectedPerformanceTotal, new OsuScore { BeatmapId = beatmapId, Mods = mods });
 
