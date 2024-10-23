@@ -15,10 +15,11 @@ updates:
     schedule:
       interval: "daily"
     groups:
-      xunit:
+      test-tools:
         applies-to: version-updates
         patterns:
           - "xunit*"
+          - "Microsoft.NET.Test.Sdk"
       osu-rulesets:
         applies-to: version-updates
         patterns:
