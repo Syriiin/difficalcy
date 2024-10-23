@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
 
@@ -29,6 +30,14 @@ namespace Difficalcy
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = OpenApiTitle, Version = OpenApiVersion });
+            });
+
+            services.AddLogging(options =>
+            {
+                options.AddSimpleConsole(console =>
+                {
+                    console.TimestampFormat = "[HH:mm:ss] ";
+                });
             });
 
             var redisConfig = Configuration["REDIS_CONFIGURATION"];
