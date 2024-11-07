@@ -13,7 +13,7 @@ updates:
       - "/Difficalcy.Taiko.Tests"
       - "/Difficalcy.Tests"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     groups:
       test-tools:
         applies-to: version-updates
@@ -27,12 +27,12 @@ updates:
   - package-ecosystem: "pip"
     directory: "/docs"
     schedule:
-      interval: "daily"
+      interval: "weekly"
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
   - package-ecosystem: "github-actions"
     directory: "/.github/workflows"
     schedule:
-      interval: "daily"
+      interval: "weekly"
