@@ -26,9 +26,15 @@ namespace Difficalcy.Services
                 logger.LogInformation("Downloading beatmap {BeatmapId}", beatmapId);
 
                 using var response = await _httpClient.GetAsync($"https://osu.ppy.sh/osu/{beatmapId}");
-                if (!response.IsSuccessStatusCode || response.Content.Headers.ContentLength == 0)
+                if (!response.IsSuccessStatusCode)
                 {
-                    logger.LogWarning("Failed to download beatmap {BeatmapId}", beatmapId);
+                    logger.LogWarning("Failed to download beatmap {BeatmapId}, status code {StatusCode}", beatmapId, response.StatusCode);
+                    throw new BeatmapNotFoundException(beatmapId);
+                }
+
+                if (response.Content.Headers.ContentLength == 0)
+                {
+                    logger.LogWarning("Downloaded beatmap {BeatmapId} response was empty", beatmapId);
                     throw new BeatmapNotFoundException(beatmapId);
                 }
 
