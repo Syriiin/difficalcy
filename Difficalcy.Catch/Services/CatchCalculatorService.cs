@@ -9,11 +9,13 @@ using Difficalcy.Models;
 using Difficalcy.Services;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.Legacy;
+using osu.Game.Online.API;
 using osu.Game.Rulesets.Catch;
 using osu.Game.Rulesets.Catch.Difficulty;
 using osu.Game.Rulesets.Catch.Objects;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Scoring;
+using LazerMod = osu.Game.Rulesets.Mods.Mod;
 
 namespace Difficalcy.Catch.Services
 {
@@ -43,13 +45,13 @@ namespace Difficalcy.Catch.Services
             await beatmapProvider.EnsureBeatmap(beatmapId);
         }
 
-        protected override (object, string) CalculateDifficultyAttributes(string beatmapId, int bitMods)
+        protected override (object, string) CalculateDifficultyAttributes(string beatmapId, Mod[] mods)
         {
             var workingBeatmap = GetWorkingBeatmap(beatmapId);
-            var mods = CatchRuleset.ConvertFromLegacyMods((LegacyMods)bitMods).ToArray();
+            var lazerMods = mods.Select(ModToLazerMod).ToArray();
 
             var difficultyCalculator = CatchRuleset.CreateDifficultyCalculator(workingBeatmap);
-            var difficultyAttributes = difficultyCalculator.Calculate(mods) as CatchDifficultyAttributes;
+            var difficultyAttributes = difficultyCalculator.Calculate(lazerMods) as CatchDifficultyAttributes;
 
             // Serialising anonymous object with same names because some properties can't be serialised, and the built-in JsonProperty fields aren't on all required fields
             return (difficultyAttributes, JsonSerializer.Serialize(new
@@ -70,7 +72,7 @@ namespace Difficalcy.Catch.Services
             var catchDifficultyAttributes = (CatchDifficultyAttributes)difficultyAttributes;
 
             var workingBeatmap = GetWorkingBeatmap(score.BeatmapId);
-            var mods = CatchRuleset.ConvertFromLegacyMods((LegacyMods)score.Mods).ToArray();
+            var mods = score.Mods.Select(ModToLazerMod).ToArray();
             var beatmap = workingBeatmap.GetPlayableBeatmap(CatchRuleset.RulesetInfo, mods);
 
             var combo = score.Combo ?? beatmap.HitObjects.Count(h => h is Fruit) + beatmap.HitObjects.OfType<JuiceStream>().SelectMany(j => j.NestedHitObjects).Count(h => !(h is TinyDroplet));
@@ -101,6 +103,15 @@ namespace Difficalcy.Catch.Services
         {
             using var beatmapStream = beatmapProvider.GetBeatmapStream(beatmapId);
             return new CalculatorWorkingBeatmap(CatchRuleset, beatmapStream);
+        }
+
+        private LazerMod ModToLazerMod(Mod mod)
+        {
+            var apiMod = new APIMod { Acronym = mod.Acronym };
+            foreach (var setting in mod.Settings)
+                apiMod.Settings.Add(setting.Key, setting.Value);
+
+            return apiMod.ToMod(CatchRuleset);
         }
 
         private static Dictionary<HitResult, int> GetHitResults(IBeatmap beatmap, int countMiss, int? countDroplet, int? countTinyDroplet)

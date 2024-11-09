@@ -8,11 +8,13 @@ using Difficalcy.Mania.Models;
 using Difficalcy.Models;
 using Difficalcy.Services;
 using osu.Game.Beatmaps.Legacy;
+using osu.Game.Online.API;
 using osu.Game.Rulesets.Mania;
 using osu.Game.Rulesets.Mania.Difficulty;
 using osu.Game.Rulesets.Mania.Objects;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Scoring;
+using LazerMod = osu.Game.Rulesets.Mods.Mod;
 
 namespace Difficalcy.Mania.Services
 {
@@ -43,13 +45,13 @@ namespace Difficalcy.Mania.Services
             await _beatmapProvider.EnsureBeatmap(beatmapId);
         }
 
-        protected override (object, string) CalculateDifficultyAttributes(string beatmapId, int bitMods)
+        protected override (object, string) CalculateDifficultyAttributes(string beatmapId, Mod[] mods)
         {
             var workingBeatmap = GetWorkingBeatmap(beatmapId);
-            var mods = ManiaRuleset.ConvertFromLegacyMods((LegacyMods)bitMods).ToArray();
+            var lazerMods = mods.Select(ModToLazerMod).ToArray();
 
             var difficultyCalculator = ManiaRuleset.CreateDifficultyCalculator(workingBeatmap);
-            var difficultyAttributes = difficultyCalculator.Calculate(mods) as ManiaDifficultyAttributes;
+            var difficultyAttributes = difficultyCalculator.Calculate(lazerMods) as ManiaDifficultyAttributes;
 
             // Serialising anonymous object with same names because some properties can't be serialised, and the built-in JsonProperty fields aren't on all required fields
             return (difficultyAttributes, JsonSerializer.Serialize(new
@@ -69,7 +71,7 @@ namespace Difficalcy.Mania.Services
         {
             var maniaDifficultyAttributes = (ManiaDifficultyAttributes)difficultyAttributes;
             var workingBeatmap = GetWorkingBeatmap(score.BeatmapId);
-            var mods = ManiaRuleset.ConvertFromLegacyMods((LegacyMods)score.Mods).ToArray();
+            var mods = score.Mods.Select(ModToLazerMod).ToArray();
             var beatmap = workingBeatmap.GetPlayableBeatmap(ManiaRuleset.RulesetInfo, mods);
 
             var hitObjectCount = beatmap.HitObjects.Count;
@@ -100,6 +102,15 @@ namespace Difficalcy.Mania.Services
         {
             using var beatmapStream = _beatmapProvider.GetBeatmapStream(beatmapId);
             return new CalculatorWorkingBeatmap(ManiaRuleset, beatmapStream);
+        }
+
+        private LazerMod ModToLazerMod(Mod mod)
+        {
+            var apiMod = new APIMod { Acronym = mod.Acronym };
+            foreach (var setting in mod.Settings)
+                apiMod.Settings.Add(setting.Key, setting.Value);
+
+            return apiMod.ToMod(ManiaRuleset);
         }
 
         private static Dictionary<HitResult, int> GetHitResults(int hitResultCount, int countMiss, int countMeh, int countOk, int countGood, int countGreat)

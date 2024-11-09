@@ -1,3 +1,4 @@
+using Difficalcy.Models;
 using Difficalcy.Osu.Models;
 using Difficalcy.Osu.Services;
 using Difficalcy.Services;
@@ -10,10 +11,10 @@ public class OsuCalculatorServiceTest : CalculatorServiceTest<OsuScore, OsuDiffi
     protected override CalculatorService<OsuScore, OsuDifficulty, OsuPerformance, OsuCalculation> CalculatorService { get; } = new OsuCalculatorService(new InMemoryCache(), new TestBeatmapProvider(typeof(OsuCalculatorService).Assembly.GetName().Name));
 
     [Theory]
-    [InlineData(6.7171144000821119d, 291.34799376682508d, "diffcalc-test", 0)]
-    [InlineData(8.9825709931204205d, 717.13844713272601d, "diffcalc-test", 64)]
-    public void Test(double expectedDifficultyTotal, double expectedPerformanceTotal, string beatmapId, int mods)
-        => TestGetCalculationReturnsCorrectValues(expectedDifficultyTotal, expectedPerformanceTotal, new OsuScore { BeatmapId = beatmapId, Mods = mods });
+    [InlineData(6.7171144000821119d, 291.34799376682508d, "diffcalc-test", new string[] { })]
+    [InlineData(8.9825709931204205d, 717.13844713272601d, "diffcalc-test", new string[] { "DT" })]
+    public void Test(double expectedDifficultyTotal, double expectedPerformanceTotal, string beatmapId, string[] mods)
+        => TestGetCalculationReturnsCorrectValues(expectedDifficultyTotal, expectedPerformanceTotal, new OsuScore { BeatmapId = beatmapId, Mods = mods.Select(m => new Mod { Acronym = m }).ToArray() });
 
     [Fact]
     public void TestAllParameters()
@@ -21,7 +22,12 @@ public class OsuCalculatorServiceTest : CalculatorServiceTest<OsuScore, OsuDiffi
         var score = new OsuScore
         {
             BeatmapId = "diffcalc-test",
-            Mods = 1112, // HD, HR, DT, FL
+            Mods = [
+                new Mod() { Acronym = "HD" },
+                new Mod() { Acronym = "HR" },
+                new Mod() { Acronym = "DT" },
+                new Mod() { Acronym = "FL" }
+            ],
             Combo = 200,
             Misses = 5,
             Mehs = 4,

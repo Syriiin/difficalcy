@@ -8,10 +8,10 @@ public class DummyCalculatorServiceTest : CalculatorServiceTest<DummyScore, Dumm
     protected override CalculatorService<DummyScore, DummyDifficulty, DummyPerformance, DummyCalculation> CalculatorService { get; } = new DummyCalculatorService(new InMemoryCache());
 
     [Theory]
-    [InlineData(15, 1500, "test 1", 150)]
-    [InlineData(10, 1000, "test 2", 100)]
-    public void Test(double expectedDifficultyTotal, double expectedPerformanceTotal, string beatmapId, int mods)
-        => TestGetCalculationReturnsCorrectValues(expectedDifficultyTotal, expectedPerformanceTotal, new DummyScore { BeatmapId = beatmapId, Mods = mods, Points = 100 });
+    [InlineData(15, 1500, "test 1", new string[] { "150" })]
+    [InlineData(10, 1000, "test 2", new string[] { "25", "75" })]
+    public void Test(double expectedDifficultyTotal, double expectedPerformanceTotal, string beatmapId, string[] mods)
+        => TestGetCalculationReturnsCorrectValues(expectedDifficultyTotal, expectedPerformanceTotal, new DummyScore { BeatmapId = beatmapId, Mods = mods.Select(m => new Mod { Acronym = m }).ToArray(), Points = 100 });
 
     [Fact]
     public async Task TestGetCalculationBatchReturnsCorrectValuesInOrder()
@@ -19,18 +19,18 @@ public class DummyCalculatorServiceTest : CalculatorServiceTest<DummyScore, Dumm
         // values are intentionally in a random order to ensure unique beatmap grouping doesnt break return ordering
         var scores = new[]
         {
-            new DummyScore { BeatmapId = "test 1", Mods = 200, Points = 200 }, // 3
-            new DummyScore { BeatmapId = "test 2", Mods = 300, Points = 100 }, // 4
-            new DummyScore { BeatmapId = "test 2", Mods = 300, Points = 200 }, // 5
-            new DummyScore { BeatmapId = "test 3", Mods = 500, Points = 200 }, // 9
-            new DummyScore { BeatmapId = "test 2", Mods = 400, Points = 200 }, // 7
-            new DummyScore { BeatmapId = "test 1", Mods = 200, Points = 100 }, // 2
-            new DummyScore { BeatmapId = "test 3", Mods = 600, Points = 100 }, // 10
-            new DummyScore { BeatmapId = "test 2", Mods = 400, Points = 100 }, // 6
-            new DummyScore { BeatmapId = "test 3", Mods = 500, Points = 100 }, // 8
-            new DummyScore { BeatmapId = "test 1", Mods = 100, Points = 200 }, // 1
-            new DummyScore { BeatmapId = "test 3", Mods = 600, Points = 200 }, // 11
-            new DummyScore { BeatmapId = "test 1", Mods = 100, Points = 100 }, // 0
+            new DummyScore { BeatmapId = "test 1", Mods = [new Mod() { Acronym = "200" }], Points = 200 }, // 3
+            new DummyScore { BeatmapId = "test 2", Mods = [new Mod() { Acronym = "300" }], Points = 100 }, // 4
+            new DummyScore { BeatmapId = "test 2", Mods = [new Mod() { Acronym = "300" }], Points = 200 }, // 5
+            new DummyScore { BeatmapId = "test 3", Mods = [new Mod() { Acronym = "500" }], Points = 200 }, // 9
+            new DummyScore { BeatmapId = "test 2", Mods = [new Mod() { Acronym = "400" }], Points = 200 }, // 7
+            new DummyScore { BeatmapId = "test 1", Mods = [new Mod() { Acronym = "200" }], Points = 100 }, // 2
+            new DummyScore { BeatmapId = "test 3", Mods = [new Mod() { Acronym = "600" }], Points = 100 }, // 10
+            new DummyScore { BeatmapId = "test 2", Mods = [new Mod() { Acronym = "400" }], Points = 100 }, // 6
+            new DummyScore { BeatmapId = "test 3", Mods = [new Mod() { Acronym = "500" }], Points = 100 }, // 8
+            new DummyScore { BeatmapId = "test 1", Mods = [new Mod() { Acronym = "100" }], Points = 200 }, // 1
+            new DummyScore { BeatmapId = "test 3", Mods = [new Mod() { Acronym = "600" }], Points = 200 }, // 11
+            new DummyScore { BeatmapId = "test 1", Mods = [new Mod() { Acronym = "100" }], Points = 100 }, // 0
         };
 
         var calculations = (await CalculatorService.GetCalculationBatch(scores)).ToArray();
@@ -76,7 +76,7 @@ public class DummyCalculatorServiceTest : CalculatorServiceTest<DummyScore, Dumm
 }
 
 /// <summary>
-/// A dummy calculator service implementation that calculates difficulty as (beatmap id + mods) / 10 and performance as difficulty * 100
+/// A dummy calculator service implementation that calculates difficulty as mods (casted from string to double) / 10 and performance as difficulty * points
 /// </summary>
 public class DummyCalculatorService(ICache cache) : CalculatorService<DummyScore, DummyDifficulty, DummyPerformance, DummyCalculation>(cache)
 {
@@ -90,9 +90,9 @@ public class DummyCalculatorService(ICache cache) : CalculatorService<DummyScore
             CalculatorUrl = $"not.a.real.url"
         };
 
-    protected override (object, string) CalculateDifficultyAttributes(string beatmapId, int mods)
+    protected override (object, string) CalculateDifficultyAttributes(string beatmapId, Mod[] mods)
     {
-        var difficulty = mods / 10.0;
+        var difficulty = mods.Sum(m => double.Parse(m.Acronym)) / 10;
         return (difficulty, difficulty.ToString());
     }
 
