@@ -2,6 +2,13 @@
 
 ## TL;DR Example recommended setup
 
+`redis.conf`
+```
+maxmemory 100mb
+maxmemory-policy allkeys-lru
+```
+
+`compose.yaml`
 ```yaml
 services:
   difficalcy-osu:
@@ -18,6 +25,7 @@ services:
   cache:
     image: redis:latest
     volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
       - redis-data:/data
 
   volumes:
@@ -79,80 +87,151 @@ curl "localhost:5000/api/calculation?BeatmapId=658127"
   "accuracy": 1,
   "combo": 2402,
   "difficulty": {
-    "aim": 3.4715033440194416,
-    "speed": 3.4738667283055444,
+    "aim": 3.486559350583331,
+    "speed": 3.401805899214971,
     "flashlight": 0,
-    "total": 7.25543964698689
+    "total": 7.218144469196162
   },
   "performance": {
-    "aim": 220.83646290283872,
-    "speed": 231.26239294786578,
+    "aim": 223.2319016752279,
+    "speed": 216.94931341785514,
     "accuracy": 142.3199671239901,
     "flashlight": 0,
-    "total": 614.5217398659557
+    "total": 607.3436935784534
   }
 }
+```
+
+However, using the querystring to pass parameters can be annoying, especially for mods.
+
+You can use the `POST /api/batch/calculation` endpoint to efficiently calculate the difficulty and performance of one or more scores in a batch by passing a JSON body.
+
+For example, the same request as above:
+
+```sh
+curl "localhost:5000/api/batch/calculation" \
+  --json '[
+    {
+      "beatmapId": "658127"
+    }
+  ]'
+```
+
+```json
+[
+  {
+    "accuracy": 1,
+    "combo": 2402,
+    "difficulty": {
+      "aim": 3.486559350583331,
+      "speed": 3.401805899214971,
+      "flashlight": 0,
+      "total": 7.218144469196162
+    },
+    "performance": {
+      "aim": 223.2319016752279,
+      "speed": 216.94931341785514,
+      "accuracy": 142.3199671239901,
+      "flashlight": 0,
+      "total": 607.3436935784534
+    }
+  }
+]
 ```
 
 With HDHR:
 
 ```sh
-curl "localhost:5000/api/calculation?BeatmapId=658127&Mods=24"
+curl "localhost:5000/api/batch/calculation" \
+  --json '[
+    {
+      "beatmapId": "658127",
+      "mods": [
+        {"acronym": "HD"},
+        {"acronym": "HR"}
+      ]
+    }
+  ]'
 ```
 
 ```json
-{
-  "accuracy": 1,
-  "combo": 2402,
-  "difficulty": {
-    "aim": 3.765456925600854,
-    "speed": 3.72396422087254,
-    "flashlight": 0,
-    "total": 7.824058505624834
-  },
-  "performance": {
-    "aim": 307.7860998424521,
-    "speed": 316.0553556393314,
-    "accuracy": 233.88299810086727,
-    "flashlight": 0,
-    "total": 885.6279594614182
+[
+  {
+    "accuracy": 1,
+    "combo": 2402,
+    "difficulty": {
+      "aim": 3.781787817014634,
+      "speed": 3.6376548985196338,
+      "flashlight": 0,
+      "total": 7.776694277815145
+    },
+    "performance": {
+      "aim": 310.44353837189016,
+      "speed": 294.27692286092105,
+      "accuracy": 233.88299810086727,
+      "flashlight": 0,
+      "total": 873.3504729333756
+    }
   }
-}
+]
 ```
 
 With [24 100s and 2 misses with a max combo of 2364](https://osu.ppy.sh/scores/453746931):
 
 ```sh
-curl "localhost:5000/api/calculation?BeatmapId=658127&Mods=24&Oks=24&Misses=2&Combo=2364"
+curl "localhost:5000/api/batch/calculation" \
+  --json '[
+    {
+      "beatmapId": "658127",
+      "mods": [
+        {"acronym": "HD"},
+        {"acronym": "HR"}
+      ],
+      "oks": 24,
+      "misses": 2,
+      "combo": 2364
+    }
+  ]'
 ```
 
 ```json
-{
-  "accuracy": 0.9908768373035985,
-  "combo": 2364,
-  "difficulty": {
-    "aim": 3.765456925600854,
-    "speed": 3.72396422087254,
-    "flashlight": 0,
-    "total": 7.824058505624834
-  },
-  "performance": {
-    "aim": 287.9789267544456,
-    "speed": 292.33748549297394,
-    "accuracy": 182.74699354821763,
-    "flashlight": 0,
-    "total": 788.8530583502242
+[
+  {
+    "accuracy": 0.9908768373035985,
+    "combo": 2364,
+    "difficulty": {
+      "aim": 3.781787817014634,
+      "speed": 3.6376548985196338,
+      "flashlight": 0,
+      "total": 7.776694277815145
+    },
+    "performance": {
+      "aim": 269.1655178289345,
+      "speed": 252.09191398987699,
+      "accuracy": 187.63970625353224,
+      "flashlight": 0,
+      "total": 738.5847641442473
+    }
   }
-}
+]
 ```
 
 ## Recommended setup
 
 In a real deployment, caching is important, so including a redis instance and persistent volumes for both beatmaps and redis data will help you a lot.
 
+Additionally, including a redis config to set a max memory and LRU cache eviction policy is a good idea to keep memory usage from running away.
+
 For real deployments, I also recommend you NOT use the `latest` tag, as this could cause issues if there is a major version released.
 You are better off checking for the current latest version in the [releases](https://github.com/Syriiin/difficalcy/releases) and pinning it manually.
 
+`redis.conf`
+```
+maxmemory 100mb
+maxmemory-policy allkeys-lru
+```
+
+`compose.yaml`
 ```yaml
 services:
   difficalcy-osu:
@@ -169,6 +248,7 @@ services:
   cache:
     image: redis:latest
     volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
       - redis-data:/data
 
   volumes:

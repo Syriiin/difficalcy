@@ -2,6 +2,8 @@
 
 difficalcy is an osu! difficulty and performance calculator REST API.
 
+See the docs for configuration details https://difficalcy.syrin.me/
+
 ## Basic usage
 
 1.  Run the container
@@ -19,8 +21,8 @@ difficalcy is an osu! difficulty and performance calculator REST API.
       "rulesetName": "osu!",
       "calculatorName": "Official osu!",
       "calculatorPackage": "osu.Game.Rulesets.Osu",
-      "calculatorVersion": "2023.1114.1.0",
-      "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Osu/2023.1114.1.0"
+      "calculatorVersion": "2024.1023.0.0",
+      "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Osu/2024.1023.0.0"
     }
     ```
 
@@ -33,17 +35,17 @@ difficalcy is an osu! difficulty and performance calculator REST API.
       "accuracy": 1,
       "combo": 2402,
       "difficulty": {
-        "aim": 3.4715033440194416,
-        "speed": 3.4738667283055444,
+        "aim": 3.486559350583331,
+        "speed": 3.401805899214971,
         "flashlight": 0,
-        "total": 7.25543964698689
+        "total": 7.218144469196162
       },
       "performance": {
-        "aim": 220.83646290283872,
-        "speed": 231.26239294786578,
+        "aim": 223.2319016752279,
+        "speed": 216.94931341785514,
         "accuracy": 142.3199671239901,
         "flashlight": 0,
-        "total": 614.5217398659557
+        "total": 607.3436935784534
       }
     }
     ```
