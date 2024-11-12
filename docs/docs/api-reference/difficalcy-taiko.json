@@ -72,10 +72,10 @@
             "name": "Mods",
             "in": "query",
             "schema": {
-              "maximum": 2147483647,
-              "minimum": 0,
-              "type": "integer",
-              "format": "int32"
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Mod"
+              }
             }
           }
         ],
@@ -156,6 +156,27 @@
         },
         "additionalProperties": false
       },
+      "Mod": {
+        "required": [
+          "acronym"
+        ],
+        "type": "object",
+        "properties": {
+          "acronym": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "settings": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "nullable": true
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "TaikoCalculation": {
         "type": "object",
         "properties": {
@@ -227,10 +248,11 @@
             "type": "string"
           },
           "mods": {
-            "maximum": 2147483647,
-            "minimum": 0,
-            "type": "integer",
-            "format": "int32"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Mod"
+            },
+            "nullable": true
           },
           "combo": {
             "maximum": 2147483647,
