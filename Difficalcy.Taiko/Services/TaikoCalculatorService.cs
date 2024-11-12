@@ -8,11 +8,13 @@ using Difficalcy.Models;
 using Difficalcy.Services;
 using Difficalcy.Taiko.Models;
 using osu.Game.Beatmaps.Legacy;
+using osu.Game.Online.API;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Taiko;
 using osu.Game.Rulesets.Taiko.Difficulty;
 using osu.Game.Rulesets.Taiko.Objects;
 using osu.Game.Scoring;
+using LazerMod = osu.Game.Rulesets.Mods.Mod;
 
 namespace Difficalcy.Taiko.Services
 {
@@ -43,13 +45,13 @@ namespace Difficalcy.Taiko.Services
             await _beatmapProvider.EnsureBeatmap(beatmapId);
         }
 
-        protected override (object, string) CalculateDifficultyAttributes(string beatmapId, int bitMods)
+        protected override (object, string) CalculateDifficultyAttributes(string beatmapId, Mod[] mods)
         {
             var workingBeatmap = GetWorkingBeatmap(beatmapId);
-            var mods = TaikoRuleset.ConvertFromLegacyMods((LegacyMods)bitMods).ToArray();
+            var lazerMods = mods.Select(ModToLazerMod).ToArray();
 
             var difficultyCalculator = TaikoRuleset.CreateDifficultyCalculator(workingBeatmap);
-            var difficultyAttributes = difficultyCalculator.Calculate(mods) as TaikoDifficultyAttributes;
+            var difficultyAttributes = difficultyCalculator.Calculate(lazerMods) as TaikoDifficultyAttributes;
 
             // Serialising anonymous object with same names because some properties can't be serialised, and the built-in JsonProperty fields aren't on all required fields
             return (difficultyAttributes, JsonSerializer.Serialize(new
@@ -75,7 +77,7 @@ namespace Difficalcy.Taiko.Services
             var taikoDifficultyAttributes = (TaikoDifficultyAttributes)difficultyAttributes;
 
             var workingBeatmap = GetWorkingBeatmap(score.BeatmapId);
-            var mods = TaikoRuleset.ConvertFromLegacyMods((LegacyMods)score.Mods).ToArray();
+            var mods = score.Mods.Select(ModToLazerMod).ToArray();
             var beatmap = workingBeatmap.GetPlayableBeatmap(TaikoRuleset.RulesetInfo, mods);
 
             var hitResultCount = beatmap.HitObjects.OfType<Hit>().Count();
@@ -107,6 +109,15 @@ namespace Difficalcy.Taiko.Services
         {
             using var beatmapStream = _beatmapProvider.GetBeatmapStream(beatmapId);
             return new CalculatorWorkingBeatmap(TaikoRuleset, beatmapStream);
+        }
+
+        private LazerMod ModToLazerMod(Mod mod)
+        {
+            var apiMod = new APIMod { Acronym = mod.Acronym };
+            foreach (var setting in mod.Settings)
+                apiMod.Settings.Add(setting.Key, setting.Value);
+
+            return apiMod.ToMod(TaikoRuleset);
         }
 
         private static Dictionary<HitResult, int> GetHitResults(int hitResultCount, int countMiss, int countOk)
