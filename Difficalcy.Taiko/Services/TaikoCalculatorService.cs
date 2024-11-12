@@ -71,6 +71,7 @@ namespace Difficalcy.Taiko.Services
                         difficultyAttributes.StarRating,
                         difficultyAttributes.MaxCombo,
                         difficultyAttributes.StaminaDifficulty,
+                        difficultyAttributes.MonoStaminaFactor,
                         difficultyAttributes.RhythmDifficulty,
                         difficultyAttributes.ColourDifficulty,
                         difficultyAttributes.PeakDifficulty,
