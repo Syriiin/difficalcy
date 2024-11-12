@@ -14,14 +14,19 @@ namespace Difficalcy.Taiko.Services
     {
         private readonly Beatmap _beatmap;
 
-        public CalculatorWorkingBeatmap(Ruleset ruleset, Stream beatmapStream) : this(ruleset, ReadFromStream(beatmapStream)) { }
+        public CalculatorWorkingBeatmap(Ruleset ruleset, Stream beatmapStream)
+            : this(ruleset, ReadFromStream(beatmapStream)) { }
 
-        private CalculatorWorkingBeatmap(Ruleset ruleset, Beatmap beatmap) : base(beatmap.BeatmapInfo, null)
+        private CalculatorWorkingBeatmap(Ruleset ruleset, Beatmap beatmap)
+            : base(beatmap.BeatmapInfo, null)
         {
             _beatmap = beatmap;
 
             // Only valid maps will be either osu! converts or osu!taiko maps
-            _beatmap.BeatmapInfo.Ruleset = beatmap.BeatmapInfo.Ruleset.OnlineID == 0 ? new OsuRuleset().RulesetInfo : ruleset.RulesetInfo;
+            _beatmap.BeatmapInfo.Ruleset =
+                beatmap.BeatmapInfo.Ruleset.OnlineID == 0
+                    ? new OsuRuleset().RulesetInfo
+                    : ruleset.RulesetInfo;
         }
 
         private static Beatmap ReadFromStream(Stream stream)
@@ -31,9 +36,13 @@ namespace Difficalcy.Taiko.Services
         }
 
         protected override IBeatmap GetBeatmap() => _beatmap;
+
         public override Texture GetBackground() => null;
+
         protected override Track GetBeatmapTrack() => null;
+
         protected override ISkin GetSkin() => null;
+
         public override Stream GetStream(string storagePath) => null;
     }
 }

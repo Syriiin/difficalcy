@@ -9,7 +9,9 @@ namespace Difficalcy.Services
         public Task EnsureBeatmap(string beatmapId)
         {
             var resourceName = GetResourceName(beatmapId);
-            _ = ResourceAssembly.GetManifestResourceInfo(resourceName) ?? throw new BeatmapNotFoundException(beatmapId);
+            _ =
+                ResourceAssembly.GetManifestResourceInfo(resourceName)
+                ?? throw new BeatmapNotFoundException(beatmapId);
             return Task.CompletedTask;
         }
 

@@ -11,7 +11,8 @@ namespace Difficalcy.Taiko
 
         public override string OpenApiVersion => "v1";
 
-        protected override string TestBeatmapAssembly => Assembly.GetExecutingAssembly().GetName().Name;
+        protected override string TestBeatmapAssembly =>
+            Assembly.GetExecutingAssembly().GetName().Name;
 
         public override void ConfigureCalculatorServices(IServiceCollection services)
         {

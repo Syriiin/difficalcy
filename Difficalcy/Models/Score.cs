@@ -24,7 +24,12 @@ namespace Difficalcy.Models
             if (Settings.Count == 0)
                 return Acronym;
 
-            var settingsString = string.Join(",", Settings.OrderBy(setting => setting.Key).Select(setting => $"{setting.Key}={setting.Value}"));
+            var settingsString = string.Join(
+                ",",
+                Settings
+                    .OrderBy(setting => setting.Key)
+                    .Select(setting => $"{setting.Key}={setting.Value}")
+            );
 
             return $"{Acronym}({settingsString})";
         }
