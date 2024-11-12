@@ -23,7 +23,14 @@ public class ManiaCalculatorServiceTest : CalculatorServiceTest<ManiaScore, Mani
         {
             BeatmapId = "diffcalc-test",
             Mods = [
-                new Mod() { Acronym = "DT" }
+                new Mod()
+                {
+                    Acronym = "DT",
+                    Settings = new Dictionary<string, string>
+                    {
+                        { "speed_change", "2" }
+                    }
+                }
             ],
             Misses = 5,
             Mehs = 4,
@@ -31,6 +38,6 @@ public class ManiaCalculatorServiceTest : CalculatorServiceTest<ManiaScore, Mani
             Goods = 2,
             Greats = 1,
         };
-        TestGetCalculationReturnsCorrectValues(2.797245912537965d, 43.17076331130473d, score);
+        TestGetCalculationReturnsCorrectValues(3.3252153148972425, 64.408516282383957, score);
     }
 }

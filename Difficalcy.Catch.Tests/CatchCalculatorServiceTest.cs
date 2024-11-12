@@ -24,13 +24,20 @@ public class CatchCalculatorServiceTest : CalculatorServiceTest<CatchScore, Catc
             BeatmapId = "diffcalc-test",
             Mods = [
                 new Mod() { Acronym = "HR" },
-                new Mod() { Acronym = "DT" }
+                new Mod()
+                {
+                    Acronym = "DT",
+                    Settings = new Dictionary<string, string>
+                    {
+                        { "speed_change", "2" }
+                    }
+                }
             ],
             Combo = 100,
             Misses = 5,
             LargeDroplets = 18,
             SmallDroplets = 200,
         };
-        TestGetCalculationReturnsCorrectValues(5.739025024925009d, 241.19384779497875d, score);
+        TestGetCalculationReturnsCorrectValues(6.9017468199992278, 375.74458599075302, score);
     }
 }

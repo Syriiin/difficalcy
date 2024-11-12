@@ -25,7 +25,14 @@ public class OsuCalculatorServiceTest : CalculatorServiceTest<OsuScore, OsuDiffi
             Mods = [
                 new Mod() { Acronym = "HD" },
                 new Mod() { Acronym = "HR" },
-                new Mod() { Acronym = "DT" },
+                new Mod()
+                {
+                    Acronym = "DT",
+                    Settings = new Dictionary<string, string>
+                    {
+                        { "speed_change", "2" }
+                    }
+                },
                 new Mod() { Acronym = "FL" }
             ],
             Combo = 200,
@@ -33,6 +40,19 @@ public class OsuCalculatorServiceTest : CalculatorServiceTest<OsuScore, OsuDiffi
             Mehs = 4,
             Oks = 3,
         };
-        TestGetCalculationReturnsCorrectValues(10.095171949076231d, 685.8314990408466d, score);
+        TestGetCalculationReturnsCorrectValues(12.418442356371395, 1415.202990027042, score);
+    }
+
+    [Fact]
+    public void TestClassicMod()
+    {
+        var score = new OsuScore
+        {
+            BeatmapId = "diffcalc-test",
+            Mods = [
+                new Mod() { Acronym = "CL" }
+            ],
+        };
+        TestGetCalculationReturnsCorrectValues(6.7171144000821119d, 289.16416504218972, score);
     }
 }

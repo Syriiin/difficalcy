@@ -24,12 +24,19 @@ public class TaikoCalculatorServiceTest : CalculatorServiceTest<TaikoScore, Taik
             BeatmapId = "diffcalc-test",
             Mods = [
                 new Mod() { Acronym = "HR" },
-                new Mod() { Acronym = "DT" }
+                new Mod()
+                {
+                    Acronym = "DT",
+                    Settings = new Dictionary<string, string>
+                    {
+                        { "speed_change", "2" }
+                    }
+                }
             ],
             Combo = 150,
             Misses = 5,
             Oks = 3,
         };
-        TestGetCalculationReturnsCorrectValues(4.0789820318081444d, 240.24516772998618d, score);
+        TestGetCalculationReturnsCorrectValues(4.922364692298034, 359.95282202016443, score);
     }
 }
