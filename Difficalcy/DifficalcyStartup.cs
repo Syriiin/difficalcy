@@ -10,7 +10,7 @@ using StackExchange.Redis;
 
 namespace Difficalcy
 {
-    abstract public class DifficalcyStartup(IConfiguration configuration)
+    public abstract class DifficalcyStartup(IConfiguration configuration)
     {
         public abstract string OpenApiTitle { get; }
 
@@ -29,7 +29,10 @@ namespace Difficalcy
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = OpenApiTitle, Version = OpenApiVersion });
+                c.SwaggerDoc(
+                    "v1",
+                    new OpenApiInfo { Title = OpenApiTitle, Version = OpenApiVersion }
+                );
             });
 
             services.AddLogging(options =>
@@ -50,7 +53,9 @@ namespace Difficalcy
 
             var useTestBeatmapProvider = Configuration["USE_TEST_BEATMAP_PROVIDER"];
             if (useTestBeatmapProvider == "true")
-                services.AddSingleton<IBeatmapProvider>(new TestBeatmapProvider(TestBeatmapAssembly));
+                services.AddSingleton<IBeatmapProvider>(
+                    new TestBeatmapProvider(TestBeatmapAssembly)
+                );
             else
                 services.AddSingleton(typeof(IBeatmapProvider), typeof(WebBeatmapProvider));
 
@@ -66,7 +71,12 @@ namespace Difficalcy
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{OpenApiTitle} {OpenApiVersion}"));
+                app.UseSwaggerUI(c =>
+                    c.SwaggerEndpoint(
+                        "/swagger/v1/swagger.json",
+                        $"{OpenApiTitle} {OpenApiVersion}"
+                    )
+                );
             }
 
             app.UseRouting();

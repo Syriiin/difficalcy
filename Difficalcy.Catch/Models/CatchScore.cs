@@ -25,7 +25,10 @@ namespace Difficalcy.Catch.Models
         {
             if (Misses > 0 && Combo is null)
             {
-                yield return new ValidationResult("Combo must be specified if Misses are greater than 0.", [nameof(Combo)]);
+                yield return new ValidationResult(
+                    "Combo must be specified if Misses are greater than 0.",
+                    [nameof(Combo)]
+                );
             }
         }
     }

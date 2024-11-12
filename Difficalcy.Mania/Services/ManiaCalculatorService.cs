@@ -18,7 +18,8 @@ using LazerMod = osu.Game.Rulesets.Mods.Mod;
 
 namespace Difficalcy.Mania.Services
 {
-    public class ManiaCalculatorService(ICache cache, IBeatmapProvider beatmapProvider) : CalculatorService<ManiaScore, ManiaDifficulty, ManiaPerformance, ManiaCalculation>(cache)
+    public class ManiaCalculatorService(ICache cache, IBeatmapProvider beatmapProvider)
+        : CalculatorService<ManiaScore, ManiaDifficulty, ManiaPerformance, ManiaCalculation>(cache)
     {
         private readonly IBeatmapProvider _beatmapProvider = beatmapProvider;
         private ManiaRuleset ManiaRuleset { get; } = new ManiaRuleset();
@@ -28,14 +29,18 @@ namespace Difficalcy.Mania.Services
             get
             {
                 var packageName = Assembly.GetAssembly(typeof(ManiaRuleset)).GetName().Name;
-                var packageVersion = Assembly.GetAssembly(typeof(ManiaRuleset)).GetName().Version.ToString();
+                var packageVersion = Assembly
+                    .GetAssembly(typeof(ManiaRuleset))
+                    .GetName()
+                    .Version.ToString();
                 return new CalculatorInfo
                 {
                     RulesetName = ManiaRuleset.Description,
                     CalculatorName = "Official osu!mania",
                     CalculatorPackage = packageName,
                     CalculatorVersion = packageVersion,
-                    CalculatorUrl = $"https://nuget.org/packages/ppy.{packageName}/{packageVersion}"
+                    CalculatorUrl =
+                        $"https://nuget.org/packages/ppy.{packageName}/{packageVersion}",
                 };
             }
         }
@@ -45,21 +50,30 @@ namespace Difficalcy.Mania.Services
             await _beatmapProvider.EnsureBeatmap(beatmapId);
         }
 
-        protected override (object, string) CalculateDifficultyAttributes(string beatmapId, Mod[] mods)
+        protected override (object, string) CalculateDifficultyAttributes(
+            string beatmapId,
+            Mod[] mods
+        )
         {
             var workingBeatmap = GetWorkingBeatmap(beatmapId);
             var lazerMods = mods.Select(ModToLazerMod).ToArray();
 
             var difficultyCalculator = ManiaRuleset.CreateDifficultyCalculator(workingBeatmap);
-            var difficultyAttributes = difficultyCalculator.Calculate(lazerMods) as ManiaDifficultyAttributes;
+            var difficultyAttributes =
+                difficultyCalculator.Calculate(lazerMods) as ManiaDifficultyAttributes;
 
             // Serialising anonymous object with same names because some properties can't be serialised, and the built-in JsonProperty fields aren't on all required fields
-            return (difficultyAttributes, JsonSerializer.Serialize(new
-            {
-                difficultyAttributes.StarRating,
-                difficultyAttributes.MaxCombo,
-                difficultyAttributes.GreatHitWindow
-            }));
+            return (
+                difficultyAttributes,
+                JsonSerializer.Serialize(
+                    new
+                    {
+                        difficultyAttributes.StarRating,
+                        difficultyAttributes.MaxCombo,
+                        difficultyAttributes.GreatHitWindow,
+                    }
+                )
+            );
         }
 
         protected override object DeserialiseDifficultyAttributes(string difficultyAttributesJson)
@@ -67,7 +81,10 @@ namespace Difficalcy.Mania.Services
             return JsonSerializer.Deserialize<ManiaDifficultyAttributes>(difficultyAttributesJson);
         }
 
-        protected override ManiaCalculation CalculatePerformance(ManiaScore score, object difficultyAttributes)
+        protected override ManiaCalculation CalculatePerformance(
+            ManiaScore score,
+            object difficultyAttributes
+        )
         {
             var maniaDifficultyAttributes = (ManiaDifficultyAttributes)difficultyAttributes;
             var workingBeatmap = GetWorkingBeatmap(score.BeatmapId);
@@ -76,7 +93,14 @@ namespace Difficalcy.Mania.Services
 
             var hitObjectCount = beatmap.HitObjects.Count;
             var holdNoteTailCount = beatmap.HitObjects.OfType<HoldNote>().Count();
-            var statistics = GetHitResults(hitObjectCount + holdNoteTailCount, score.Misses, score.Mehs, score.Oks, score.Goods, score.Greats);
+            var statistics = GetHitResults(
+                hitObjectCount + holdNoteTailCount,
+                score.Misses,
+                score.Mehs,
+                score.Oks,
+                score.Goods,
+                score.Greats
+            );
             var accuracy = CalculateAccuracy(statistics);
 
             var scoreInfo = new ScoreInfo(beatmap.BeatmapInfo, ManiaRuleset.RulesetInfo)
@@ -88,13 +112,15 @@ namespace Difficalcy.Mania.Services
             };
 
             var performanceCalculator = ManiaRuleset.CreatePerformanceCalculator();
-            var performanceAttributes = performanceCalculator.Calculate(scoreInfo, maniaDifficultyAttributes) as ManiaPerformanceAttributes;
+            var performanceAttributes =
+                performanceCalculator.Calculate(scoreInfo, maniaDifficultyAttributes)
+                as ManiaPerformanceAttributes;
 
             return new ManiaCalculation()
             {
                 Difficulty = GetDifficultyFromDifficultyAttributes(maniaDifficultyAttributes),
                 Performance = GetPerformanceFromPerformanceAttributes(performanceAttributes),
-                Accuracy = accuracy
+                Accuracy = accuracy,
             };
         }
 
@@ -113,9 +139,17 @@ namespace Difficalcy.Mania.Services
             return apiMod.ToMod(ManiaRuleset);
         }
 
-        private static Dictionary<HitResult, int> GetHitResults(int hitResultCount, int countMiss, int countMeh, int countOk, int countGood, int countGreat)
+        private static Dictionary<HitResult, int> GetHitResults(
+            int hitResultCount,
+            int countMiss,
+            int countMeh,
+            int countOk,
+            int countGood,
+            int countGreat
+        )
         {
-            var countPerfect = hitResultCount - (countMiss + countMeh + countOk + countGood + countGreat);
+            var countPerfect =
+                hitResultCount - (countMiss + countMeh + countOk + countGood + countGreat);
 
             return new Dictionary<HitResult, int>
             {
@@ -124,7 +158,7 @@ namespace Difficalcy.Mania.Services
                 [HitResult.Good] = countGood,
                 [HitResult.Ok] = countOk,
                 [HitResult.Meh] = countMeh,
-                [HitResult.Miss] = countMiss
+                [HitResult.Miss] = countMiss,
             };
         }
 
@@ -141,23 +175,30 @@ namespace Difficalcy.Mania.Services
             if (total == 0)
                 return 1;
 
-            return (double)((6 * countPerfect) + (6 * countGreat) + (4 * countGood) + (2 * countOk) + countMeh) / (6 * total);
+            return (double)(
+                    (6 * countPerfect)
+                    + (6 * countGreat)
+                    + (4 * countGood)
+                    + (2 * countOk)
+                    + countMeh
+                ) / (6 * total);
         }
 
-        private static ManiaDifficulty GetDifficultyFromDifficultyAttributes(ManiaDifficultyAttributes difficultyAttributes)
+        private static ManiaDifficulty GetDifficultyFromDifficultyAttributes(
+            ManiaDifficultyAttributes difficultyAttributes
+        )
         {
-            return new ManiaDifficulty()
-            {
-                Total = difficultyAttributes.StarRating
-            };
+            return new ManiaDifficulty() { Total = difficultyAttributes.StarRating };
         }
 
-        private static ManiaPerformance GetPerformanceFromPerformanceAttributes(ManiaPerformanceAttributes performanceAttributes)
+        private static ManiaPerformance GetPerformanceFromPerformanceAttributes(
+            ManiaPerformanceAttributes performanceAttributes
+        )
         {
             return new ManiaPerformance()
             {
                 Total = performanceAttributes.Total,
-                Difficulty = performanceAttributes.Difficulty
+                Difficulty = performanceAttributes.Difficulty,
             };
         }
     }
