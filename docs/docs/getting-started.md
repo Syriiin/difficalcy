@@ -216,6 +216,47 @@ curl "localhost:5000/api/batch/calculation" \
 ]
 ```
 
+Mod settings are also supported:
+
+```sh
+curl "localhost:5000/api/batch/calculation" \
+  --json '[
+    {
+      "beatmapId": "658127",
+      "mods": [
+        {
+          "acronym": "DT",
+          "settings": {
+            "speed_change": "1.2"
+          }
+        }
+      ]
+    }
+  ]'
+```
+
+```json
+[
+  {
+    "accuracy": 1,
+    "combo": 2402,
+    "difficulty": {
+      "aim": 4.09090844208357,
+      "speed": 4.156262773610562,
+      "flashlight": 0,
+      "total": 8.641107338148792
+    },
+    "performance": {
+      "aim": 364.8582844353347,
+      "speed": 405.96269551748065,
+      "accuracy": 192.72297482793658,
+      "flashlight": 0,
+      "total": 1007.207697579252
+    }
+  }
+]
+```
+
 ## Recommended setup
 
 In a real deployment, caching is important, so including a redis instance and persistent volumes for both beatmaps and redis data will help you a lot.
