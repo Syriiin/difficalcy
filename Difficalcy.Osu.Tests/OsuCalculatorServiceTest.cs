@@ -60,8 +60,10 @@ public class OsuCalculatorServiceTest
             Misses = 5,
             Mehs = 4,
             Oks = 3,
+            SliderTails = 2,
+            SliderTicks = 1,
         };
-        TestGetCalculationReturnsCorrectValues(12.418442356371395, 1441.8141993457837, score);
+        TestGetCalculationReturnsCorrectValues(12.418442356371395, 1208.1384749524739, score);
     }
 
     [Fact]
@@ -86,6 +88,8 @@ public class OsuCalculatorServiceTest
             Misses = 5,
             Mehs = 4,
             Oks = 3,
+            SliderTails = 2,
+            SliderTicks = 1,
         };
         TestGetCalculationReturnsCorrectValues(12.418442356371395, 1405.0910286547635, score);
     }
