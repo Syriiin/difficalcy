@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Difficalcy.Mania.Models;
 using Difficalcy.Models;
 using Difficalcy.Services;
-using osu.Game.Beatmaps.Legacy;
 using osu.Game.Online.API;
 using osu.Game.Rulesets.Mania;
 using osu.Game.Rulesets.Mania.Difficulty;
@@ -87,6 +86,24 @@ namespace Difficalcy.Mania.Services
         )
         {
             var maniaDifficultyAttributes = (ManiaDifficultyAttributes)difficultyAttributes;
+
+            var scoreInfo = GetScoreInfo(score);
+
+            var performanceCalculator = ManiaRuleset.CreatePerformanceCalculator();
+            var performanceAttributes =
+                performanceCalculator.Calculate(scoreInfo, maniaDifficultyAttributes)
+                as ManiaPerformanceAttributes;
+
+            return new ManiaCalculation()
+            {
+                Difficulty = GetDifficultyFromDifficultyAttributes(maniaDifficultyAttributes),
+                Performance = GetPerformanceFromPerformanceAttributes(performanceAttributes),
+                Accuracy = scoreInfo.Accuracy,
+            };
+        }
+
+        private ScoreInfo GetScoreInfo(ManiaScore score)
+        {
             var workingBeatmap = GetWorkingBeatmap(score.BeatmapId);
             var mods = score.Mods.Select(ModToLazerMod).ToArray();
             var beatmap = workingBeatmap.GetPlayableBeatmap(ManiaRuleset.RulesetInfo, mods);
@@ -103,24 +120,12 @@ namespace Difficalcy.Mania.Services
             );
             var accuracy = CalculateAccuracy(statistics);
 
-            var scoreInfo = new ScoreInfo(beatmap.BeatmapInfo, ManiaRuleset.RulesetInfo)
+            return new ScoreInfo(beatmap.BeatmapInfo, ManiaRuleset.RulesetInfo)
             {
                 Accuracy = accuracy,
                 MaxCombo = 0,
                 Statistics = statistics,
                 Mods = mods,
-            };
-
-            var performanceCalculator = ManiaRuleset.CreatePerformanceCalculator();
-            var performanceAttributes =
-                performanceCalculator.Calculate(scoreInfo, maniaDifficultyAttributes)
-                as ManiaPerformanceAttributes;
-
-            return new ManiaCalculation()
-            {
-                Difficulty = GetDifficultyFromDifficultyAttributes(maniaDifficultyAttributes),
-                Performance = GetPerformanceFromPerformanceAttributes(performanceAttributes),
-                Accuracy = accuracy,
             };
         }
 

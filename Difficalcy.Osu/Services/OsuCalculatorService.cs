@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Difficalcy.Models;
 using Difficalcy.Osu.Models;
 using Difficalcy.Services;
-using osu.Game.Beatmaps;
 using osu.Game.Online.API;
 using osu.Game.Rulesets.Osu;
 using osu.Game.Rulesets.Osu.Difficulty;
@@ -99,6 +98,24 @@ namespace Difficalcy.Osu.Services
         {
             var osuDifficultyAttributes = (OsuDifficultyAttributes)difficultyAttributes;
 
+            var scoreInfo = GetScoreInfo(score);
+
+            var performanceCalculator = OsuRuleset.CreatePerformanceCalculator();
+            var performanceAttributes =
+                performanceCalculator.Calculate(scoreInfo, osuDifficultyAttributes)
+                as OsuPerformanceAttributes;
+
+            return new OsuCalculation()
+            {
+                Difficulty = GetDifficultyFromDifficultyAttributes(osuDifficultyAttributes),
+                Performance = GetPerformanceFromPerformanceAttributes(performanceAttributes),
+                Accuracy = scoreInfo.Accuracy,
+                Combo = scoreInfo.MaxCombo,
+            };
+        }
+
+        private ScoreInfo GetScoreInfo(OsuScore score)
+        {
             var workingBeatmap = GetWorkingBeatmap(score.BeatmapId);
             var mods = score.Mods.Select(ModToLazerMod).ToArray();
             var beatmap = workingBeatmap.GetPlayableBeatmap(OsuRuleset.RulesetInfo, mods);
@@ -143,25 +160,12 @@ namespace Difficalcy.Osu.Services
                 accuracy = CalculateLazerAccuracy(statistics, maxSliderTails, maxSliderTicks);
             }
 
-            var scoreInfo = new ScoreInfo(beatmap.BeatmapInfo, OsuRuleset.RulesetInfo)
+            return new ScoreInfo(beatmap.BeatmapInfo, OsuRuleset.RulesetInfo)
             {
                 Accuracy = accuracy,
                 MaxCombo = combo,
                 Statistics = statistics,
                 Mods = mods,
-            };
-
-            var performanceCalculator = OsuRuleset.CreatePerformanceCalculator();
-            var performanceAttributes =
-                performanceCalculator.Calculate(scoreInfo, osuDifficultyAttributes)
-                as OsuPerformanceAttributes;
-
-            return new OsuCalculation()
-            {
-                Difficulty = GetDifficultyFromDifficultyAttributes(osuDifficultyAttributes),
-                Performance = GetPerformanceFromPerformanceAttributes(performanceAttributes),
-                Accuracy = accuracy,
-                Combo = combo,
             };
         }
 

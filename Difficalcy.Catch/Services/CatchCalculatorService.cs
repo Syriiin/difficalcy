@@ -8,7 +8,6 @@ using Difficalcy.Catch.Models;
 using Difficalcy.Models;
 using Difficalcy.Services;
 using osu.Game.Beatmaps;
-using osu.Game.Beatmaps.Legacy;
 using osu.Game.Online.API;
 using osu.Game.Rulesets.Catch;
 using osu.Game.Rulesets.Catch.Difficulty;
@@ -88,32 +87,7 @@ namespace Difficalcy.Catch.Services
         {
             var catchDifficultyAttributes = (CatchDifficultyAttributes)difficultyAttributes;
 
-            var workingBeatmap = GetWorkingBeatmap(score.BeatmapId);
-            var mods = score.Mods.Select(ModToLazerMod).ToArray();
-            var beatmap = workingBeatmap.GetPlayableBeatmap(CatchRuleset.RulesetInfo, mods);
-
-            var combo =
-                score.Combo
-                ?? beatmap.HitObjects.Count(h => h is Fruit)
-                    + beatmap
-                        .HitObjects.OfType<JuiceStream>()
-                        .SelectMany(j => j.NestedHitObjects)
-                        .Count(h => !(h is TinyDroplet));
-            var statistics = GetHitResults(
-                beatmap,
-                score.Misses,
-                score.LargeDroplets,
-                score.SmallDroplets
-            );
-            var accuracy = CalculateAccuracy(statistics);
-
-            var scoreInfo = new ScoreInfo(beatmap.BeatmapInfo, CatchRuleset.RulesetInfo)
-            {
-                Accuracy = accuracy,
-                MaxCombo = combo,
-                Statistics = statistics,
-                Mods = mods,
-            };
+            var scoreInfo = GetScoreInfo(score);
 
             var performanceCalculator = CatchRuleset.CreatePerformanceCalculator();
             var performanceAttributes =
@@ -124,8 +98,38 @@ namespace Difficalcy.Catch.Services
             {
                 Difficulty = GetDifficultyFromDifficultyAttributes(catchDifficultyAttributes),
                 Performance = GetPerformanceFromPerformanceAttributes(performanceAttributes),
+                Accuracy = scoreInfo.Accuracy,
+                Combo = scoreInfo.MaxCombo,
+            };
+        }
+
+        private ScoreInfo GetScoreInfo(CatchScore score)
+        {
+            var workingBeatmap = GetWorkingBeatmap(score.BeatmapId);
+            var mods = score.Mods.Select(ModToLazerMod).ToArray();
+            var beatmap = workingBeatmap.GetPlayableBeatmap(CatchRuleset.RulesetInfo, mods);
+
+            var combo =
+                score.Combo
+                ?? beatmap.HitObjects.Count(h => h is Fruit)
+                    + beatmap
+                        .HitObjects.OfType<JuiceStream>()
+                        .SelectMany(j => j.NestedHitObjects)
+                        .Count(h => h is not TinyDroplet);
+            var statistics = GetHitResults(
+                beatmap,
+                score.Misses,
+                score.LargeDroplets,
+                score.SmallDroplets
+            );
+            var accuracy = CalculateAccuracy(statistics);
+
+            return new ScoreInfo(beatmap.BeatmapInfo, CatchRuleset.RulesetInfo)
+            {
                 Accuracy = accuracy,
-                Combo = combo,
+                MaxCombo = combo,
+                Statistics = statistics,
+                Mods = mods,
             };
         }
 
