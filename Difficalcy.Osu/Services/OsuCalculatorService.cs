@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using Difficalcy.Models;
 using Difficalcy.Osu.Models;
 using Difficalcy.Services;
+using osu.Game.Beatmaps;
 using osu.Game.Online.API;
 using osu.Game.Rulesets.Osu;
 using osu.Game.Rulesets.Osu.Difficulty;
+using osu.Game.Rulesets.Osu.Mods;
 using osu.Game.Rulesets.Osu.Objects;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Scoring;
@@ -105,13 +107,41 @@ namespace Difficalcy.Osu.Services
                 score.Combo
                 ?? beatmap.HitObjects.Count
                     + beatmap.HitObjects.OfType<Slider>().Sum(s => s.NestedHitObjects.Count - 1);
-            var statistics = GetHitResults(
-                beatmap.HitObjects.Count,
-                score.Misses,
-                score.Mehs,
-                score.Oks
-            );
-            var accuracy = CalculateAccuracy(statistics);
+
+            Dictionary<HitResult, int> statistics;
+            double accuracy;
+
+            if (mods.OfType<OsuModClassic>().Any(m => m.NoSliderHeadAccuracy.Value))
+            {
+                statistics = GetClassicHitResults(
+                    beatmap.HitObjects.Count,
+                    score.Misses,
+                    score.Mehs,
+                    score.Oks
+                );
+                accuracy = CalculateClassicAccuracy(statistics);
+            }
+            else
+            {
+                var maxSliderTails = beatmap.HitObjects.OfType<Slider>().Count();
+
+                var maxSliderTicks = beatmap
+                    .HitObjects.OfType<Slider>()
+                    .Sum(s => s.NestedHitObjects.Count(x => x is SliderTick or SliderRepeat));
+
+                statistics = GetLazerHitResults(
+                    beatmap.HitObjects.Count,
+                    maxSliderTails,
+                    maxSliderTicks,
+                    score.Misses,
+                    score.Mehs,
+                    score.Oks,
+                    score.SliderTails,
+                    score.SliderTicks
+                );
+
+                accuracy = CalculateLazerAccuracy(statistics, maxSliderTails, maxSliderTicks);
+            }
 
             var scoreInfo = new ScoreInfo(beatmap.BeatmapInfo, OsuRuleset.RulesetInfo)
             {
@@ -150,7 +180,7 @@ namespace Difficalcy.Osu.Services
             return apiMod.ToMod(OsuRuleset);
         }
 
-        private static Dictionary<HitResult, int> GetHitResults(
+        private static Dictionary<HitResult, int> GetClassicHitResults(
             int hitResultCount,
             int countMiss,
             int countMeh,
@@ -168,18 +198,78 @@ namespace Difficalcy.Osu.Services
             };
         }
 
-        private static double CalculateAccuracy(Dictionary<HitResult, int> statistics)
+        private static Dictionary<HitResult, int> GetLazerHitResults(
+            int hitResultCount,
+            int sliderTailCount,
+            int sliderTickCount,
+            int countMiss,
+            int countMeh,
+            int countOk,
+            int? countSliderTails,
+            int? countSliderTicks
+        )
+        {
+            var countGreat = hitResultCount - countOk - countMeh - countMiss;
+
+            return new Dictionary<HitResult, int>
+            {
+                { HitResult.Great, countGreat },
+                { HitResult.Ok, countOk },
+                { HitResult.Meh, countMeh },
+                { HitResult.Miss, countMiss },
+                { HitResult.SliderTailHit, countSliderTails ?? sliderTailCount },
+                { HitResult.LargeTickHit, countSliderTicks ?? sliderTickCount },
+                {
+                    HitResult.LargeTickMiss,
+                    sliderTickCount - (countSliderTicks ?? sliderTickCount)
+                },
+            };
+        }
+
+        private static double CalculateClassicAccuracy(Dictionary<HitResult, int> statistics)
         {
             var countGreat = statistics[HitResult.Great];
             var countOk = statistics[HitResult.Ok];
             var countMeh = statistics[HitResult.Meh];
             var countMiss = statistics[HitResult.Miss];
-            var total = countGreat + countOk + countMeh + countMiss;
+            var countObjects = countGreat + countOk + countMeh + countMiss;
 
-            if (total == 0)
+            if (countObjects == 0)
                 return 1;
 
-            return (double)((6 * countGreat) + (2 * countOk) + countMeh) / (6 * total);
+            var max = countObjects * 6;
+            var total = (countGreat * 6) + (countOk * 2) + countMeh;
+
+            return (double)total / max;
+        }
+
+        private static double CalculateLazerAccuracy(
+            Dictionary<HitResult, int> statistics,
+            int sliderTailCount,
+            int sliderTickCount
+        )
+        {
+            var countGreat = statistics[HitResult.Great];
+            var countOk = statistics[HitResult.Ok];
+            var countMeh = statistics[HitResult.Meh];
+            var countMiss = statistics[HitResult.Miss];
+            var countSliderTails = statistics[HitResult.SliderTailHit];
+            var countSliderTicks = statistics[HitResult.LargeTickHit];
+
+            var countObject = countGreat + countOk + countMeh + countMiss;
+
+            if (countObject == 0)
+                return 1;
+
+            var max = (countObject * 6) + (sliderTailCount * 3) + (sliderTickCount * 0.6);
+            var total =
+                (countGreat * 6)
+                + (countOk * 2)
+                + countMeh
+                + (countSliderTails * 3)
+                + (countSliderTicks * 0.6);
+
+            return (double)total / max;
         }
 
         private static OsuDifficulty GetDifficultyFromDifficultyAttributes(
