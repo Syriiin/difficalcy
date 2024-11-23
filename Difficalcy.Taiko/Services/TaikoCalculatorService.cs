@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Difficalcy.Models;
 using Difficalcy.Services;
 using Difficalcy.Taiko.Models;
-using osu.Game.Beatmaps.Legacy;
 using osu.Game.Online.API;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Taiko;
@@ -94,22 +93,7 @@ namespace Difficalcy.Taiko.Services
         {
             var taikoDifficultyAttributes = (TaikoDifficultyAttributes)difficultyAttributes;
 
-            var workingBeatmap = GetWorkingBeatmap(score.BeatmapId);
-            var mods = score.Mods.Select(ModToLazerMod).ToArray();
-            var beatmap = workingBeatmap.GetPlayableBeatmap(TaikoRuleset.RulesetInfo, mods);
-
-            var hitResultCount = beatmap.HitObjects.OfType<Hit>().Count();
-            var combo = score.Combo ?? hitResultCount;
-            var statistics = GetHitResults(hitResultCount, score.Misses, score.Oks);
-            var accuracy = CalculateAccuracy(statistics);
-
-            var scoreInfo = new ScoreInfo(beatmap.BeatmapInfo, TaikoRuleset.RulesetInfo)
-            {
-                Accuracy = accuracy,
-                MaxCombo = combo,
-                Statistics = statistics,
-                Mods = mods,
-            };
+            var scoreInfo = GetScoreInfo(score);
 
             var performanceCalculator = TaikoRuleset.CreatePerformanceCalculator();
             var performanceAttributes =
@@ -120,8 +104,28 @@ namespace Difficalcy.Taiko.Services
             {
                 Difficulty = GetDifficultyFromDifficultyAttributes(taikoDifficultyAttributes),
                 Performance = GetPerformanceFromPerformanceAttributes(performanceAttributes),
+                Accuracy = scoreInfo.Accuracy,
+                Combo = scoreInfo.MaxCombo,
+            };
+        }
+
+        private ScoreInfo GetScoreInfo(TaikoScore score)
+        {
+            var workingBeatmap = GetWorkingBeatmap(score.BeatmapId);
+            var mods = score.Mods.Select(ModToLazerMod).ToArray();
+            var beatmap = workingBeatmap.GetPlayableBeatmap(TaikoRuleset.RulesetInfo, mods);
+
+            var hitResultCount = beatmap.HitObjects.OfType<Hit>().Count();
+            var combo = score.Combo ?? hitResultCount;
+            var statistics = GetHitResults(hitResultCount, score.Misses, score.Oks);
+            var accuracy = CalculateAccuracy(statistics);
+
+            return new ScoreInfo(beatmap.BeatmapInfo, TaikoRuleset.RulesetInfo)
+            {
                 Accuracy = accuracy,
-                Combo = combo,
+                MaxCombo = combo,
+                Statistics = statistics,
+                Mods = mods,
             };
         }
 

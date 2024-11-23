@@ -71,6 +71,26 @@
             }
           },
           {
+            "name": "SliderTails",
+            "in": "query",
+            "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "SliderTicks",
+            "in": "query",
+            "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
             "name": "BeatmapId",
             "in": "query",
             "required": true,
@@ -296,6 +316,20 @@
             "minimum": 0,
             "type": "integer",
             "format": "int32"
+          },
+          "sliderTails": {
+            "maximum": 2147483647,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "sliderTicks": {
+            "maximum": 2147483647,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         },
         "additionalProperties": false

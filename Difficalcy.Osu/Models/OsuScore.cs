@@ -18,6 +18,12 @@ namespace Difficalcy.Osu.Models
         [Range(0, int.MaxValue)]
         public int Oks { get; init; } = 0;
 
+        [Range(0, int.MaxValue)]
+        public int? SliderTails { get; init; }
+
+        [Range(0, int.MaxValue)]
+        public int? SliderTicks { get; init; } // LargeTickHits
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (Misses > 0 && Combo is null)
