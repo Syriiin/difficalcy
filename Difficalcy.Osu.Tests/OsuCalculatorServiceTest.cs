@@ -21,8 +21,8 @@ public class OsuCalculatorServiceTest
         );
 
     [Theory]
-    [InlineData(6.7171144000821119d, 291.34799376682508d, "diffcalc-test", new string[] { })]
-    [InlineData(8.9825709931204205d, 717.13844713272601d, "diffcalc-test", new string[] { "DT" })]
+    [InlineData(6.7171144000821119d, 291.6916492167043, "diffcalc-test", new string[] { })]
+    [InlineData(8.9825709931204205d, 718.5552449511403, "diffcalc-test", new string[] { "DT" })]
     public void Test(
         double expectedDifficultyTotal,
         double expectedPerformanceTotal,
@@ -61,17 +61,32 @@ public class OsuCalculatorServiceTest
             Mehs = 4,
             Oks = 3,
         };
-        TestGetCalculationReturnsCorrectValues(12.418442356371395, 1415.202990027042, score);
+        TestGetCalculationReturnsCorrectValues(12.418442356371395, 1441.8141993457837, score);
     }
 
     [Fact]
-    public void TestClassicMod()
+    public void TestAllParametersClassicMod()
     {
         var score = new OsuScore
         {
             BeatmapId = "diffcalc-test",
-            Mods = [new Mod() { Acronym = "CL" }],
+            Mods =
+            [
+                new Mod() { Acronym = "HD" },
+                new Mod() { Acronym = "HR" },
+                new Mod()
+                {
+                    Acronym = "DT",
+                    Settings = new Dictionary<string, string> { { "speed_change", "2" } },
+                },
+                new Mod() { Acronym = "FL" },
+                new Mod() { Acronym = "CL" },
+            ],
+            Combo = 200,
+            Misses = 5,
+            Mehs = 4,
+            Oks = 3,
         };
-        TestGetCalculationReturnsCorrectValues(6.7171144000821119d, 289.16416504218972, score);
+        TestGetCalculationReturnsCorrectValues(12.418442356371395, 1405.0910286547635, score);
     }
 }
