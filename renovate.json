@@ -2,5 +2,26 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
+  ],
+  "packageRules": [
+    {
+      "matchManagers": [
+        "nuget"
+      ],
+      "matchPackageNames": [
+        "ppy.osu.Game.Rulesets*"
+      ],
+      "groupName": "osu-rulesets"
+    },
+    {
+      "matchManagers": [
+        "nuget"
+      ],
+      "matchPackageNames": [
+        "xunit*",
+        "Microsoft.Net.Test.Sdk"
+      ],
+      "groupName": "test-tools"
+    }
   ]
 }
