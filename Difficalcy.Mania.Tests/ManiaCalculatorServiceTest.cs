@@ -21,8 +21,8 @@ public class ManiaCalculatorServiceTest
         );
 
     [Theory]
-    [InlineData(2.3493769750220914d, 45.76140071089439d, "diffcalc-test", new string[] { })]
-    [InlineData(2.797245912537965d, 68.79984443279172d, "diffcalc-test", new string[] { "DT" })]
+    [InlineData(2.3493769750220914, 45.76140071089439, "diffcalc-test", new string[] { })]
+    [InlineData(2.797245912537965, 68.79984443279172, "diffcalc-test", new string[] { "DT" })]
     public void Test(
         double expectedDifficultyTotal,
         double expectedPerformanceTotal,
@@ -59,6 +59,6 @@ public class ManiaCalculatorServiceTest
             Goods = 2,
             Greats = 1,
         };
-        TestGetCalculationReturnsCorrectValues(3.3252153148972425, 64.408516282383957, score);
+        TestGetCalculationReturnsCorrectValues(3.3252153148972425, 64.40851628238396, score);
     }
 }

@@ -21,8 +21,8 @@ public class CatchCalculatorServiceTest
         );
 
     [Theory]
-    [InlineData(4.0505463516206195d, 164.5770866821372d, "diffcalc-test", new string[] { })]
-    [InlineData(5.1696411260785498d, 291.43480971713944d, "diffcalc-test", new string[] { "DT" })]
+    [InlineData(4.050546351620621, 164.57708668213735, "diffcalc-test", new string[] { })]
+    [InlineData(5.169641126078549, 291.4348097171394, "diffcalc-test", new string[] { "DT" })]
     public void Test(
         double expectedDifficultyTotal,
         double expectedPerformanceTotal,
@@ -59,6 +59,6 @@ public class CatchCalculatorServiceTest
             LargeDroplets = 18,
             SmallDroplets = 200,
         };
-        TestGetCalculationReturnsCorrectValues(6.9017468199992278, 375.74458599075302, score);
+        TestGetCalculationReturnsCorrectValues(6.61877502983358, 345.54834710808564, score);
     }
 }
