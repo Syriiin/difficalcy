@@ -65,12 +65,7 @@ namespace Difficalcy.Catch.Services
             return (
                 difficultyAttributes,
                 JsonSerializer.Serialize(
-                    new
-                    {
-                        difficultyAttributes.StarRating,
-                        difficultyAttributes.MaxCombo,
-                        difficultyAttributes.ApproachRate,
-                    }
+                    new { difficultyAttributes.StarRating, difficultyAttributes.MaxCombo }
                 )
             );
         }
