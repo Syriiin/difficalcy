@@ -65,12 +65,7 @@ namespace Difficalcy.Mania.Services
             return (
                 difficultyAttributes,
                 JsonSerializer.Serialize(
-                    new
-                    {
-                        difficultyAttributes.StarRating,
-                        difficultyAttributes.MaxCombo,
-                        difficultyAttributes.GreatHitWindow,
-                    }
+                    new { difficultyAttributes.StarRating, difficultyAttributes.MaxCombo }
                 )
             );
         }
