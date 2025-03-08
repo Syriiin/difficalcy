@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ppy.osu.Game.Rulesets.Osu" Version="2025.304.0" />
+    <PackageReference Include="ppy.osu.Game.Rulesets.Osu" Version="2025.306.0" />
   </ItemGroup>
 
   <ItemGroup>

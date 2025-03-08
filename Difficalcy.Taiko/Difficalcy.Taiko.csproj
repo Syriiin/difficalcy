@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ppy.osu.Game.Rulesets.Taiko" Version="2025.304.0" />
-    <PackageReference Include="ppy.osu.Game.Rulesets.Osu" Version="2025.304.0" /> <!-- required for convert support -->
+    <PackageReference Include="ppy.osu.Game.Rulesets.Taiko" Version="2025.306.0" />
+    <PackageReference Include="ppy.osu.Game.Rulesets.Osu" Version="2025.306.0" /> <!-- required for convert support -->
   </ItemGroup>
 
   <ItemGroup>
