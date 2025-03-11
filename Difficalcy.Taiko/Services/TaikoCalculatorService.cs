@@ -70,6 +70,9 @@ namespace Difficalcy.Taiko.Services
                         difficultyAttributes.StarRating,
                         difficultyAttributes.MaxCombo,
                         difficultyAttributes.MonoStaminaFactor,
+                        difficultyAttributes.StaminaDifficulty,
+                        difficultyAttributes.RhythmDifficulty,
+                        difficultyAttributes.ColourDifficulty,
                     }
                 )
             );
