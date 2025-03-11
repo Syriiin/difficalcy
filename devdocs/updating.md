@@ -6,7 +6,7 @@ There are some common changes that need to be made when changes are made to the 
 
 To ensure our caching functions correctly, we need to make sure we serialise the required difficulty attributes.
 
-These can be checked by looking at the `FromDatabaseAttributes` method of the difficulty attribute classes.
+These can be checked by looking at the `FromDatabaseAttributes` method of the difficulty attribute classes and adding them to any skill difficulty values attributes (eg. `AimDifficulty`).
 
 ## Updating test values
 
