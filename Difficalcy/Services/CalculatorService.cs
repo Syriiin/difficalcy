@@ -5,13 +5,18 @@ using Difficalcy.Models;
 
 namespace Difficalcy.Services
 {
-    public abstract class CalculatorService<TScore, TDifficulty, TPerformance, TCalculation>(
-        ICache cache
-    )
+    public abstract class CalculatorService<
+        TScore,
+        TDifficulty,
+        TPerformance,
+        TCalculation,
+        TBeatmapDetails
+    >(ICache cache)
         where TScore : Score
         where TDifficulty : Difficulty
         where TPerformance : Performance
         where TCalculation : Calculation<TDifficulty, TPerformance>
+        where TBeatmapDetails : BeatmapDetails
     {
         /// <summary>
         /// A set of information describing the calculator.
@@ -50,6 +55,17 @@ namespace Difficalcy.Services
             TScore score,
             object difficultyAttributes
         );
+
+        /// <summary>
+        /// Returns the beatmap details for a given beatmap ID.
+        /// </summary>
+        public async Task<TBeatmapDetails> GetBeatmapDetails(string beatmapId)
+        {
+            await EnsureBeatmap(beatmapId);
+            return GetBeatmapDetailsSync(beatmapId);
+        }
+
+        protected abstract TBeatmapDetails GetBeatmapDetailsSync(string beatmapId);
 
         /// <summary>
         /// Returns the calculation of a given score.

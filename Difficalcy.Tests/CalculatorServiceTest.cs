@@ -3,17 +3,25 @@ namespace Difficalcy.Tests;
 using Difficalcy.Models;
 using Difficalcy.Services;
 
-public abstract class CalculatorServiceTest<TScore, TDifficulty, TPerformance, TCalculation>
+public abstract class CalculatorServiceTest<
+    TScore,
+    TDifficulty,
+    TPerformance,
+    TCalculation,
+    TBeatmapDetails
+>
     where TScore : Score
     where TDifficulty : Difficulty
     where TPerformance : Performance
     where TCalculation : Calculation<TDifficulty, TPerformance>
+    where TBeatmapDetails : BeatmapDetails
 {
     protected abstract CalculatorService<
         TScore,
         TDifficulty,
         TPerformance,
-        TCalculation
+        TCalculation,
+        TBeatmapDetails
     > CalculatorService { get; }
 
     public async void TestGetCalculationReturnsCorrectValues(
