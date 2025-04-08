@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Difficalcy.Mania.Models;
 using Difficalcy.Models;
 using Difficalcy.Services;
+using osu.Game.Beatmaps;
 using osu.Game.Online.API;
 using osu.Game.Rulesets.Mania;
 using osu.Game.Rulesets.Mania.Difficulty;
@@ -18,7 +19,13 @@ using LazerMod = osu.Game.Rulesets.Mods.Mod;
 namespace Difficalcy.Mania.Services
 {
     public class ManiaCalculatorService(ICache cache, IBeatmapProvider beatmapProvider)
-        : CalculatorService<ManiaScore, ManiaDifficulty, ManiaPerformance, ManiaCalculation>(cache)
+        : CalculatorService<
+            ManiaScore,
+            ManiaDifficulty,
+            ManiaPerformance,
+            ManiaCalculation,
+            ManiaBeatmapDetails
+        >(cache)
     {
         private readonly IBeatmapProvider _beatmapProvider = beatmapProvider;
         private ManiaRuleset ManiaRuleset { get; } = new ManiaRuleset();
@@ -97,6 +104,36 @@ namespace Difficalcy.Mania.Services
             };
         }
 
+        protected override ManiaBeatmapDetails GetBeatmapDetailsSync(string beatmapId)
+        {
+            var workingBeatmap = GetWorkingBeatmap(beatmapId);
+            var beatmap = workingBeatmap.GetPlayableBeatmap(ManiaRuleset.RulesetInfo);
+
+            var scoreInfo = new ScoreInfo(beatmap.BeatmapInfo, ManiaRuleset.RulesetInfo) { };
+
+            var noteCount = beatmap.HitObjects.OfType<Note>().Count();
+
+            return new ManiaBeatmapDetails()
+            {
+                Artist = beatmap.Metadata.Artist,
+                Title = beatmap.Metadata.Title,
+                Author = beatmap.Metadata.Author.Username,
+                DifficultyName = beatmap.BeatmapInfo.DifficultyName,
+                MaxCombo = beatmap.GetMaxCombo(),
+                Length = beatmap.CalculatePlayableLength(),
+                MinBPM = (int)Math.Round(beatmap.ControlPointInfo.BPMMinimum),
+                MaxBPM = (int)Math.Round(beatmap.ControlPointInfo.BPMMaximum),
+                CommonBPM = (int)Math.Round(60000 / beatmap.GetMostCommonBeatLength()),
+                NoteCount = noteCount,
+                HoldNoteCount = beatmap.HitObjects.OfType<HoldNote>().Count(),
+                KeyCount = beatmap.Difficulty.CircleSize,
+                Accuracy = Math.Round(beatmap.Difficulty.OverallDifficulty, 2),
+                DrainRate = Math.Round(beatmap.Difficulty.DrainRate, 2),
+                BaseVelocity = Math.Round(beatmap.Difficulty.SliderMultiplier, 2),
+                TickRate = Math.Round(beatmap.Difficulty.SliderTickRate, 2),
+            };
+        }
+
         private ScoreInfo GetScoreInfo(ManiaScore score)
         {
             var workingBeatmap = GetWorkingBeatmap(score.BeatmapId);
@@ -118,7 +155,7 @@ namespace Difficalcy.Mania.Services
             return new ScoreInfo(beatmap.BeatmapInfo, ManiaRuleset.RulesetInfo)
             {
                 Accuracy = accuracy,
-                MaxCombo = 0,
+                MaxCombo = beatmap.GetMaxCombo(),
                 Statistics = statistics,
                 Mods = mods,
             };
