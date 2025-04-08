@@ -10,6 +10,7 @@ namespace Difficalcy.Osu.Controllers
             OsuDifficulty,
             OsuPerformance,
             OsuCalculation,
+            OsuBeatmapDetails,
             OsuCalculatorService
         >(calculatorService) { }
 }

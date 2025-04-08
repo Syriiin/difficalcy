@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 using Difficalcy.Models;
 using Difficalcy.Osu.Models;
 using Difficalcy.Services;
+using osu.Game.Beatmaps;
 using osu.Game.Online.API;
 using osu.Game.Rulesets.Osu;
 using osu.Game.Rulesets.Osu.Difficulty;
@@ -18,7 +20,13 @@ using LazerMod = osu.Game.Rulesets.Mods.Mod;
 namespace Difficalcy.Osu.Services
 {
     public class OsuCalculatorService(ICache cache, IBeatmapProvider beatmapProvider)
-        : CalculatorService<OsuScore, OsuDifficulty, OsuPerformance, OsuCalculation>(cache)
+        : CalculatorService<
+            OsuScore,
+            OsuDifficulty,
+            OsuPerformance,
+            OsuCalculation,
+            OsuBeatmapDetails
+        >(cache)
     {
         private OsuRuleset OsuRuleset { get; } = new OsuRuleset();
 
@@ -113,16 +121,44 @@ namespace Difficalcy.Osu.Services
             };
         }
 
+        protected override OsuBeatmapDetails GetBeatmapDetailsSync(string beatmapId)
+        {
+            var workingBeatmap = GetWorkingBeatmap(beatmapId);
+            var beatmap = workingBeatmap.GetPlayableBeatmap(OsuRuleset.RulesetInfo);
+
+            return new OsuBeatmapDetails()
+            {
+                Artist = beatmap.Metadata.Artist,
+                Title = beatmap.Metadata.Title,
+                Author = beatmap.Metadata.Author.Username,
+                DifficultyName = beatmap.BeatmapInfo.DifficultyName,
+                MaxCombo = beatmap.GetMaxCombo(),
+                Length = beatmap.CalculatePlayableLength(),
+                MinBPM = (int)Math.Round(beatmap.ControlPointInfo.BPMMinimum),
+                MaxBPM = (int)Math.Round(beatmap.ControlPointInfo.BPMMaximum),
+                CommonBPM = (int)Math.Round(60000 / beatmap.GetMostCommonBeatLength()),
+                CircleCount = beatmap.HitObjects.OfType<HitCircle>().Count(),
+                SliderCount = beatmap.HitObjects.OfType<Slider>().Count(),
+                SpinnerCount = beatmap.HitObjects.OfType<Spinner>().Count(),
+                SliderTickCount = beatmap
+                    .HitObjects.OfType<Slider>()
+                    .Sum(s => s.NestedHitObjects.Count(x => x is SliderTick or SliderRepeat)),
+                CircleSize = Math.Round(beatmap.Difficulty.CircleSize, 2),
+                ApproachRate = Math.Round(beatmap.Difficulty.ApproachRate, 2),
+                Accuracy = Math.Round(beatmap.Difficulty.OverallDifficulty, 2),
+                DrainRate = Math.Round(beatmap.Difficulty.DrainRate, 2),
+                BaseVelocity = Math.Round(beatmap.Difficulty.SliderMultiplier, 2),
+                TickRate = Math.Round(beatmap.Difficulty.SliderTickRate, 2),
+            };
+        }
+
         private ScoreInfo GetScoreInfo(OsuScore score)
         {
             var workingBeatmap = GetWorkingBeatmap(score.BeatmapId);
             var mods = score.Mods.Select(ModToLazerMod).ToArray();
             var beatmap = workingBeatmap.GetPlayableBeatmap(OsuRuleset.RulesetInfo, mods);
 
-            var combo =
-                score.Combo
-                ?? beatmap.HitObjects.Count
-                    + beatmap.HitObjects.OfType<Slider>().Sum(s => s.NestedHitObjects.Count - 1);
+            var combo = score.Combo ?? beatmap.GetMaxCombo();
 
             Dictionary<HitResult, int> statistics;
             double accuracy;
