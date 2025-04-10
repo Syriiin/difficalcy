@@ -257,6 +257,36 @@ curl "localhost:5000/api/batch/calculation" \
 ]
 ```
 
+There is also a `/beatmapdetails` endpoint for getting various specifics about a beatmap:
+
+```sh
+$ curl "localhost:5000/api/beatmapdetails?BeatmapId=658127"
+```
+
+```json
+{
+  "circleCount": 1760,
+  "sliderCount": 210,
+  "spinnerCount": 3,
+  "sliderTickCount": 219,
+  "circleSize": 4,
+  "approachRate": 9.6,
+  "accuracy": 9,
+  "drainRate": 6,
+  "artist": "xi",
+  "title": "Blue Zenith",
+  "difficultyName": "FOUR DIMENSIONS",
+  "author": "Asphyxia",
+  "maxCombo": 2402,
+  "length": 250800,
+  "minBPM": 200,
+  "maxBPM": 200,
+  "commonBPM": 200,
+  "baseVelocity": 1.8,
+  "tickRate": 1
+}
+```
+
 ## Recommended setup
 
 In a real deployment, caching is important, so including a redis instance and persistent volumes for both beatmaps and redis data will help you a lot.
