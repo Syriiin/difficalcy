@@ -10,6 +10,7 @@ namespace Difficalcy.Taiko.Controllers
             TaikoDifficulty,
             TaikoPerformance,
             TaikoCalculation,
+            TaikoBeatmapDetails,
             TaikoCalculatorService
         >(calculatorService) { }
 }

@@ -19,7 +19,13 @@ using LazerMod = osu.Game.Rulesets.Mods.Mod;
 namespace Difficalcy.Catch.Services
 {
     public class CatchCalculatorService(ICache cache, IBeatmapProvider beatmapProvider)
-        : CalculatorService<CatchScore, CatchDifficulty, CatchPerformance, CatchCalculation>(cache)
+        : CalculatorService<
+            CatchScore,
+            CatchDifficulty,
+            CatchPerformance,
+            CatchCalculation,
+            CatchBeatmapDetails
+        >(cache)
     {
         private CatchRuleset CatchRuleset { get; } = new CatchRuleset();
 
@@ -98,19 +104,42 @@ namespace Difficalcy.Catch.Services
             };
         }
 
+        protected override CatchBeatmapDetails GetBeatmapDetailsSync(string beatmapId)
+        {
+            var workingBeatmap = GetWorkingBeatmap(beatmapId);
+            var beatmap = workingBeatmap.GetPlayableBeatmap(CatchRuleset.RulesetInfo);
+
+            var fruitCount = beatmap.HitObjects.OfType<Fruit>().Count();
+
+            return new CatchBeatmapDetails()
+            {
+                Artist = beatmap.Metadata.Artist,
+                Title = beatmap.Metadata.Title,
+                Author = beatmap.Metadata.Author.Username,
+                DifficultyName = beatmap.BeatmapInfo.DifficultyName,
+                MaxCombo = beatmap.GetMaxCombo(),
+                Length = beatmap.CalculatePlayableLength(),
+                MinBPM = (int)Math.Round(beatmap.ControlPointInfo.BPMMinimum),
+                MaxBPM = (int)Math.Round(beatmap.ControlPointInfo.BPMMaximum),
+                CommonBPM = (int)Math.Round(60000 / beatmap.GetMostCommonBeatLength()),
+                FruitCount = fruitCount,
+                JuiceStreamCount = beatmap.HitObjects.OfType<JuiceStream>().Count(),
+                BananaShowerCount = beatmap.HitObjects.OfType<BananaShower>().Count(),
+                CircleSize = Math.Round(beatmap.Difficulty.CircleSize, 2),
+                ApproachRate = Math.Round(beatmap.Difficulty.ApproachRate, 2),
+                DrainRate = Math.Round(beatmap.Difficulty.DrainRate, 2),
+                BaseVelocity = Math.Round(beatmap.Difficulty.SliderMultiplier, 2),
+                TickRate = Math.Round(beatmap.Difficulty.SliderTickRate, 2),
+            };
+        }
+
         private ScoreInfo GetScoreInfo(CatchScore score)
         {
             var workingBeatmap = GetWorkingBeatmap(score.BeatmapId);
             var mods = score.Mods.Select(ModToLazerMod).ToArray();
             var beatmap = workingBeatmap.GetPlayableBeatmap(CatchRuleset.RulesetInfo, mods);
 
-            var combo =
-                score.Combo
-                ?? beatmap.HitObjects.Count(h => h is Fruit)
-                    + beatmap
-                        .HitObjects.OfType<JuiceStream>()
-                        .SelectMany(j => j.NestedHitObjects)
-                        .Count(h => h is not TinyDroplet);
+            var combo = score.Combo ?? beatmap.GetMaxCombo();
             var statistics = GetHitResults(
                 beatmap,
                 score.Misses,

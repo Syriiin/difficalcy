@@ -10,6 +10,7 @@ namespace Difficalcy.Mania.Controllers
             ManiaDifficulty,
             ManiaPerformance,
             ManiaCalculation,
+            ManiaBeatmapDetails,
             ManiaCalculatorService
         >(calculatorService) { }
 }

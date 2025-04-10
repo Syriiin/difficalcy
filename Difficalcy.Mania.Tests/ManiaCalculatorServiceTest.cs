@@ -7,13 +7,20 @@ using Difficalcy.Tests;
 namespace Difficalcy.Mania.Tests;
 
 public class ManiaCalculatorServiceTest
-    : CalculatorServiceTest<ManiaScore, ManiaDifficulty, ManiaPerformance, ManiaCalculation>
+    : CalculatorServiceTest<
+        ManiaScore,
+        ManiaDifficulty,
+        ManiaPerformance,
+        ManiaCalculation,
+        ManiaBeatmapDetails
+    >
 {
     protected override CalculatorService<
         ManiaScore,
         ManiaDifficulty,
         ManiaPerformance,
-        ManiaCalculation
+        ManiaCalculation,
+        ManiaBeatmapDetails
     > CalculatorService { get; } =
         new ManiaCalculatorService(
             new InMemoryCache(),
@@ -60,5 +67,28 @@ public class ManiaCalculatorServiceTest
             Greats = 1,
         };
         TestGetCalculationReturnsCorrectValues(3.3252153148972425, 64.40851628238396, score);
+    }
+
+    [Fact]
+    public async Task TestBeatmapDetails()
+    {
+        var beatmapId = "diffcalc-test";
+        var beatmapDetails = await CalculatorService.GetBeatmapDetails(beatmapId);
+        Assert.Equal("Unknown", beatmapDetails.Artist);
+        Assert.Equal("Unknown", beatmapDetails.Title);
+        Assert.Equal("Normal", beatmapDetails.DifficultyName);
+        Assert.Equal("Unknown Creator", beatmapDetails.Author);
+        Assert.Equal(151, beatmapDetails.MaxCombo);
+        Assert.Equal(30500, beatmapDetails.Length);
+        Assert.Equal(120, beatmapDetails.MinBPM);
+        Assert.Equal(120, beatmapDetails.MaxBPM);
+        Assert.Equal(120, beatmapDetails.CommonBPM);
+        Assert.Equal(123, beatmapDetails.NoteCount);
+        Assert.Equal(14, beatmapDetails.HoldNoteCount);
+        Assert.Equal(4, beatmapDetails.KeyCount);
+        Assert.Equal(7, beatmapDetails.Accuracy);
+        Assert.Equal(5, beatmapDetails.DrainRate);
+        Assert.Equal(1.6, beatmapDetails.BaseVelocity, 4);
+        Assert.Equal(1, beatmapDetails.TickRate);
     }
 }

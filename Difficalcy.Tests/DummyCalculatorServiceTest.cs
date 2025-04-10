@@ -1,16 +1,24 @@
 namespace Difficalcy.Tests;
 
+using System.Threading.Tasks;
 using Difficalcy.Models;
 using Difficalcy.Services;
 
 public class DummyCalculatorServiceTest
-    : CalculatorServiceTest<DummyScore, DummyDifficulty, DummyPerformance, DummyCalculation>
+    : CalculatorServiceTest<
+        DummyScore,
+        DummyDifficulty,
+        DummyPerformance,
+        DummyCalculation,
+        DummyBeatmapDetails
+    >
 {
     protected override CalculatorService<
         DummyScore,
         DummyDifficulty,
         DummyPerformance,
-        DummyCalculation
+        DummyCalculation,
+        DummyBeatmapDetails
     > CalculatorService { get; } = new DummyCalculatorService(new InMemoryCache());
 
     [Theory]
@@ -153,13 +161,38 @@ public class DummyCalculatorServiceTest
         Assert.Equal(10, calculations[11].Difficulty.Total); // 0
         Assert.Equal(1000, calculations[11].Performance.Total);
     }
+
+    [Fact]
+    public async Task TestGetBeatmapDetailsReturnsCorrectValues()
+    {
+        var beatmapId = "test 1";
+        var beatmapDetails = await CalculatorService.GetBeatmapDetails(beatmapId);
+
+        Assert.Equal("Dummy artist", beatmapDetails.Artist);
+        Assert.Equal("Dummy title", beatmapDetails.Title);
+        Assert.Equal("Dummy diff", beatmapDetails.DifficultyName);
+        Assert.Equal("Dummy author", beatmapDetails.Author);
+        Assert.Equal(100, beatmapDetails.MaxCombo);
+        Assert.Equal(200, beatmapDetails.Length);
+        Assert.Equal(300, beatmapDetails.MinBPM);
+        Assert.Equal(400, beatmapDetails.MaxBPM);
+        Assert.Equal(500, beatmapDetails.CommonBPM);
+        Assert.Equal(600, beatmapDetails.BaseVelocity);
+        Assert.Equal(700, beatmapDetails.TickRate);
+    }
 }
 
 /// <summary>
 /// A dummy calculator service implementation that calculates difficulty as mods (casted from string to double) / 10 and performance as difficulty * points
 /// </summary>
 public class DummyCalculatorService(ICache cache)
-    : CalculatorService<DummyScore, DummyDifficulty, DummyPerformance, DummyCalculation>(cache)
+    : CalculatorService<
+        DummyScore,
+        DummyDifficulty,
+        DummyPerformance,
+        DummyCalculation,
+        DummyBeatmapDetails
+    >(cache)
 {
     public override CalculatorInfo Info =>
         new()
@@ -170,6 +203,24 @@ public class DummyCalculatorService(ICache cache)
             CalculatorVersion = "DummyCalculatorVersion",
             CalculatorUrl = $"not.a.real.url",
         };
+
+    protected override DummyBeatmapDetails GetBeatmapDetailsSync(string beatmapId)
+    {
+        return new DummyBeatmapDetails
+        {
+            Artist = "Dummy artist",
+            Title = "Dummy title",
+            DifficultyName = "Dummy diff",
+            Author = "Dummy author",
+            MaxCombo = 100,
+            Length = 200,
+            MinBPM = 300,
+            MaxBPM = 400,
+            CommonBPM = 500,
+            BaseVelocity = 600,
+            TickRate = 700,
+        };
+    }
 
     protected override (object, string) CalculateDifficultyAttributes(string beatmapId, Mod[] mods)
     {
@@ -206,3 +257,5 @@ public record DummyDifficulty : Difficulty { }
 public record DummyPerformance : Performance { }
 
 public record DummyCalculation : Calculation<DummyDifficulty, DummyPerformance> { }
+
+public record DummyBeatmapDetails : BeatmapDetails { }

@@ -24,6 +24,34 @@
         }
       }
     },
+    "/api/beatmapdetails": {
+      "get": {
+        "tags": [
+          "CatchCalculator"
+        ],
+        "parameters": [
+          {
+            "name": "beatmapId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CatchBeatmapDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/calculation": {
       "get": {
         "tags": [
@@ -162,6 +190,80 @@
           "calculatorUrl": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CatchBeatmapDetails": {
+        "type": "object",
+        "properties": {
+          "artist": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "difficultyName": {
+            "type": "string",
+            "nullable": true
+          },
+          "author": {
+            "type": "string",
+            "nullable": true
+          },
+          "maxCombo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "length": {
+            "type": "number",
+            "format": "double"
+          },
+          "minBPM": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxBPM": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "commonBPM": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "baseVelocity": {
+            "type": "number",
+            "format": "double"
+          },
+          "tickRate": {
+            "type": "number",
+            "format": "double"
+          },
+          "fruitCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "juiceStreamCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "bananaShowerCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "circleSize": {
+            "type": "number",
+            "format": "double"
+          },
+          "approachRate": {
+            "type": "number",
+            "format": "double"
+          },
+          "drainRate": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false

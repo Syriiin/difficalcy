@@ -10,6 +10,7 @@ namespace Difficalcy.Catch.Controllers
             CatchDifficulty,
             CatchPerformance,
             CatchCalculation,
+            CatchBeatmapDetails,
             CatchCalculatorService
         >(calculatorService) { }
 }

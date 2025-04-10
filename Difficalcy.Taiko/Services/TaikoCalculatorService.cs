@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Difficalcy.Models;
 using Difficalcy.Services;
 using Difficalcy.Taiko.Models;
+using osu.Game.Beatmaps;
 using osu.Game.Online.API;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Taiko;
@@ -18,7 +19,13 @@ using LazerMod = osu.Game.Rulesets.Mods.Mod;
 namespace Difficalcy.Taiko.Services
 {
     public class TaikoCalculatorService(ICache cache, IBeatmapProvider beatmapProvider)
-        : CalculatorService<TaikoScore, TaikoDifficulty, TaikoPerformance, TaikoCalculation>(cache)
+        : CalculatorService<
+            TaikoScore,
+            TaikoDifficulty,
+            TaikoPerformance,
+            TaikoCalculation,
+            TaikoBeatmapDetails
+        >(cache)
     {
         private readonly IBeatmapProvider _beatmapProvider = beatmapProvider;
         private TaikoRuleset TaikoRuleset { get; } = new TaikoRuleset();
@@ -106,6 +113,34 @@ namespace Difficalcy.Taiko.Services
             };
         }
 
+        protected override TaikoBeatmapDetails GetBeatmapDetailsSync(string beatmapId)
+        {
+            var workingBeatmap = GetWorkingBeatmap(beatmapId);
+            var beatmap = workingBeatmap.GetPlayableBeatmap(TaikoRuleset.RulesetInfo);
+
+            var hitCount = beatmap.HitObjects.OfType<Hit>().Count();
+
+            return new TaikoBeatmapDetails()
+            {
+                Artist = beatmap.Metadata.Artist,
+                Title = beatmap.Metadata.Title,
+                Author = beatmap.Metadata.Author.Username,
+                DifficultyName = beatmap.BeatmapInfo.DifficultyName,
+                MaxCombo = beatmap.GetMaxCombo(),
+                Length = beatmap.CalculatePlayableLength(),
+                MinBPM = (int)Math.Round(beatmap.ControlPointInfo.BPMMinimum),
+                MaxBPM = (int)Math.Round(beatmap.ControlPointInfo.BPMMaximum),
+                CommonBPM = (int)Math.Round(60000 / beatmap.GetMostCommonBeatLength()),
+                HitCount = hitCount,
+                DrumRollCount = beatmap.HitObjects.OfType<DrumRoll>().Count(),
+                SwellCount = beatmap.HitObjects.OfType<Swell>().Count(),
+                Accuracy = Math.Round(beatmap.Difficulty.OverallDifficulty, 2),
+                DrainRate = Math.Round(beatmap.Difficulty.DrainRate, 2),
+                BaseVelocity = Math.Round(beatmap.Difficulty.SliderMultiplier, 2),
+                TickRate = Math.Round(beatmap.Difficulty.SliderTickRate, 2),
+            };
+        }
+
         private ScoreInfo GetScoreInfo(TaikoScore score)
         {
             var workingBeatmap = GetWorkingBeatmap(score.BeatmapId);
@@ -113,7 +148,7 @@ namespace Difficalcy.Taiko.Services
             var beatmap = workingBeatmap.GetPlayableBeatmap(TaikoRuleset.RulesetInfo, mods);
 
             var hitResultCount = beatmap.HitObjects.OfType<Hit>().Count();
-            var combo = score.Combo ?? hitResultCount;
+            var combo = score.Combo ?? beatmap.GetMaxCombo();
             var statistics = GetHitResults(hitResultCount, score.Misses, score.Oks);
             var accuracy = CalculateAccuracy(statistics);
 

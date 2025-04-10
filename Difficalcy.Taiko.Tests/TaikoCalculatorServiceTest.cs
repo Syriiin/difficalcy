@@ -7,13 +7,20 @@ using Difficalcy.Tests;
 namespace Difficalcy.Taiko.Tests;
 
 public class TaikoCalculatorServiceTest
-    : CalculatorServiceTest<TaikoScore, TaikoDifficulty, TaikoPerformance, TaikoCalculation>
+    : CalculatorServiceTest<
+        TaikoScore,
+        TaikoDifficulty,
+        TaikoPerformance,
+        TaikoCalculation,
+        TaikoBeatmapDetails
+    >
 {
     protected override CalculatorService<
         TaikoScore,
         TaikoDifficulty,
         TaikoPerformance,
-        TaikoCalculation
+        TaikoCalculation,
+        TaikoBeatmapDetails
     > CalculatorService { get; } =
         new TaikoCalculatorService(
             new InMemoryCache(),
@@ -59,5 +66,28 @@ public class TaikoCalculatorServiceTest
             Oks = 3,
         };
         TestGetCalculationReturnsCorrectValues(6.216091072305756, 451.45173560370836, score);
+    }
+
+    [Fact]
+    public async Task TestBeatmapDetails()
+    {
+        var beatmapId = "diffcalc-test";
+        var beatmapDetails = await CalculatorService.GetBeatmapDetails(beatmapId);
+        Assert.Equal("Unknown", beatmapDetails.Artist);
+        Assert.Equal("Unknown", beatmapDetails.Title);
+        Assert.Equal("Normal", beatmapDetails.DifficultyName);
+        Assert.Equal("Unknown Creator", beatmapDetails.Author);
+        Assert.Equal(200, beatmapDetails.MaxCombo);
+        Assert.Equal(53000, beatmapDetails.Length);
+        Assert.Equal(120, beatmapDetails.MinBPM);
+        Assert.Equal(120, beatmapDetails.MaxBPM);
+        Assert.Equal(120, beatmapDetails.CommonBPM);
+        Assert.Equal(200, beatmapDetails.HitCount);
+        Assert.Equal(30, beatmapDetails.DrumRollCount);
+        Assert.Equal(8, beatmapDetails.SwellCount);
+        Assert.Equal(7, beatmapDetails.Accuracy);
+        Assert.Equal(5, beatmapDetails.DrainRate);
+        Assert.Equal(1.6, beatmapDetails.BaseVelocity, 4);
+        Assert.Equal(1, beatmapDetails.TickRate);
     }
 }

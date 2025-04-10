@@ -13,17 +13,20 @@ namespace Difficalcy.Controllers
         TDifficulty,
         TPerformance,
         TCalculation,
+        TBeatmapDetails,
         TCalculatorService
     >(TCalculatorService calculatorService) : ControllerBase
         where TScore : Score
         where TDifficulty : Difficulty
         where TPerformance : Performance
         where TCalculation : Calculation<TDifficulty, TPerformance>
+        where TBeatmapDetails : BeatmapDetails
         where TCalculatorService : CalculatorService<
                 TScore,
                 TDifficulty,
                 TPerformance,
-                TCalculation
+                TCalculation,
+                TBeatmapDetails
             >
     {
         protected readonly TCalculatorService calculatorService = calculatorService;
@@ -35,6 +38,24 @@ namespace Difficalcy.Controllers
         public ActionResult<CalculatorInfo> GetInfo()
         {
             return Ok(calculatorService.Info);
+        }
+
+        /// <summary>
+        /// Returns beatmap details.
+        /// </summary>
+        [HttpGet("beatmapdetails")]
+        public async Task<ActionResult<TBeatmapDetails>> GetBeatmapDetails(
+            [FromQuery] string beatmapId
+        )
+        {
+            try
+            {
+                return Ok(await calculatorService.GetBeatmapDetails(beatmapId));
+            }
+            catch (BeatmapNotFoundException e)
+            {
+                return BadRequest(new { error = e.Message });
+            }
         }
 
         /// <summary>

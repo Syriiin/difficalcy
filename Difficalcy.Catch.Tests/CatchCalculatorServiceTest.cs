@@ -7,13 +7,20 @@ using Difficalcy.Tests;
 namespace Difficalcy.Catch.Tests;
 
 public class CatchCalculatorServiceTest
-    : CalculatorServiceTest<CatchScore, CatchDifficulty, CatchPerformance, CatchCalculation>
+    : CalculatorServiceTest<
+        CatchScore,
+        CatchDifficulty,
+        CatchPerformance,
+        CatchCalculation,
+        CatchBeatmapDetails
+    >
 {
     protected override CalculatorService<
         CatchScore,
         CatchDifficulty,
         CatchPerformance,
-        CatchCalculation
+        CatchCalculation,
+        CatchBeatmapDetails
     > CalculatorService { get; } =
         new CatchCalculatorService(
             new InMemoryCache(),
@@ -60,5 +67,29 @@ public class CatchCalculatorServiceTest
             SmallDroplets = 200,
         };
         TestGetCalculationReturnsCorrectValues(6.61877502983358, 345.54834710808564, score);
+    }
+
+    [Fact]
+    public async Task TestBeatmapDetails()
+    {
+        var beatmapId = "diffcalc-test";
+        var beatmapDetails = await CalculatorService.GetBeatmapDetails(beatmapId);
+        Assert.Equal("Unknown", beatmapDetails.Artist);
+        Assert.Equal("Unknown", beatmapDetails.Title);
+        Assert.Equal("Normal", beatmapDetails.DifficultyName);
+        Assert.Equal("Unknown Creator", beatmapDetails.Author);
+        Assert.Equal(127, beatmapDetails.MaxCombo);
+        Assert.Equal(45250, beatmapDetails.Length);
+        Assert.Equal(120, beatmapDetails.MinBPM);
+        Assert.Equal(120, beatmapDetails.MaxBPM);
+        Assert.Equal(120, beatmapDetails.CommonBPM);
+        Assert.Equal(78, beatmapDetails.FruitCount);
+        Assert.Equal(12, beatmapDetails.JuiceStreamCount);
+        Assert.Equal(3, beatmapDetails.BananaShowerCount);
+        Assert.Equal(4, beatmapDetails.CircleSize);
+        Assert.Equal(8.3, beatmapDetails.ApproachRate, 4);
+        Assert.Equal(5, beatmapDetails.DrainRate);
+        Assert.Equal(1.6, beatmapDetails.BaseVelocity, 4);
+        Assert.Equal(1, beatmapDetails.TickRate);
     }
 }
