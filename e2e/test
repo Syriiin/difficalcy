@@ -3,12 +3,16 @@ set -euxo pipefail
 
 curl --fail --silent --show-error "http://$DIFFICALCY_OSU_HOST/api/info" | jq
 curl --fail --silent --show-error "http://$DIFFICALCY_OSU_HOST/api/calculation?BeatmapId=diffcalc-test" | jq
+curl --fail --silent --show-error "http://$DIFFICALCY_OSU_HOST/api/beatmapdetails?BeatmapId=diffcalc-test" | jq
 
 curl --fail --silent --show-error "http://$DIFFICALCY_CATCH_HOST/api/info" | jq
 curl --fail --silent --show-error "http://$DIFFICALCY_CATCH_HOST/api/calculation?BeatmapId=diffcalc-test" | jq
+curl --fail --silent --show-error "http://$DIFFICALCY_CATCH_HOST/api/beatmapdetails?BeatmapId=diffcalc-test" | jq
 
 curl --fail --silent --show-error "http://$DIFFICALCY_TAIKO_HOST/api/info" | jq
 curl --fail --silent --show-error "http://$DIFFICALCY_TAIKO_HOST/api/calculation?BeatmapId=diffcalc-test" | jq
+curl --fail --silent --show-error "http://$DIFFICALCY_TAIKO_HOST/api/beatmapdetails?BeatmapId=diffcalc-test" | jq
 
 curl --fail --silent --show-error "http://$DIFFICALCY_MANIA_HOST/api/info" | jq
 curl --fail --silent --show-error "http://$DIFFICALCY_MANIA_HOST/api/calculation?BeatmapId=diffcalc-test" | jq
+curl --fail --silent --show-error "http://$DIFFICALCY_MANIA_HOST/api/beatmapdetails?BeatmapId=diffcalc-test" | jq
