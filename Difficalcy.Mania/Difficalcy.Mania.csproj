@@ -1,20 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="ppy.osu.Game.Rulesets.Mania" Version="2025.424.0" />
-    <PackageReference Include="ppy.osu.Game.Rulesets.Osu" Version="2025.424.0" /> <!-- required for convert support -->
+    <!-- required for convert support -->
+    <PackageReference Include="ppy.osu.Game.Rulesets.Osu" Version="2025.424.0" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="../Difficalcy/Difficalcy.csproj" />
   </ItemGroup>
-
   <ItemGroup Label="Resources">
     <EmbeddedResource Include="Resources\**\*.*" />
   </ItemGroup>
-
 </Project>

@@ -40,10 +40,10 @@ build-docs:	## Builds documentation site
 	$(COMPOSE_RUN_DOCS) build --strict --clean
 
 check-formatting:	## Checks code formatting
-	$(COMPOSE_TOOLING_RUN) dotnet tool run dotnet-csharpier . --check
+	$(COMPOSE_TOOLING_RUN) dotnet tool run csharpier check .
 
 fix-formatting:	## Fix code formatting
-	$(COMPOSE_TOOLING_RUN) dotnet tool run dotnet-csharpier .
+	$(COMPOSE_TOOLING_RUN) dotnet tool run csharpier format .
 
 # TODO: move gh into tooling container (requires env var considerations)
 VERSION =
