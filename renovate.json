@@ -4,6 +4,7 @@
     "config:recommended",
     "schedule:weekly"
   ],
+  "rebaseWhen": "behind-base-branch",
   "packageRules": [
     {
       "matchManagers": [
