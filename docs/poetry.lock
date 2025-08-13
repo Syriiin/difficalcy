@@ -215,21 +215,22 @@ files = [
 
 [[package]]
 name = "essentials-openapi"
-version = "1.0.8"
+version = "1.2.1"
 description = "Classes to generate OpenAPI Documentation v3 and v2, in JSON and YAML."
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "essentials_openapi-1.0.8-py3-none-any.whl", hash = "sha256:1d3afc67cefc952aade7d406c2ffac81634e54ce7e597ddd8ceb1bfe1fe62e46"},
-    {file = "essentials_openapi-1.0.8.tar.gz", hash = "sha256:37832b7b422939bdcf9cc6f52d2317e0ee19907ac8aba2c77a8cff49a2c0b26a"},
+    {file = "essentials_openapi-1.2.1-py3-none-any.whl", hash = "sha256:d0085cde3ceaa25e6fc4983d8372ac0185909e3fa2791f498280379bb3c86c62"},
+    {file = "essentials_openapi-1.2.1.tar.gz", hash = "sha256:70b06d80a8d9cb7634b702903cfe8fcfc48e6fc054e744eab514bb7bc37f00c9"},
 ]
 
 [package.dependencies]
 essentials = ">=1.1.5"
+markupsafe = ">=3.0.0"
 pyyaml = ">=6"
 
 [package.extras]
-full = ["click (>=8.1.3,<8.2.0)", "httpx (<1)", "jinja2 (>=3.1.2,<3.2.0)", "markupsafe (==2.1.2)", "rich (>=12.6.0,<12.7.0)"]
+full = ["click (>=8.1.3,<8.2.0)", "httpx (<1)", "jinja2 (>=3.1.2,<3.2.0)", "rich (>=12.6.0,<12.7.0)"]
 
 [[package]]
 name = "ghp-import"
@@ -555,18 +556,18 @@ files = [
 
 [[package]]
 name = "neoteroi-mkdocs"
-version = "1.1.2"
+version = "1.1.3"
 description = "Plugins for MkDocs and Python Markdown"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "neoteroi_mkdocs-1.1.2-py3-none-any.whl", hash = "sha256:a40475142b7067f5b88108d2e164a6c3d6ed98af311402bd0833417bdb0dd6bc"},
-    {file = "neoteroi_mkdocs-1.1.2.tar.gz", hash = "sha256:95a8b8e6b89a54a6a731e68329c7bb03e86f46deb74fe2a95de307c9702e7af9"},
+    {file = "neoteroi_mkdocs-1.1.3-py3-none-any.whl", hash = "sha256:772aee317c9bb10a89d67e71e322730f92cc349d5eecc8a08e8fb079398e514b"},
+    {file = "neoteroi_mkdocs-1.1.3.tar.gz", hash = "sha256:3ecfb825e898d10a6d703a3ef3f0484d823b7b5660425e76af421e316ac18036"},
 ]
 
 [package.dependencies]
 click = "*"
-essentials-openapi = "*"
+essentials-openapi = ">=1.2.1"
 httpx = "*"
 jinja2 = "*"
 mkdocs = "*"
