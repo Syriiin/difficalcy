@@ -11,6 +11,7 @@ nav:
   - index.md
   - getting-started.md
   - configuration.md
+  - versioning.md
   - API Reference:
     - api-reference/index.md
     - difficalcy-osu: api-reference/difficalcy-osu.md
