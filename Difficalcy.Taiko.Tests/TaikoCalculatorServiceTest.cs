@@ -28,8 +28,8 @@ public class TaikoCalculatorServiceTest
         );
 
     [Theory]
-    [InlineData(3.3055544732491895, 135.44034861603984, "diffcalc-test", new string[] { })]
-    [InlineData(4.447257361895736, 272.94981653131504, "diffcalc-test", new string[] { "DT" })]
+    [InlineData(3.3055544732491895, 137.14983590098501, "diffcalc-test", new string[] { })]
+    [InlineData(4.447257361895736, 275.91119634365759, "diffcalc-test", new string[] { "DT" })]
     public void Test(
         double expectedDifficultyTotal,
         double expectedPerformanceTotal,
@@ -65,7 +65,7 @@ public class TaikoCalculatorServiceTest
             Misses = 5,
             Oks = 3,
         };
-        TestGetCalculationReturnsCorrectValues(6.216091072305756, 451.45173560370836, score);
+        TestGetCalculationReturnsCorrectValues(6.216091072305756, 467.94763806664434, score);
     }
 
     [Fact]
