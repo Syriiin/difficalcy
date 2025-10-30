@@ -1,6 +1,6 @@
 # Updating guide
 
-There are some common changes that need to be made when changes are made to the difficulty calculators
+There are some common changes that need to be made when changes are made to the difficulty calculators.
 
 ## Updating difficulty attributes
 
@@ -77,9 +77,11 @@ $ dotnet run -- simulate taiko ~/git/difficalcy/Difficalcy.Taiko/Resources/Testi
 ```sh
 $ dotnet run -- simulate catch ~/git/difficalcy/Difficalcy.Catch/Resources/Testing/Beatmaps/diffcalc-test.osu \
     --json
+
 $ dotnet run -- simulate catch ~/git/difficalcy/Difficalcy.Catch/Resources/Testing/Beatmaps/diffcalc-test.osu \
     --json \
     --mod DT
+
 $ dotnet run -- simulate catch ~/git/difficalcy/Difficalcy.Catch/Resources/Testing/Beatmaps/diffcalc-test.osu \
     --json \
     --mod HR \
@@ -97,10 +99,12 @@ $ dotnet run -- simulate catch ~/git/difficalcy/Difficalcy.Catch/Resources/Testi
 $ dotnet run -- simulate mania ~/git/difficalcy/Difficalcy.Mania/Resources/Testing/Beatmaps/diffcalc-test.osu \
     --json \
     --greats 0
+
 $ dotnet run -- simulate mania ~/git/difficalcy/Difficalcy.Mania/Resources/Testing/Beatmaps/diffcalc-test.osu \
     --json \
     --mod DT \
     --greats 0
+
 $ dotnet run -- simulate mania ~/git/difficalcy/Difficalcy.Mania/Resources/Testing/Beatmaps/diffcalc-test.osu \
     --json \
     --mod DT \
