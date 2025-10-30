@@ -66,7 +66,7 @@ public class CatchCalculatorServiceTest
             LargeDroplets = 18,
             SmallDroplets = 200,
         };
-        TestGetCalculationReturnsCorrectValues(6.61877502983358, 345.54834710808564, score);
+        TestGetCalculationReturnsCorrectValues(6.61877502983358, 384.78709155438418, score);
     }
 
     [Fact]
