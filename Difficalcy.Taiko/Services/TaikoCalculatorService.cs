@@ -80,6 +80,7 @@ namespace Difficalcy.Taiko.Services
                         difficultyAttributes.StaminaDifficulty,
                         difficultyAttributes.RhythmDifficulty,
                         difficultyAttributes.ColourDifficulty,
+                        difficultyAttributes.ConsistencyFactor,
                     }
                 )
             );

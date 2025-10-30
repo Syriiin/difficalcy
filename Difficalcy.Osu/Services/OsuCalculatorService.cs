@@ -88,6 +88,11 @@ namespace Difficalcy.Osu.Services
                         difficultyAttributes.HitCircleCount,
                         difficultyAttributes.SliderCount,
                         difficultyAttributes.SpinnerCount,
+                        difficultyAttributes.AimTopWeightedSliderFactor,
+                        difficultyAttributes.SpeedTopWeightedSliderFactor,
+                        difficultyAttributes.NestedScorePerObject,
+                        difficultyAttributes.LegacyScoreBaseMultiplier,
+                        difficultyAttributes.MaximumLegacyComboScore,
                     }
                 )
             );
