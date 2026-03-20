@@ -375,5 +375,10 @@
         "additionalProperties": false
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "TaikoCalculator"
+    }
+  ]
 }

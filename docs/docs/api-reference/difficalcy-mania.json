@@ -386,5 +386,10 @@
         "additionalProperties": false
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "ManiaCalculator"
+    }
+  ]
 }

@@ -377,5 +377,10 @@
         "additionalProperties": false
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "CatchCalculator"
+    }
+  ]
 }
