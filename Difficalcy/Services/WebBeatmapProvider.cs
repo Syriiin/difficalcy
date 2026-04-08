@@ -15,6 +15,8 @@ namespace Difficalcy.Services
         private readonly string _downloadMissingBeatmaps = configuration[
             "DOWNLOAD_MISSING_BEATMAPS"
         ];
+        private readonly string _beatmapDownloadUrl =
+            configuration["BEATMAP_DOWNLOAD_URL"] ?? "https://osu.ppy.sh/osu/{0}";
         private readonly HttpClient _httpClient = new();
 
         public async Task EnsureBeatmap(string beatmapId)
@@ -34,7 +36,7 @@ namespace Difficalcy.Services
                 logger.LogInformation("Downloading beatmap {BeatmapId}", beatmapId);
 
                 using var response = await _httpClient.GetAsync(
-                    $"https://osu.ppy.sh/osu/{beatmapId}"
+                    string.Format(_beatmapDownloadUrl, beatmapId)
                 );
                 if (!response.IsSuccessStatusCode)
                 {
