@@ -35,7 +35,7 @@ namespace Difficalcy.Services
                 logger.LogInformation("Downloading beatmap {BeatmapId}", beatmapId);
 
                 using var response = await _httpClient.GetAsync(
-                    string.Format(_beatmapDownloadUrl, beatmapId)
+                    _beatmapDownloadUrl.Replace("{beatmapId}", beatmapId)
                 );
                 if (!response.IsSuccessStatusCode)
                 {

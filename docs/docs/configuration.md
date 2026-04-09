@@ -6,16 +6,16 @@ However it would be a good idea to consider these configuration options for a re
 
 ## Environment Variables
 
-| Environment variable        | Default                      | Description                                                                                     |
-|-----------------------------|------------------------------|-------------------------------------------------------------------------------------------------|
-| `REDIS_CONFIGURATION`       |                              | The address of the redis server to use for beatmap caching. By default, there will be no cache. |
-| `DOWNLOAD_MISSING_BEATMAPS` | true                         | Whether or not to attempt to download missing beatmaps.                                         |
-| `BEATMAP_DOWNLOAD_URL`      | `https://osu.ppy.sh/osu/{0}` | The url to use for downloading missing beatmaps.                                                |
+| Environment variable        | Default                              | Description                                                                                     |
+| --------------------------- | ------------------------------------ | ----------------------------------------------------------------------------------------------- |
+| `REDIS_CONFIGURATION`       |                                      | The address of the redis server to use for beatmap caching. By default, there will be no cache. |
+| `DOWNLOAD_MISSING_BEATMAPS` | true                                 | Whether or not to attempt to download missing beatmaps.                                         |
+| `BEATMAP_DOWNLOAD_URL`      | `https://osu.ppy.sh/osu/{beatmapId}` | The url to use for downloading missing beatmaps.                                                |
 
 ## Docker volumes
 
 By default these paths will use anonymous volumes, but you may want to create and mount named volumes here, to ensure persistent storage, or to share with other containers.
 
 | Path        | Description                                                                                             |
-|-------------|---------------------------------------------------------------------------------------------------------|
+| ----------- | ------------------------------------------------------------------------------------------------------- |
 | `/beatmaps` | This is the path where difficalcy will use to cache beatmaps. Beatmaps are stored as `<beatmapid>.osu`. |
