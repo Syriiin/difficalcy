@@ -15,8 +15,7 @@ namespace Difficalcy.Services
         private readonly string _downloadMissingBeatmaps = configuration[
             "DOWNLOAD_MISSING_BEATMAPS"
         ];
-        private readonly string _beatmapDownloadUrl =
-            configuration["BEATMAP_DOWNLOAD_URL"] ?? "https://osu.ppy.sh/osu/{0}";
+        private readonly string _beatmapDownloadUrl = configuration["BEATMAP_DOWNLOAD_URL"];
         private readonly HttpClient _httpClient = new();
 
         public async Task EnsureBeatmap(string beatmapId)
