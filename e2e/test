@@ -3,16 +3,20 @@ set -euxo pipefail
 
 curl --fail --silent --show-error "http://$DIFFICALCY_OSU_HOST/api/info" | jq
 curl --fail --silent --show-error "http://$DIFFICALCY_OSU_HOST/api/calculation?BeatmapId=diffcalc-test-osu" | jq
+curl --fail --silent --show-error "http://$DIFFICALCY_OSU_HOST/api/calculation?BeatmapId=diffcalc-test-osu" | jq # Run twice to test caching
 curl --fail --silent --show-error "http://$DIFFICALCY_OSU_HOST/api/beatmapdetails?BeatmapId=diffcalc-test-osu" | jq
 
 curl --fail --silent --show-error "http://$DIFFICALCY_CATCH_HOST/api/info" | jq
 curl --fail --silent --show-error "http://$DIFFICALCY_CATCH_HOST/api/calculation?BeatmapId=diffcalc-test-catch" | jq
+curl --fail --silent --show-error "http://$DIFFICALCY_CATCH_HOST/api/calculation?BeatmapId=diffcalc-test-catch" | jq # Run twice to test caching
 curl --fail --silent --show-error "http://$DIFFICALCY_CATCH_HOST/api/beatmapdetails?BeatmapId=diffcalc-test-catch" | jq
 
 curl --fail --silent --show-error "http://$DIFFICALCY_TAIKO_HOST/api/info" | jq
 curl --fail --silent --show-error "http://$DIFFICALCY_TAIKO_HOST/api/calculation?BeatmapId=diffcalc-test-taiko" | jq
+curl --fail --silent --show-error "http://$DIFFICALCY_TAIKO_HOST/api/calculation?BeatmapId=diffcalc-test-taiko" | jq # Run twice to test caching
 curl --fail --silent --show-error "http://$DIFFICALCY_TAIKO_HOST/api/beatmapdetails?BeatmapId=diffcalc-test-taiko" | jq
 
 curl --fail --silent --show-error "http://$DIFFICALCY_MANIA_HOST/api/info" | jq
 curl --fail --silent --show-error "http://$DIFFICALCY_MANIA_HOST/api/calculation?BeatmapId=diffcalc-test-mania" | jq
+curl --fail --silent --show-error "http://$DIFFICALCY_MANIA_HOST/api/calculation?BeatmapId=diffcalc-test-mania" | jq # Run twice to test caching
 curl --fail --silent --show-error "http://$DIFFICALCY_MANIA_HOST/api/beatmapdetails?BeatmapId=diffcalc-test-mania" | jq
