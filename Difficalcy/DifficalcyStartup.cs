@@ -51,13 +51,7 @@ namespace Difficalcy
                 cache = new RedisCache(ConnectionMultiplexer.Connect(redisConfig));
             services.AddSingleton<ICache>(cache);
 
-            var useTestBeatmapProvider = Configuration["USE_TEST_BEATMAP_PROVIDER"];
-            if (useTestBeatmapProvider == "true")
-                services.AddSingleton<IBeatmapProvider>(
-                    new TestBeatmapProvider(TestBeatmapAssembly)
-                );
-            else
-                services.AddSingleton(typeof(IBeatmapProvider), typeof(WebBeatmapProvider));
+            services.AddSingleton(typeof(IBeatmapProvider), typeof(WebBeatmapProvider));
 
             ConfigureCalculatorServices(services);
         }
