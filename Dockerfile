@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine3.19 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine AS base
 
 LABEL org.opencontainers.image.source https://github.com/Syriiin/difficalcy
 
@@ -16,7 +16,7 @@ RUN mkdir ${BEATMAP_DIRECTORY} && chmod -R 777 ${BEATMAP_DIRECTORY}
 
 USER app
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0-jammy AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 COPY ./Difficalcy/Difficalcy.csproj ./Difficalcy/
