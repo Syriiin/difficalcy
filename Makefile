@@ -2,7 +2,7 @@ COMPOSE_TOOLING_RUN = docker compose -f compose.tooling.yaml run --rm --build to
 COMPOSE_E2E = docker compose -f compose.yaml -f compose.override.e2e.yaml
 COMPOSE_E2E_RUN = $(COMPOSE_E2E) run --rm --build e2e-test-runner
 COMPOSE_APP_DEV = docker compose -f compose.yaml -f compose.override.yaml
-COMPOSE_RUN_DOCS = docker compose -f compose.yaml -f compose.override.yaml run docs
+COMPOSE_RUN_DOCS = docker compose -f compose.yaml -f compose.override.yaml run --rm --build docs
 COMPOSE_PUBLISH = docker compose -f compose.yaml -f compose.override.publish.yaml
 
 help:	## Show this help
