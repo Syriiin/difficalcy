@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.4",
+  "openapi": "3.1.1",
   "info": {
     "title": "Difficalcy.Mania",
     "version": "v1"
@@ -8,7 +8,7 @@
     "/api/info": {
       "get": {
         "tags": [
-          "ManiaCalculator"
+          "Difficalcy.Mania"
         ],
         "responses": {
           "200": {
@@ -24,108 +24,10 @@
         }
       }
     },
-    "/api/beatmapdetails": {
-      "get": {
-        "tags": [
-          "ManiaCalculator"
-        ],
-        "parameters": [
-          {
-            "name": "beatmapId",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ManiaBeatmapDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/calculation": {
       "get": {
         "tags": [
-          "ManiaCalculator"
-        ],
-        "parameters": [
-          {
-            "name": "Misses",
-            "in": "query",
-            "schema": {
-              "maximum": 2147483647,
-              "minimum": 0,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Mehs",
-            "in": "query",
-            "schema": {
-              "maximum": 2147483647,
-              "minimum": 0,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Oks",
-            "in": "query",
-            "schema": {
-              "maximum": 2147483647,
-              "minimum": 0,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Goods",
-            "in": "query",
-            "schema": {
-              "maximum": 2147483647,
-              "minimum": 0,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Greats",
-            "in": "query",
-            "schema": {
-              "maximum": 2147483647,
-              "minimum": 0,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "BeatmapId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Mods",
-            "in": "query",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/Mod"
-              }
-            }
-          }
+          "Difficalcy.Mania"
         ],
         "responses": {
           "200": {
@@ -137,6 +39,16 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -144,7 +56,7 @@
     "/api/batch/calculation": {
       "post": {
         "tags": [
-          "ManiaCalculator"
+          "Difficalcy.Mania"
         ],
         "requestBody": {
           "content": {
@@ -171,6 +83,54 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/beatmapdetails": {
+      "get": {
+        "tags": [
+          "Difficalcy.Mania"
+        ],
+        "parameters": [
+          {
+            "name": "beatmapId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManiaBeatmapDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -182,137 +142,228 @@
         "type": "object",
         "properties": {
           "rulesetName": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "calculatorName": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "calculatorPackage": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "calculatorVersion": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "calculatorUrl": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "null",
+              "string"
+            ]
           }
-        },
-        "additionalProperties": false
+        }
+      },
+      "ErrorResponse": {
+        "required": [
+          "error"
+        ],
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
       },
       "ManiaBeatmapDetails": {
         "type": "object",
         "properties": {
-          "artist": {
-            "type": "string",
-            "nullable": true
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "difficultyName": {
-            "type": "string",
-            "nullable": true
-          },
-          "author": {
-            "type": "string",
-            "nullable": true
-          },
-          "maxCombo": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "length": {
-            "type": "number",
-            "format": "double"
-          },
-          "minBPM": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "maxBPM": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "commonBPM": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "baseVelocity": {
-            "type": "number",
-            "format": "double"
-          },
-          "tickRate": {
-            "type": "number",
-            "format": "double"
-          },
           "noteCount": {
-            "type": "integer",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "holdNoteCount": {
-            "type": "integer",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "keyCount": {
-            "type": "number",
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           },
           "accuracy": {
-            "type": "number",
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           },
           "drainRate": {
-            "type": "number",
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "artist": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "title": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "difficultyName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "author": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "maxCombo": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "length": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "minBPM": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "maxBPM": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "commonBPM": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "baseVelocity": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "tickRate": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           }
-        },
-        "additionalProperties": false
+        }
       },
       "ManiaCalculation": {
         "type": "object",
         "properties": {
+          "accuracy": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
           "difficulty": {
             "$ref": "#/components/schemas/ManiaDifficulty"
           },
           "performance": {
             "$ref": "#/components/schemas/ManiaPerformance"
-          },
-          "accuracy": {
-            "type": "number",
-            "format": "double"
           }
-        },
-        "additionalProperties": false
+        }
       },
       "ManiaDifficulty": {
         "type": "object",
         "properties": {
           "total": {
-            "type": "number",
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           }
-        },
-        "additionalProperties": false
+        }
       },
       "ManiaPerformance": {
         "type": "object",
         "properties": {
-          "total": {
-            "type": "number",
+          "difficulty": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           },
-          "difficulty": {
-            "type": "number",
+          "total": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           }
-        },
-        "additionalProperties": false
+        }
       },
       "ManiaScore": {
         "required": [
@@ -320,49 +371,72 @@
         ],
         "type": "object",
         "properties": {
-          "beatmapId": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "mods": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Mod"
-            },
-            "nullable": true
-          },
           "misses": {
             "maximum": 2147483647,
             "minimum": 0,
-            "type": "integer",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "mehs": {
             "maximum": 2147483647,
             "minimum": 0,
-            "type": "integer",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "oks": {
             "maximum": 2147483647,
             "minimum": 0,
-            "type": "integer",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "goods": {
             "maximum": 2147483647,
             "minimum": 0,
-            "type": "integer",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "greats": {
             "maximum": 2147483647,
             "minimum": 0,
-            "type": "integer",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
+          },
+          "beatmapId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "mods": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/Mod"
+            }
           }
-        },
-        "additionalProperties": false
+        }
       },
       "Mod": {
         "required": [
@@ -371,25 +445,27 @@
         "type": "object",
         "properties": {
           "acronym": {
-            "minLength": 1,
-            "type": "string"
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "settings": {
-            "type": "object",
+            "type": [
+              "null",
+              "object"
+            ],
             "additionalProperties": {
-              "type": "string",
-              "nullable": true
-            },
-            "nullable": true
+              "type": "string"
+            }
           }
-        },
-        "additionalProperties": false
+        }
       }
     }
   },
   "tags": [
     {
-      "name": "ManiaCalculator"
+      "name": "Difficalcy.Mania"
     }
   ]
 }

@@ -1,20 +1,30 @@
-using Microsoft.AspNetCore.Hosting;
+using Difficalcy;
+using Difficalcy.Catch.Models;
+using Difficalcy.Catch.Services;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Difficalcy.Catch
-{
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
+var builder = WebApplication.CreateBuilder(args);
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
-    }
-}
+builder.AddDifficalcyServices("Difficalcy.Catch", "v1");
+
+builder.Services.AddSingleton<CatchCalculatorService>();
+
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+    app.UseDeveloperExceptionPage();
+
+app.MapOpenApi();
+
+app.MapDifficalcyEndpoints<
+    CatchScore,
+    CatchDifficulty,
+    CatchPerformance,
+    CatchCalculation,
+    CatchBeatmapDetails,
+    CatchCalculatorService
+>();
+
+app.Run();

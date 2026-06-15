@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using Difficalcy.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace Difficalcy.Taiko.Models
 {
@@ -24,6 +26,26 @@ namespace Difficalcy.Taiko.Models
                     [nameof(Combo)]
                 );
             }
+        }
+
+        public static ValueTask<TaikoScore> BindAsync(HttpContext context)
+        {
+            var (beatmapId, mods) = BindCommon(context);
+            if (string.IsNullOrEmpty(beatmapId))
+                return ValueTask.FromResult<TaikoScore>(null);
+
+            var query = context.Request.Query;
+
+            return ValueTask.FromResult(
+                new TaikoScore
+                {
+                    BeatmapId = beatmapId,
+                    Mods = mods,
+                    Combo = ParseInt((string)query["Combo"]),
+                    Misses = ParseInt((string)query["Misses"]) ?? 0,
+                    Oks = ParseInt((string)query["Oks"]) ?? 0,
+                }
+            );
         }
     }
 }
