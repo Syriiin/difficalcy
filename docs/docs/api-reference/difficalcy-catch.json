@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.4",
+  "openapi": "3.1.1",
   "info": {
     "title": "Difficalcy.Catch",
     "version": "v1"
@@ -8,7 +8,7 @@
     "/api/info": {
       "get": {
         "tags": [
-          "CatchCalculator"
+          "Difficalcy.Catch"
         ],
         "responses": {
           "200": {
@@ -24,98 +24,10 @@
         }
       }
     },
-    "/api/beatmapdetails": {
-      "get": {
-        "tags": [
-          "CatchCalculator"
-        ],
-        "parameters": [
-          {
-            "name": "beatmapId",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CatchBeatmapDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/calculation": {
       "get": {
         "tags": [
-          "CatchCalculator"
-        ],
-        "parameters": [
-          {
-            "name": "Combo",
-            "in": "query",
-            "schema": {
-              "maximum": 2147483647,
-              "minimum": 0,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Misses",
-            "in": "query",
-            "schema": {
-              "maximum": 2147483647,
-              "minimum": 0,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "SmallDroplets",
-            "in": "query",
-            "schema": {
-              "maximum": 2147483647,
-              "minimum": 0,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "LargeDroplets",
-            "in": "query",
-            "schema": {
-              "maximum": 2147483647,
-              "minimum": 0,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "BeatmapId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Mods",
-            "in": "query",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/Mod"
-              }
-            }
-          }
+          "Difficalcy.Catch"
         ],
         "responses": {
           "200": {
@@ -127,6 +39,16 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -134,7 +56,7 @@
     "/api/batch/calculation": {
       "post": {
         "tags": [
-          "CatchCalculator"
+          "Difficalcy.Catch"
         ],
         "requestBody": {
           "content": {
@@ -161,6 +83,54 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/beatmapdetails": {
+      "get": {
+        "tags": [
+          "Difficalcy.Catch"
+        ],
+        "parameters": [
+          {
+            "name": "beatmapId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CatchBeatmapDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -172,141 +142,222 @@
         "type": "object",
         "properties": {
           "rulesetName": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "calculatorName": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "calculatorPackage": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "calculatorVersion": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "calculatorUrl": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "null",
+              "string"
+            ]
           }
-        },
-        "additionalProperties": false
+        }
       },
       "CatchBeatmapDetails": {
         "type": "object",
         "properties": {
-          "artist": {
-            "type": "string",
-            "nullable": true
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "difficultyName": {
-            "type": "string",
-            "nullable": true
-          },
-          "author": {
-            "type": "string",
-            "nullable": true
-          },
-          "maxCombo": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "length": {
-            "type": "number",
-            "format": "double"
-          },
-          "minBPM": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "maxBPM": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "commonBPM": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "baseVelocity": {
-            "type": "number",
-            "format": "double"
-          },
-          "tickRate": {
-            "type": "number",
-            "format": "double"
-          },
           "fruitCount": {
-            "type": "integer",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "juiceStreamCount": {
-            "type": "integer",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "bananaShowerCount": {
-            "type": "integer",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "circleSize": {
-            "type": "number",
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           },
           "approachRate": {
-            "type": "number",
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           },
           "drainRate": {
-            "type": "number",
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "artist": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "title": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "difficultyName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "author": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "maxCombo": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "length": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "minBPM": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "maxBPM": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "commonBPM": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "baseVelocity": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "tickRate": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           }
-        },
-        "additionalProperties": false
+        }
       },
       "CatchCalculation": {
         "type": "object",
         "properties": {
+          "accuracy": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "combo": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
           "difficulty": {
             "$ref": "#/components/schemas/CatchDifficulty"
           },
           "performance": {
             "$ref": "#/components/schemas/CatchPerformance"
-          },
-          "accuracy": {
-            "type": "number",
-            "format": "double"
-          },
-          "combo": {
-            "type": "number",
-            "format": "double"
           }
-        },
-        "additionalProperties": false
+        }
       },
       "CatchDifficulty": {
         "type": "object",
         "properties": {
           "total": {
-            "type": "number",
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           }
-        },
-        "additionalProperties": false
+        }
       },
       "CatchPerformance": {
         "type": "object",
         "properties": {
           "total": {
-            "type": "number",
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           }
-        },
-        "additionalProperties": false
+        }
       },
       "CatchScore": {
         "required": [
@@ -314,46 +365,79 @@
         ],
         "type": "object",
         "properties": {
-          "beatmapId": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "mods": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Mod"
-            },
-            "nullable": true
-          },
           "combo": {
             "maximum": 2147483647,
             "minimum": 0,
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
           },
           "misses": {
             "maximum": 2147483647,
             "minimum": 0,
-            "type": "integer",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "smallDroplets": {
             "maximum": 2147483647,
             "minimum": 0,
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
           },
           "largeDroplets": {
             "maximum": 2147483647,
             "minimum": 0,
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "beatmapId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "mods": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/Mod"
+            }
           }
-        },
-        "additionalProperties": false
+        }
+      },
+      "ErrorResponse": {
+        "required": [
+          "error"
+        ],
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
       },
       "Mod": {
         "required": [
@@ -362,25 +446,27 @@
         "type": "object",
         "properties": {
           "acronym": {
-            "minLength": 1,
-            "type": "string"
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "settings": {
-            "type": "object",
+            "type": [
+              "null",
+              "object"
+            ],
             "additionalProperties": {
-              "type": "string",
-              "nullable": true
-            },
-            "nullable": true
+              "type": "string"
+            }
           }
-        },
-        "additionalProperties": false
+        }
       }
     }
   },
   "tags": [
     {
-      "name": "CatchCalculator"
+      "name": "Difficalcy.Catch"
     }
   ]
 }

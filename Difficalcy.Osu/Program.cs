@@ -1,20 +1,30 @@
-using Microsoft.AspNetCore.Hosting;
+using Difficalcy;
+using Difficalcy.Osu.Models;
+using Difficalcy.Osu.Services;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Difficalcy.Osu
-{
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
+var builder = WebApplication.CreateBuilder(args);
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
-    }
-}
+builder.AddDifficalcyServices("Difficalcy.Osu", "v1");
+
+builder.Services.AddSingleton<OsuCalculatorService>();
+
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+    app.UseDeveloperExceptionPage();
+
+app.MapOpenApi();
+
+app.MapDifficalcyEndpoints<
+    OsuScore,
+    OsuDifficulty,
+    OsuPerformance,
+    OsuCalculation,
+    OsuBeatmapDetails,
+    OsuCalculatorService
+>();
+
+app.Run();

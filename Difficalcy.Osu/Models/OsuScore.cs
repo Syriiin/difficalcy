@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using Difficalcy.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace Difficalcy.Osu.Models
 {
@@ -33,6 +35,29 @@ namespace Difficalcy.Osu.Models
                     [nameof(Combo)]
                 );
             }
+        }
+
+        public static ValueTask<OsuScore> BindAsync(HttpContext context)
+        {
+            var (beatmapId, mods) = BindCommon(context);
+            if (string.IsNullOrEmpty(beatmapId))
+                return ValueTask.FromResult<OsuScore>(null);
+
+            var query = context.Request.Query;
+
+            return ValueTask.FromResult(
+                new OsuScore
+                {
+                    BeatmapId = beatmapId,
+                    Mods = mods,
+                    Combo = ParseInt((string)query["Combo"]),
+                    Misses = ParseInt((string)query["Misses"]) ?? 0,
+                    Mehs = ParseInt((string)query["Mehs"]) ?? 0,
+                    Oks = ParseInt((string)query["Oks"]) ?? 0,
+                    SliderTails = ParseInt((string)query["SliderTails"]),
+                    SliderTicks = ParseInt((string)query["SliderTicks"]),
+                }
+            );
         }
     }
 }
