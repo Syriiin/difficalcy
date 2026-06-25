@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
 using Difficalcy.Models;
-using Microsoft.AspNetCore.Http;
 
 namespace Difficalcy.Catch.Models
 {
@@ -32,27 +30,6 @@ namespace Difficalcy.Catch.Models
                     [nameof(Combo)]
                 );
             }
-        }
-
-        public static ValueTask<CatchScore> BindAsync(HttpContext context)
-        {
-            var (beatmapId, mods) = BindCommon(context);
-            if (string.IsNullOrEmpty(beatmapId))
-                return ValueTask.FromResult<CatchScore>(null);
-
-            var query = context.Request.Query;
-
-            return ValueTask.FromResult(
-                new CatchScore
-                {
-                    BeatmapId = beatmapId,
-                    Mods = mods,
-                    Combo = ParseInt((string)query["Combo"]),
-                    Misses = ParseInt((string)query["Misses"]) ?? 0,
-                    SmallDroplets = ParseInt((string)query["SmallDroplets"]),
-                    LargeDroplets = ParseInt((string)query["LargeDroplets"]),
-                }
-            );
         }
     }
 }
