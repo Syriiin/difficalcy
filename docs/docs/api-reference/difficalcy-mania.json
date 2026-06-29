@@ -8,7 +8,7 @@
     "/api/info": {
       "get": {
         "tags": [
-          "Difficalcy.Mania"
+          "DifficalcyHandlers`5"
         ],
         "responses": {
           "200": {
@@ -27,7 +27,25 @@
     "/api/calculation": {
       "get": {
         "tags": [
-          "Difficalcy.Mania"
+          "DifficalcyHandlers`5"
+        ],
+        "parameters": [
+          {
+            "name": "beatmapId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "mods",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -56,7 +74,7 @@
     "/api/batch/calculation": {
       "post": {
         "tags": [
-          "Difficalcy.Mania"
+          "DifficalcyHandlers`5"
         ],
         "requestBody": {
           "content": {
@@ -68,7 +86,8 @@
                 }
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
@@ -100,12 +119,13 @@
     "/api/beatmapdetails": {
       "get": {
         "tags": [
-          "Difficalcy.Mania"
+          "DifficalcyHandlers`5"
         ],
         "parameters": [
           {
             "name": "beatmapId",
             "in": "query",
+            "required": true,
             "schema": {
               "type": "string"
             }
@@ -465,7 +485,7 @@
   },
   "tags": [
     {
-      "name": "Difficalcy.Mania"
+      "name": "DifficalcyHandlers`5"
     }
   ]
 }

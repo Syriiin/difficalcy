@@ -56,7 +56,7 @@ namespace Difficalcy.Services
                     throw new BeatmapNotFoundException(beatmapId);
                 }
 
-                using var fs = new FileStream(beatmapPath, FileMode.CreateNew);
+                using var fs = new FileStream(beatmapPath, FileMode.Create);
                 await response.Content.CopyToAsync(fs);
                 if (fs.Length == 0)
                 {

@@ -4,6 +4,7 @@ set -euxo pipefail
 curl --fail --silent --show-error "http://$DIFFICALCY_OSU_HOST/api/info" | jq
 curl --fail --silent --show-error "http://$DIFFICALCY_OSU_HOST/api/calculation?BeatmapId=diffcalc-test-osu" | jq
 curl --fail --silent --show-error "http://$DIFFICALCY_OSU_HOST/api/calculation?BeatmapId=diffcalc-test-osu" | jq # Run twice to test caching
+curl --fail --silent --show-error "http://$DIFFICALCY_OSU_HOST/api/calculation?BeatmapId=diffcalc-test-osu&Mods=HD,DT" | jq
 curl --fail --silent --show-error -X POST "http://$DIFFICALCY_OSU_HOST/api/batch/calculation" \
   -H "Content-Type: application/json" \
   -d '[{"BeatmapId": "diffcalc-test-osu"}, {"BeatmapId": "diffcalc-test-osu", "Mods": [{"Acronym": "DT"}]}]' | jq
@@ -12,6 +13,7 @@ curl --fail --silent --show-error "http://$DIFFICALCY_OSU_HOST/api/beatmapdetail
 curl --fail --silent --show-error "http://$DIFFICALCY_CATCH_HOST/api/info" | jq
 curl --fail --silent --show-error "http://$DIFFICALCY_CATCH_HOST/api/calculation?BeatmapId=diffcalc-test-catch" | jq
 curl --fail --silent --show-error "http://$DIFFICALCY_CATCH_HOST/api/calculation?BeatmapId=diffcalc-test-catch" | jq # Run twice to test caching
+curl --fail --silent --show-error "http://$DIFFICALCY_CATCH_HOST/api/calculation?BeatmapId=diffcalc-test-catch&Mods=HD,DT" | jq
 curl --fail --silent --show-error -X POST "http://$DIFFICALCY_CATCH_HOST/api/batch/calculation" \
   -H "Content-Type: application/json" \
   -d '[{"BeatmapId": "diffcalc-test-catch"}, {"BeatmapId": "diffcalc-test-catch", "Mods": [{"Acronym": "DT"}]}]' | jq
@@ -20,6 +22,7 @@ curl --fail --silent --show-error "http://$DIFFICALCY_CATCH_HOST/api/beatmapdeta
 curl --fail --silent --show-error "http://$DIFFICALCY_TAIKO_HOST/api/info" | jq
 curl --fail --silent --show-error "http://$DIFFICALCY_TAIKO_HOST/api/calculation?BeatmapId=diffcalc-test-taiko" | jq
 curl --fail --silent --show-error "http://$DIFFICALCY_TAIKO_HOST/api/calculation?BeatmapId=diffcalc-test-taiko" | jq # Run twice to test caching
+curl --fail --silent --show-error "http://$DIFFICALCY_TAIKO_HOST/api/calculation?BeatmapId=diffcalc-test-taiko&Mods=HD,DT" | jq
 curl --fail --silent --show-error -X POST "http://$DIFFICALCY_TAIKO_HOST/api/batch/calculation" \
   -H "Content-Type: application/json" \
   -d '[{"BeatmapId": "diffcalc-test-taiko"}, {"BeatmapId": "diffcalc-test-taiko", "Mods": [{"Acronym": "DT"}]}]' | jq
@@ -28,6 +31,7 @@ curl --fail --silent --show-error "http://$DIFFICALCY_TAIKO_HOST/api/beatmapdeta
 curl --fail --silent --show-error "http://$DIFFICALCY_MANIA_HOST/api/info" | jq
 curl --fail --silent --show-error "http://$DIFFICALCY_MANIA_HOST/api/calculation?BeatmapId=diffcalc-test-mania" | jq
 curl --fail --silent --show-error "http://$DIFFICALCY_MANIA_HOST/api/calculation?BeatmapId=diffcalc-test-mania" | jq # Run twice to test caching
+curl --fail --silent --show-error "http://$DIFFICALCY_MANIA_HOST/api/calculation?BeatmapId=diffcalc-test-mania&Mods=HD,DT" | jq
 curl --fail --silent --show-error -X POST "http://$DIFFICALCY_MANIA_HOST/api/batch/calculation" \
   -H "Content-Type: application/json" \
   -d '[{"BeatmapId": "diffcalc-test-mania"}, {"BeatmapId": "diffcalc-test-mania", "Mods": [{"Acronym": "DT"}]}]' | jq

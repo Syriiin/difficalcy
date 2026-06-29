@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using osu.Framework.Audio.Track;
 using osu.Framework.Graphics.Textures;
@@ -6,6 +7,7 @@ using osu.Game.Beatmaps.Formats;
 using osu.Game.IO;
 using osu.Game.Rulesets;
 using osu.Game.Rulesets.Osu;
+using osu.Game.Rulesets.Taiko;
 using osu.Game.Skinning;
 
 namespace Difficalcy.Taiko.Services
@@ -29,6 +31,14 @@ namespace Difficalcy.Taiko.Services
                     : ruleset.RulesetInfo;
         }
 
+        [DynamicDependency(
+            DynamicallyAccessedMemberTypes.PublicParameterlessConstructor,
+            typeof(TaikoRuleset)
+        )]
+        [DynamicDependency(
+            DynamicallyAccessedMemberTypes.PublicParameterlessConstructor,
+            typeof(OsuRuleset)
+        )]
         private static Beatmap ReadFromStream(Stream stream)
         {
             using var reader = new LineBufferedReader(stream);

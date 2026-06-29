@@ -68,18 +68,25 @@ namespace Difficalcy.Mania.Services
             var difficultyAttributes =
                 difficultyCalculator.Calculate(lazerMods) as ManiaDifficultyAttributes;
 
-            // Serialising anonymous object with same names because some properties can't be serialised, and the built-in JsonProperty fields aren't on all required fields
+            // Serialising DTO with same names because some properties can't be serialised, and the built-in JsonProperty fields aren't on all required fields
+            var dto = new ManiaDifficultyAttributesDto
+            {
+                StarRating = difficultyAttributes.StarRating,
+                MaxCombo = difficultyAttributes.MaxCombo,
+            };
+
             return (
                 difficultyAttributes,
-                JsonSerializer.Serialize(
-                    new { difficultyAttributes.StarRating, difficultyAttributes.MaxCombo }
-                )
+                JsonSerializer.Serialize(dto, ManiaJsonContext.Default.ManiaDifficultyAttributesDto)
             );
         }
 
         protected override object DeserialiseDifficultyAttributes(string difficultyAttributesJson)
         {
-            return JsonSerializer.Deserialize<ManiaDifficultyAttributes>(difficultyAttributesJson);
+            return JsonSerializer.Deserialize(
+                difficultyAttributesJson,
+                ManiaJsonContext.Default.ManiaDifficultyAttributes
+            );
         }
 
         protected override ManiaCalculation CalculatePerformance(
