@@ -69,3 +69,22 @@ endif
 	VERSION=latest $(COMPOSE_PUBLISH) build
 	VERSION=latest $(COMPOSE_PUBLISH) push difficalcy
 	gh release create "$(VERSION)" --generate-notes
+
+VERSION =
+pre-release:	## Pushes docker image to ghcr.io and create a github prerelease
+ifndef VERSION
+	$(error VERSION is undefined)
+endif
+ifndef GITHUB_TOKEN
+	$(error GITHUB_TOKEN env var is not set)
+endif
+ifndef GITHUB_USERNAME
+	$(error GITHUB_USERNAME env var is not set)
+endif
+ifneq "$(shell git diff --name-only HEAD)" ""
+	$(error There are uncommitted changes in the working directory)
+endif
+	echo $$GITHUB_TOKEN | docker login ghcr.io --username $$GITHUB_USERNAME --password-stdin
+	VERSION=$(VERSION) $(COMPOSE_PUBLISH) build
+	VERSION=$(VERSION) $(COMPOSE_PUBLISH) push difficalcy
+	gh release create "$(VERSION)" --generate-notes --prerelease
