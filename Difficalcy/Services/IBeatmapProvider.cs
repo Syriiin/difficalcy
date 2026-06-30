@@ -1,4 +1,3 @@
-using System.IO;
 using System.Threading.Tasks;
 
 namespace Difficalcy.Services
@@ -7,6 +6,6 @@ namespace Difficalcy.Services
     {
         public Task EnsureBeatmap(string beatmapId);
 
-        public Stream GetBeatmapStream(string beatmapId);
+        public string GetBeatmapPath(string beatmapId);
     }
 }
