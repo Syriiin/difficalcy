@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
@@ -9,6 +10,7 @@ using Difficalcy.Services;
 using Difficalcy.Taiko.Models;
 using osu.Game.Beatmaps;
 using osu.Game.Online.API;
+using osu.Game.Rulesets.Osu;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Taiko;
 using osu.Game.Rulesets.Taiko.Difficulty;
@@ -165,10 +167,17 @@ namespace Difficalcy.Taiko.Services
             };
         }
 
-        private CalculatorWorkingBeatmap GetWorkingBeatmap(string beatmapId)
+        [DynamicDependency(
+            DynamicallyAccessedMemberTypes.PublicParameterlessConstructor,
+            typeof(TaikoRuleset)
+        )]
+        [DynamicDependency(
+            DynamicallyAccessedMemberTypes.PublicParameterlessConstructor,
+            typeof(OsuRuleset)
+        )]
+        private FlatWorkingBeatmap GetWorkingBeatmap(string beatmapId)
         {
-            using var beatmapStream = _beatmapProvider.GetBeatmapStream(beatmapId);
-            return new CalculatorWorkingBeatmap(TaikoRuleset, beatmapStream);
+            return new FlatWorkingBeatmap(_beatmapProvider.GetBeatmapPath(beatmapId));
         }
 
         private LazerMod ModToLazerMod(Mod mod)
