@@ -87,4 +87,4 @@ endif
 	echo $$GITHUB_TOKEN | docker login ghcr.io --username $$GITHUB_USERNAME --password-stdin
 	VERSION=$(VERSION) $(COMPOSE_PUBLISH) build
 	VERSION=$(VERSION) $(COMPOSE_PUBLISH) push difficalcy
-	gh release create "$(VERSION)" --generate-notes --prerelease
+	gh release create "$(VERSION)" --generate-notes --prerelease --target "$(shell git branch --show-current)"
