@@ -48,3 +48,12 @@ LABEL org.opencontainers.image.description "Lazer powered osu! difficulty calcul
 COPY --from=build --chown=app:app /beatmaps /beatmaps
 COPY --from=build /app/difficalcy .
 ENTRYPOINT ["./Difficalcy.Api"]
+
+FROM build AS build-slim
+RUN rm -f /app/difficalcy/*.so /app/difficalcy/*.so.*
+
+FROM base AS slim
+LABEL org.opencontainers.image.description "Lazer powered osu! difficulty calculator API (slim)"
+COPY --from=build-slim --chown=app:app /beatmaps /beatmaps
+COPY --from=build-slim /app/difficalcy .
+ENTRYPOINT ["./Difficalcy.Api"]
