@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/runtime-deps:10.0-noble AS base
+FROM mcr.microsoft.com/dotnet/runtime-deps:10.0-noble-chiseled AS base
 
 LABEL org.opencontainers.image.source https://github.com/Syriiin/difficalcy
 
@@ -16,6 +16,8 @@ USER app
 
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
+
+COPY ./Directory.Build.props ./
 
 # AOT compilation dependencies
 RUN apt-get update && apt-get install -y clang zlib1g-dev && rm -rf /var/lib/apt/lists/*
