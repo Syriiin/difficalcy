@@ -7,13 +7,13 @@ Difficalcy is a simple HTTP API interface for the official osu! difficulty calcu
 Run the server:
 
 ```sh
-docker run -p 5000:80 ghcr.io/syriiin/difficalcy-osu:latest
+docker run -p 5000:80 ghcr.io/syriiin/difficalcy:latest
 ```
 
 Call the API:
 
 ```sh
-curl "localhost:5000/api/calculation?BeatmapId=658127"
+curl "localhost:5000/api/calculators/osu/calculation?BeatmapId=658127"
 ```
 
 Get your lazer powered calculations:

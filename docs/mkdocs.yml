@@ -5,19 +5,14 @@ site_author: Samuel Cattini-Schultz
 repo_url: https://github.com/Syriiin/difficalcy
 repo_name: Syriiin/difficalcy
 copyright: |
-  &copy; 2024 <a href="https://github.com/Syriiin" target="_blank" rel="noopener">Samuel Cattini-Schultz</a>
+  &copy; 2026 <a href="https://github.com/Syriiin" target="_blank" rel="noopener">Samuel Cattini-Schultz</a>
 
 nav:
   - index.md
   - getting-started.md
   - configuration.md
   - versioning.md
-  - API Reference:
-    - api-reference/index.md
-    - difficalcy-osu: api-reference/difficalcy-osu.md
-    - difficalcy-taiko: api-reference/difficalcy-taiko.md
-    - difficalcy-catch: api-reference/difficalcy-catch.md
-    - difficalcy-mania: api-reference/difficalcy-mania.md
+  - api-reference/index.md
   - custom-calculators.md
 
 theme:

@@ -5,8 +5,6 @@ using osu.Game.Rulesets.Mania.Difficulty;
 namespace Difficalcy.Mania.Models;
 
 // Response models
-[JsonSerializable(typeof(CalculatorInfo))]
-[JsonSerializable(typeof(ErrorResponse))]
 [JsonSerializable(typeof(ManiaCalculation))]
 [JsonSerializable(typeof(ManiaCalculation[]))]
 [JsonSerializable(typeof(ManiaBeatmapDetails))]

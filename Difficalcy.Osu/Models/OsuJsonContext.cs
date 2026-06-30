@@ -5,8 +5,6 @@ using osu.Game.Rulesets.Osu.Difficulty;
 namespace Difficalcy.Osu.Models;
 
 // Response models
-[JsonSerializable(typeof(CalculatorInfo))]
-[JsonSerializable(typeof(ErrorResponse))]
 [JsonSerializable(typeof(OsuCalculation))]
 [JsonSerializable(typeof(OsuCalculation[]))]
 [JsonSerializable(typeof(OsuBeatmapDetails))]

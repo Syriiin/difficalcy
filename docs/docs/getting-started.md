@@ -2,17 +2,11 @@
 
 ## TL;DR Example recommended setup
 
-`redis.conf`
-```
-maxmemory 100mb
-maxmemory-policy allkeys-lru
-```
-
 `compose.yaml`
 ```yaml
 services:
-  difficalcy-osu:
-    image: ghcr.io/syriiin/difficalcy-osu:latest
+  difficalcy:
+    image: ghcr.io/syriiin/difficalcy:latest # PIN ME
     environment:
       - REDIS_CONFIGURATION=cache:6379
     ports:
@@ -33,31 +27,24 @@ services:
     redis-data:
 ```
 
+`redis.conf`
+```
+maxmemory 100mb
+maxmemory-policy allkeys-lru
+```
+
 See [API Reference](./api-reference/index.md) for available endpoints.
-
-## Available calculators
-
-difficalcy is available for all four official osu! rulesets:
-
-- osu! - `ghcr.io/syriiin/difficalcy-osu`
-- osu!taiko - `ghcr.io/syriiin/difficalcy-taiko`
-- osu!catch - `ghcr.io/syriiin/difficalcy-catch`
-- osu!mania - `ghcr.io/syriiin/difficalcy-mania`
-
-See [the github packages](https://github.com/Syriiin?tab=packages&repo_name=difficalcy) for the latest list.
-
-For this tutorial, we'll stick with the osu! calculator.
 
 ## How to run difficalcy
 
-difficalcy calculators are published as docker images, so you can run it anywhere docker runs.
+difficalcy is published as a docker image, so you can run it anywhere docker runs.
 
 ### Docker
 
 You can run it with docker directly:
 
 ```sh
-docker run -p 5000:80 ghcr.io/syriiin/difficalcy-osu:latest
+docker run -p 5000:80 ghcr.io/syriiin/difficalcy:latest
 ```
 
 ### Docker Compose
@@ -66,20 +53,72 @@ You can run it with docker compose:
 
 ```yaml
 services:
-  difficalcy-osu:
-    image: ghcr.io/syriiin/difficalcy-osu:latest
+  difficalcy:
+    image: ghcr.io/syriiin/difficalcy:latest
     ports:
       - "5000:80"
 ```
 
+## Available calculators
+
+difficalcy is available for all four official osu! rulesets under a single service. Each calculator is accessible by its key:
+
+- `osu` - osu!
+- `taiko` - osu!taiko
+- `catch` - osu!catch
+- `mania` - osu!mania
+
+You can list available calculators at runtime with the `/api/calculators` endpoint:
+
+```sh
+curl "localhost:5000/api/calculators"
+```
+
+```json
+{
+  "osu": {
+    "rulesetName": "osu!",
+    "calculatorName": "Official osu!",
+    "calculatorPackage": "osu.Game.Rulesets.Osu",
+    "calculatorVersion": "2026.527.0.0",
+    "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Osu/2026.527.0.0"
+  },
+  "taiko": {
+    "rulesetName": "osu!taiko",
+    "calculatorName": "Official osu!taiko",
+    "calculatorPackage": "osu.Game.Rulesets.Taiko",
+    "calculatorVersion": "2026.527.0.0",
+    "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Taiko/2026.527.0.0"
+  },
+  "catch": {
+    "rulesetName": "osu!catch",
+    "calculatorName": "Official osu!catch",
+    "calculatorPackage": "osu.Game.Rulesets.Catch",
+    "calculatorVersion": "2026.527.0.0",
+    "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Catch/2026.527.0.0"
+  },
+  "mania": {
+    "rulesetName": "osu!mania",
+    "calculatorName": "Official osu!mania",
+    "calculatorPackage": "osu.Game.Rulesets.Mania",
+    "calculatorVersion": "2026.527.0.0",
+    "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Mania/2026.527.0.0"
+  }
+}
+```
+
+For this tutorial, we'll stick with the osu! calculator.
+
+For other rulesets, see the [API Reference](./api-reference/index.md).
+
 ## How to run a calculation
 
-You can use the `GET /api/calculation` endpoint to calculate the difficulty and performance of a score.
+You can use the `GET /api/calculators/osu/calculation` endpoint to perform basic difficulty and performance calculations of a score.
 
 For example, to calculate an SS on [xi - Blue Zenith [FOUR DIMENSIONS]](https://osu.ppy.sh/beatmapsets/292301#osu/658127):
 
 ```sh
-curl "localhost:5000/api/calculation?BeatmapId=658127"
+curl "localhost:5000/api/calculators/osu/calculation?BeatmapId=658127"
 ```
 
 ```json
@@ -102,14 +141,14 @@ curl "localhost:5000/api/calculation?BeatmapId=658127"
 }
 ```
 
-However, using the querystring to pass parameters can be annoying, especially for mods.
+However, the querystring is very limiting for passing parameters, so it's restricted to only beatmap ID and comma separated mods ( eg. `Mods=HD,HR`).
 
-You can use the `POST /api/batch/calculation` endpoint to efficiently calculate the difficulty and performance of one or more scores in a batch by passing a JSON body.
+You can use the `POST /api/calculators/osu/batch/calculation` endpoint to efficiently calculate the difficulty and performance of one or more scores in a batch by passing a JSON body with full parameters.
 
 For example, the same request as above:
 
 ```sh
-curl "localhost:5000/api/batch/calculation" \
+curl "localhost:5000/api/calculators/osu/batch/calculation" \
   --json '[
     {
       "beatmapId": "658127"
@@ -142,7 +181,7 @@ curl "localhost:5000/api/batch/calculation" \
 With HDHR:
 
 ```sh
-curl "localhost:5000/api/batch/calculation" \
+curl "localhost:5000/api/calculators/osu/batch/calculation" \
   --json '[
     {
       "beatmapId": "658127",
@@ -179,7 +218,7 @@ curl "localhost:5000/api/batch/calculation" \
 With [24 100s and 2 misses with a max combo of 2364](https://osu.ppy.sh/scores/453746931):
 
 ```sh
-curl "localhost:5000/api/batch/calculation" \
+curl "localhost:5000/api/calculators/osu/batch/calculation" \
   --json '[
     {
       "beatmapId": "658127",
@@ -219,7 +258,7 @@ curl "localhost:5000/api/batch/calculation" \
 Mod settings are also supported:
 
 ```sh
-curl "localhost:5000/api/batch/calculation" \
+curl "localhost:5000/api/calculators/osu/batch/calculation" \
   --json '[
     {
       "beatmapId": "658127",
@@ -260,7 +299,7 @@ curl "localhost:5000/api/batch/calculation" \
 There is also a `/beatmapdetails` endpoint for getting various specifics about a beatmap:
 
 ```sh
-$ curl "localhost:5000/api/beatmapdetails?BeatmapId=658127"
+$ curl "localhost:5000/api/calculators/osu/beatmapdetails?BeatmapId=658127"
 ```
 
 ```json
@@ -305,8 +344,8 @@ maxmemory-policy allkeys-lru
 `compose.yaml`
 ```yaml
 services:
-  difficalcy-osu:
-    image: ghcr.io/syriiin/difficalcy-osu:latest
+  difficalcy:
+    image: ghcr.io/syriiin/difficalcy:latest # PIN ME
     environment:
       - REDIS_CONFIGURATION=cache:6379
     ports:

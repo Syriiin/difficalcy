@@ -65,7 +65,7 @@ ifneq "$(shell git diff --name-only master)" ""
 endif
 	echo $$GITHUB_TOKEN | docker login ghcr.io --username $$GITHUB_USERNAME --password-stdin
 	VERSION=$(VERSION) $(COMPOSE_PUBLISH) build
-	VERSION=$(VERSION) $(COMPOSE_PUBLISH) push difficalcy-osu difficalcy-taiko difficalcy-catch difficalcy-mania
+	VERSION=$(VERSION) $(COMPOSE_PUBLISH) push difficalcy
 	VERSION=latest $(COMPOSE_PUBLISH) build
-	VERSION=latest $(COMPOSE_PUBLISH) push difficalcy-osu difficalcy-taiko difficalcy-catch difficalcy-mania
+	VERSION=latest $(COMPOSE_PUBLISH) push difficalcy
 	gh release create "$(VERSION)" --generate-notes

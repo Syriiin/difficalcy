@@ -14,6 +14,7 @@ RUN dotnet tool restore
 
 COPY Difficalcy.sln .
 COPY Difficalcy/Difficalcy.csproj ./Difficalcy/
+COPY Difficalcy.Api/Difficalcy.Api.csproj ./Difficalcy.Api/
 COPY Difficalcy.Catch/Difficalcy.Catch.csproj ./Difficalcy.Catch/
 COPY Difficalcy.Catch.Tests/Difficalcy.Catch.Tests.csproj ./Difficalcy.Catch.Tests/
 COPY Difficalcy.Mania/Difficalcy.Mania.csproj ./Difficalcy.Mania/
