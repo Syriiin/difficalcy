@@ -39,7 +39,7 @@ COPY ./Difficalcy.Mania/ ./Difficalcy.Mania/
 RUN mkdir -p /beatmaps && chmod -R 777 /beatmaps
 
 RUN dotnet publish ./Difficalcy.Api/Difficalcy.Api.csproj -o /app/difficalcy --runtime linux-x64 --self-contained true \
-    && rm -f /app/difficalcy/*.dbg
+    && rm -f /app/difficalcy/*.dbg /app/difficalcy/*.pdb /app/difficalcy/*.Development.json
 
 FROM base AS publish
 LABEL org.opencontainers.image.description "Lazer powered osu! difficulty calculator API"
