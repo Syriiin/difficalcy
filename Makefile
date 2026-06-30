@@ -14,7 +14,7 @@ bash:	## Opens bash shell in tooling container
 test:	## Runs test suite
 	$(COMPOSE_TOOLING_RUN) dotnet test
 
-test-e2e:	## Runs E2E test suite
+test-e2e:	## Runs E2E test suite (main + slim)
 	$(COMPOSE_E2E_RUN)
 	$(COMPOSE_E2E) down
 
