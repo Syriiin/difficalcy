@@ -5,8 +5,6 @@ using osu.Game.Rulesets.Taiko.Difficulty;
 namespace Difficalcy.Taiko.Models;
 
 // Response models
-[JsonSerializable(typeof(CalculatorInfo))]
-[JsonSerializable(typeof(ErrorResponse))]
 [JsonSerializable(typeof(TaikoCalculation))]
 [JsonSerializable(typeof(TaikoCalculation[]))]
 [JsonSerializable(typeof(TaikoBeatmapDetails))]

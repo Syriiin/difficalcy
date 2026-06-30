@@ -5,8 +5,6 @@ using osu.Game.Rulesets.Catch.Difficulty;
 namespace Difficalcy.Catch.Models;
 
 // Response models
-[JsonSerializable(typeof(CalculatorInfo))]
-[JsonSerializable(typeof(ErrorResponse))]
 [JsonSerializable(typeof(CatchCalculation))]
 [JsonSerializable(typeof(CatchCalculation[]))]
 [JsonSerializable(typeof(CatchBeatmapDetails))]

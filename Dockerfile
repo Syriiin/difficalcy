@@ -11,7 +11,6 @@ ENV DOWNLOAD_MISSING_BEATMAPS="true"
 ENV BEATMAP_DOWNLOAD_URL="https://osu.ppy.sh/osu/{beatmapId}"
 
 VOLUME ${BEATMAP_DIRECTORY}
-# chmod 777 so that this volume can be read/written by other containers that might use different uids
 
 USER app
 
@@ -22,53 +21,28 @@ WORKDIR /src
 RUN apt-get update && apt-get install -y clang zlib1g-dev && rm -rf /var/lib/apt/lists/*
 
 COPY ./Difficalcy/Difficalcy.csproj ./Difficalcy/
-COPY ./Difficalcy.Catch/Difficalcy.Catch.csproj ./Difficalcy.Catch/
-COPY ./Difficalcy.Mania/Difficalcy.Mania.csproj ./Difficalcy.Mania/
+COPY ./Difficalcy.Api/Difficalcy.Api.csproj ./Difficalcy.Api/
 COPY ./Difficalcy.Osu/Difficalcy.Osu.csproj ./Difficalcy.Osu/
 COPY ./Difficalcy.Taiko/Difficalcy.Taiko.csproj ./Difficalcy.Taiko/
+COPY ./Difficalcy.Catch/Difficalcy.Catch.csproj ./Difficalcy.Catch/
+COPY ./Difficalcy.Mania/Difficalcy.Mania.csproj ./Difficalcy.Mania/
 
-RUN dotnet restore ./Difficalcy.Catch/Difficalcy.Catch.csproj
-RUN dotnet restore ./Difficalcy.Mania/Difficalcy.Mania.csproj
-RUN dotnet restore ./Difficalcy.Osu/Difficalcy.Osu.csproj
-RUN dotnet restore ./Difficalcy.Taiko/Difficalcy.Taiko.csproj
+RUN dotnet restore ./Difficalcy.Api/Difficalcy.Api.csproj
 
 COPY ./Difficalcy/ ./Difficalcy/
-COPY ./Difficalcy.Catch/ ./Difficalcy.Catch/
-COPY ./Difficalcy.Mania/ ./Difficalcy.Mania/
+COPY ./Difficalcy.Api/ ./Difficalcy.Api/
 COPY ./Difficalcy.Osu/ ./Difficalcy.Osu/
 COPY ./Difficalcy.Taiko/ ./Difficalcy.Taiko/
+COPY ./Difficalcy.Catch/ ./Difficalcy.Catch/
+COPY ./Difficalcy.Mania/ ./Difficalcy.Mania/
 
 RUN mkdir -p /beatmaps && chmod -R 777 /beatmaps
 
-RUN dotnet publish ./Difficalcy.Catch/Difficalcy.Catch.csproj -o /app/difficalcy-catch --runtime linux-x64 --self-contained true \
-    && rm -f /app/difficalcy-catch/*.dbg
-RUN dotnet publish ./Difficalcy.Mania/Difficalcy.Mania.csproj -o /app/difficalcy-mania --runtime linux-x64 --self-contained true \
-    && rm -f /app/difficalcy-mania/*.dbg
-RUN dotnet publish ./Difficalcy.Osu/Difficalcy.Osu.csproj -o /app/difficalcy-osu --runtime linux-x64 --self-contained true \
-    && rm -f /app/difficalcy-osu/*.dbg
-RUN dotnet publish ./Difficalcy.Taiko/Difficalcy.Taiko.csproj -o /app/difficalcy-taiko --runtime linux-x64 --self-contained true \
-    && rm -f /app/difficalcy-taiko/*.dbg
+RUN dotnet publish ./Difficalcy.Api/Difficalcy.Api.csproj -o /app/difficalcy --runtime linux-x64 --self-contained true \
+    && rm -f /app/difficalcy/*.dbg
 
-FROM base AS difficalcy-catch
-LABEL org.opencontainers.image.description "Lazer powered osu!catch difficulty calculator API"
-COPY --from=build --chown=app:app /beatmaps /beatmaps
-COPY --from=build /app/difficalcy-catch .
-ENTRYPOINT ["./Difficalcy.Catch"]
-
-FROM base AS difficalcy-mania
-LABEL org.opencontainers.image.description "Lazer powered osu!mania difficulty calculator API"
-COPY --from=build --chown=app:app /beatmaps /beatmaps
-COPY --from=build /app/difficalcy-mania .
-ENTRYPOINT ["./Difficalcy.Mania"]
-
-FROM base AS difficalcy-osu
+FROM base AS publish
 LABEL org.opencontainers.image.description "Lazer powered osu! difficulty calculator API"
 COPY --from=build --chown=app:app /beatmaps /beatmaps
-COPY --from=build /app/difficalcy-osu .
-ENTRYPOINT ["./Difficalcy.Osu"]
-
-FROM base AS difficalcy-taiko
-LABEL org.opencontainers.image.description "Lazer powered osu!taiko difficulty calculator API"
-COPY --from=build --chown=app:app /beatmaps /beatmaps
-COPY --from=build /app/difficalcy-taiko .
-ENTRYPOINT ["./Difficalcy.Taiko"]
+COPY --from=build /app/difficalcy .
+ENTRYPOINT ["./Difficalcy.Api"]
