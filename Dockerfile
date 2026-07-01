@@ -75,7 +75,7 @@ RUN dotnet build ./tools/StripResources/StripResources.csproj -o /tools && \
 
 # -----------------------------------------------------------------------------
 
-FROM base AS slim
+FROM base AS publish-slim
 LABEL org.opencontainers.image.description "Lazer powered osu! difficulty calculator API (slim)"
 COPY --from=build-slim --chown=app:app /beatmaps /beatmaps
 COPY --from=build-slim /app/difficalcy .

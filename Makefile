@@ -3,7 +3,7 @@ COMPOSE_E2E = docker compose -f compose.yaml -f compose.override.e2e.yaml
 COMPOSE_E2E_RUN = $(COMPOSE_E2E) run --rm --build e2e-test-runner
 COMPOSE_APP_DEV = docker compose -f compose.yaml -f compose.override.yaml
 COMPOSE_RUN_DOCS = docker compose -f compose.yaml -f compose.override.yaml run --rm --build docs
-COMPOSE_PUBLISH = docker compose -f compose.yaml -f compose.override.publish.yaml
+REPO = ghcr.io/syriiin/difficalcy
 
 help:	## Show this help
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
@@ -47,7 +47,7 @@ fix-formatting:	## Fix code formatting
 
 # TODO: move gh into tooling container (requires env var considerations)
 VERSION =
-release:	## Pushes docker images to ghcr.io and create a github release
+release:	## Pushes docker images to ghcr.io and creates a github release
 ifndef VERSION
 	$(error VERSION is undefined)
 endif
@@ -64,14 +64,20 @@ ifneq "$(shell git diff --name-only master)" ""
 	$(error There are uncommitted changes in the working directory)
 endif
 	echo $$GITHUB_TOKEN | docker login ghcr.io --username $$GITHUB_USERNAME --password-stdin
-	VERSION=$(VERSION) $(COMPOSE_PUBLISH) build
-	VERSION=$(VERSION) $(COMPOSE_PUBLISH) push difficalcy
-	VERSION=latest $(COMPOSE_PUBLISH) build
-	VERSION=latest $(COMPOSE_PUBLISH) push difficalcy
+	docker build . --target publish \
+	    -t $(REPO):$(VERSION) \
+	    -t $(REPO):latest
+	docker build . --target publish-slim \
+	    -t $(REPO):$(VERSION)-slim \
+	    -t $(REPO):latest-slim
+	docker push $(REPO):$(VERSION)
+	docker push $(REPO):latest
+	docker push $(REPO):$(VERSION)-slim
+	docker push $(REPO):latest-slim
 	gh release create "$(VERSION)" --generate-notes
 
 VERSION =
-pre-release:	## Pushes docker image to ghcr.io and create a github prerelease
+pre-release:	## Pushes docker images to ghcr.io and creates a github prerelease
 ifndef VERSION
 	$(error VERSION is undefined)
 endif
@@ -85,6 +91,8 @@ ifneq "$(shell git diff --name-only HEAD)" ""
 	$(error There are uncommitted changes in the working directory)
 endif
 	echo $$GITHUB_TOKEN | docker login ghcr.io --username $$GITHUB_USERNAME --password-stdin
-	VERSION=$(VERSION) $(COMPOSE_PUBLISH) build
-	VERSION=$(VERSION) $(COMPOSE_PUBLISH) push difficalcy
+	docker build . --target publish -t $(REPO):$(VERSION)
+	docker build . --target publish-slim -t $(REPO):$(VERSION)-slim
+	docker push $(REPO):$(VERSION)
+	docker push $(REPO):$(VERSION)-slim
 	gh release create "$(VERSION)" --generate-notes --prerelease --target "$(shell git branch --show-current)"
