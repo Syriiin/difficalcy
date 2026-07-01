@@ -1,3 +1,0 @@
-services:
-  difficalcy:
-    image: ghcr.io/syriiin/difficalcy:${VERSION}
