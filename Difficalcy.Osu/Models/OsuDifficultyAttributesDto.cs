@@ -8,11 +8,12 @@ public record OsuDifficultyAttributesDto
     public double SpeedDifficulty { get; init; }
     public double SpeedNoteCount { get; init; }
     public double FlashlightDifficulty { get; init; }
+    public double ReadingDifficulty { get; init; }
     public double SliderFactor { get; init; }
     public double AimDifficultSliderCount { get; init; }
     public double AimDifficultStrainCount { get; init; }
     public double SpeedDifficultStrainCount { get; init; }
-    public double DrainRate { get; init; }
+    public double ReadingDifficultNoteCount { get; init; }
     public int HitCircleCount { get; init; }
     public int SliderCount { get; init; }
     public int SpinnerCount { get; init; }
