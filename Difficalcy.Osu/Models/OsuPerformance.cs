@@ -8,5 +8,6 @@ namespace Difficalcy.Osu.Models
         public double Speed { get; init; }
         public double Accuracy { get; init; }
         public double Flashlight { get; init; }
+        public double Reading { get; init; }
     }
 }

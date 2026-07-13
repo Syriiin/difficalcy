@@ -65,7 +65,7 @@ public class TaikoCalculatorServiceTest
             Misses = 5,
             Oks = 3,
         };
-        TestGetCalculationReturnsCorrectValues(6.22607274618289, 568.8862054952898, score);
+        TestGetCalculationReturnsCorrectValues(6.22607274618289, 568.88629422631971, score);
     }
 
     [Fact]
