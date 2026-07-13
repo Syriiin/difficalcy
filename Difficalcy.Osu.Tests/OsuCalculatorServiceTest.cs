@@ -28,8 +28,8 @@ public class OsuCalculatorServiceTest
         );
 
     [Theory]
-    [InlineData(6.6232539338574457, 294.76637038971711, "diffcalc-test", new string[] { })]
-    [InlineData(9.6491732889113653, 907.52821930780783, "diffcalc-test", new string[] { "DT" })]
+    [InlineData(6.5243230054514676, 291.15100073619107, "diffcalc-test", new string[] { })]
+    [InlineData(9.4677694877983463, 878.04911849488235, "diffcalc-test", new string[] { "DT" })]
     public void Test(
         double expectedDifficultyTotal,
         double expectedPerformanceTotal,
@@ -70,7 +70,7 @@ public class OsuCalculatorServiceTest
             SliderTails = 2,
             SliderTicks = 1,
         };
-        TestGetCalculationReturnsCorrectValues(15.116923730281842, 1727.1470039426433, score);
+        TestGetCalculationReturnsCorrectValues(14.27904896620441, 1380.5431667352334, score);
     }
 
     [Fact]
@@ -98,7 +98,7 @@ public class OsuCalculatorServiceTest
             SliderTails = 2,
             SliderTicks = 1,
         };
-        TestGetCalculationReturnsCorrectValues(15.116923730281842, 2023.8316876246472, score);
+        TestGetCalculationReturnsCorrectValues(14.27904896620441, 1702.8430403970876, score);
     }
 
     [Fact]

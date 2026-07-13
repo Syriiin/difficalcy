@@ -355,6 +355,10 @@
           "flashlight": {
             "type": "number",
             "format": "double"
+          },
+          "reading": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false
@@ -379,6 +383,10 @@
             "format": "double"
           },
           "flashlight": {
+            "type": "number",
+            "format": "double"
+          },
+          "reading": {
             "type": "number",
             "format": "double"
           }
