@@ -80,11 +80,12 @@ namespace Difficalcy.Osu.Services
                         difficultyAttributes.SpeedDifficulty,
                         difficultyAttributes.SpeedNoteCount,
                         difficultyAttributes.FlashlightDifficulty,
+                        difficultyAttributes.ReadingDifficulty,
                         difficultyAttributes.SliderFactor,
                         difficultyAttributes.AimDifficultSliderCount,
                         difficultyAttributes.AimDifficultStrainCount,
                         difficultyAttributes.SpeedDifficultStrainCount,
-                        difficultyAttributes.DrainRate,
+                        difficultyAttributes.ReadingDifficultNoteCount,
                         difficultyAttributes.HitCircleCount,
                         difficultyAttributes.SliderCount,
                         difficultyAttributes.SpinnerCount,
@@ -326,6 +327,7 @@ namespace Difficalcy.Osu.Services
                 Aim = difficultyAttributes.AimDifficulty,
                 Speed = difficultyAttributes.SpeedDifficulty,
                 Flashlight = difficultyAttributes.FlashlightDifficulty,
+                Reading = difficultyAttributes.ReadingDifficulty,
             };
         }
 
@@ -340,6 +342,7 @@ namespace Difficalcy.Osu.Services
                 Speed = performanceAttributes.Speed,
                 Accuracy = performanceAttributes.Accuracy,
                 Flashlight = performanceAttributes.Flashlight,
+                Reading = performanceAttributes.Reading,
             };
         }
     }
