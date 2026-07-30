@@ -70,6 +70,39 @@ public class ManiaCalculatorServiceTest
     }
 
     [Fact]
+    public async Task TestAllParametersClassicMod()
+    {
+        var score = new ManiaScore
+        {
+            BeatmapId = "diffcalc-test",
+            Mods =
+            [
+                new Mod()
+                {
+                    Acronym = "DT",
+                    Settings = new Dictionary<string, string> { { "speed_change", "2" } },
+                },
+                new Mod() { Acronym = "CL" },
+            ],
+            Misses = 5,
+            Mehs = 4,
+            Oks = 3,
+            Goods = 2,
+            Greats = 1,
+        };
+
+        var calculation = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(3.3252153148972425, calculation.Difficulty.Total, 4);
+        Assert.Equal(60.445155625089356, calculation.Performance.Total, 4);
+        Assert.Equal(0.91970802919708028, calculation.Accuracy, 4);
+
+        var calculationFromCache = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(calculation, calculationFromCache);
+    }
+
+    [Fact]
     public async Task TestBeatmapDetails()
     {
         var beatmapId = "diffcalc-test";
