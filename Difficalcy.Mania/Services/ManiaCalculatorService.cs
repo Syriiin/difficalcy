@@ -17,6 +17,7 @@ using osu.Game.Rulesets.Osu;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Scoring;
 using LazerMod = osu.Game.Rulesets.Mods.Mod;
+using LazerClassicMod = osu.Game.Rulesets.Mods.ModClassic;
 
 namespace Difficalcy.Mania.Services
 {
@@ -147,12 +148,14 @@ namespace Difficalcy.Mania.Services
         {
             var workingBeatmap = GetWorkingBeatmap(score.BeatmapId);
             var mods = score.Mods.Select(ModToLazerMod).ToArray();
+            var isClassic = mods.Any(m => m is LazerClassicMod);
             var beatmap = workingBeatmap.GetPlayableBeatmap(ManiaRuleset.RulesetInfo, mods);
 
             var hitObjectCount = beatmap.HitObjects.Count;
             var holdNoteTailCount = beatmap.HitObjects.OfType<HoldNote>().Count();
+            var hitResultCount = isClassic ? hitObjectCount : hitObjectCount + holdNoteTailCount;
             var statistics = GetHitResults(
-                hitObjectCount + holdNoteTailCount,
+                hitResultCount,
                 score.Misses,
                 score.Mehs,
                 score.Oks,
