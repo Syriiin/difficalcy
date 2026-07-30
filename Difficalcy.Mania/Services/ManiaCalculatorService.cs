@@ -160,7 +160,7 @@ namespace Difficalcy.Mania.Services
                 score.Goods,
                 score.Greats
             );
-            var accuracy = CalculateAccuracy(statistics);
+            var accuracy = CalculateAccuracy(statistics, isClassic);
 
             return new ScoreInfo(beatmap.BeatmapInfo, ManiaRuleset.RulesetInfo)
             {
@@ -216,7 +216,7 @@ namespace Difficalcy.Mania.Services
             };
         }
 
-        private static double CalculateAccuracy(Dictionary<HitResult, int> statistics)
+        private static double CalculateAccuracy(Dictionary<HitResult, int> statistics, bool isClassic)
         {
             var countPerfect = statistics[HitResult.Perfect];
             var countGreat = statistics[HitResult.Great];
@@ -229,13 +229,15 @@ namespace Difficalcy.Mania.Services
             if (total == 0)
                 return 1;
 
+            var perfectPoints = isClassic ? 300 : 305;
+
             return (double)(
-                    (6 * countPerfect)
-                    + (6 * countGreat)
-                    + (4 * countGood)
-                    + (2 * countOk)
-                    + countMeh
-                ) / (6 * total);
+                    (perfectPoints * countPerfect)
+                    + (300 * countGreat)
+                    + (200 * countGood)
+                    + (100 * countOk)
+                    + (50 * countMeh)
+                ) / (perfectPoints * total);
         }
 
         private static ManiaDifficulty GetDifficultyFromDifficultyAttributes(
