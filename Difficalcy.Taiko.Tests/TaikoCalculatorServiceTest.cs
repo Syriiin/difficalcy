@@ -69,6 +69,39 @@ public class TaikoCalculatorServiceTest
     }
 
     [Fact]
+    public async Task TestAllParametersClassicMod()
+    {
+        var score = new TaikoScore
+        {
+            BeatmapId = "diffcalc-test",
+            Mods =
+            [
+                new Mod() { Acronym = "HR" },
+                new Mod()
+                {
+                    Acronym = "DT",
+                    Settings = new Dictionary<string, string> { { "speed_change", "2" } },
+                },
+                new Mod() { Acronym = "CL" },
+            ],
+            Combo = 150,
+            Misses = 5,
+            Oks = 3,
+        };
+
+        var calculation = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(6.22607274618289, calculation.Difficulty.Total, 4);
+        Assert.Equal(568.88629422631971, calculation.Performance.Total, 4);
+        Assert.Equal(0.96750000000000003, calculation.Accuracy, 4);
+        Assert.Equal(150, calculation.Combo, 4);
+
+        var calculationFromCache = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(calculation, calculationFromCache);
+    }
+
+    [Fact]
     public async Task TestBeatmapDetails()
     {
         var beatmapId = "diffcalc-test";

@@ -74,7 +74,7 @@ public class OsuCalculatorServiceTest
     }
 
     [Fact]
-    public void TestAllParametersClassicMod()
+    public async Task TestAllParametersClassicMod()
     {
         var score = new OsuScore
         {
@@ -98,7 +98,17 @@ public class OsuCalculatorServiceTest
             SliderTails = 2,
             SliderTicks = 1,
         };
-        TestGetCalculationReturnsCorrectValues(14.27904896620441, 1702.8430403970876, score);
+
+        var calculation = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(14.27904896620441, calculation.Difficulty.Total, 4);
+        Assert.Equal(1702.8430403970876, calculation.Performance.Total, 4);
+        Assert.Equal(0.91666666666666663, calculation.Accuracy, 4);
+        Assert.Equal(200, calculation.Combo, 4);
+
+        var calculationFromCache = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(calculation, calculationFromCache);
     }
 
     [Fact]

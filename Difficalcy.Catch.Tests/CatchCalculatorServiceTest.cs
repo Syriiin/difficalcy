@@ -70,6 +70,40 @@ public class CatchCalculatorServiceTest
     }
 
     [Fact]
+    public async Task TestAllParametersClassicMod()
+    {
+        var score = new CatchScore
+        {
+            BeatmapId = "diffcalc-test",
+            Mods =
+            [
+                new Mod() { Acronym = "HR" },
+                new Mod()
+                {
+                    Acronym = "DT",
+                    Settings = new Dictionary<string, string> { { "speed_change", "2" } },
+                },
+                new Mod() { Acronym = "CL" },
+            ],
+            Combo = 100,
+            Misses = 5,
+            LargeDroplets = 18,
+            SmallDroplets = 200,
+        };
+
+        var calculation = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(6.6156692905339396, calculation.Difficulty.Total, 4);
+        Assert.Equal(384.42585375147621, calculation.Performance.Total, 4);
+        Assert.Equal(0.95833333333333337, calculation.Accuracy, 4);
+        Assert.Equal(100, calculation.Combo, 4);
+
+        var calculationFromCache = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(calculation, calculationFromCache);
+    }
+
+    [Fact]
     public async Task TestBeatmapDetails()
     {
         var beatmapId = "diffcalc-test";
