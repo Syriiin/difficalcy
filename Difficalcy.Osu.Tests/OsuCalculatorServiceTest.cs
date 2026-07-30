@@ -2,20 +2,12 @@ using Difficalcy.Models;
 using Difficalcy.Osu.Models;
 using Difficalcy.Osu.Services;
 using Difficalcy.Services;
-using Difficalcy.Tests;
 
 namespace Difficalcy.Osu.Tests;
 
 public class OsuCalculatorServiceTest
-    : CalculatorServiceTest<
-        OsuScore,
-        OsuDifficulty,
-        OsuPerformance,
-        OsuCalculation,
-        OsuBeatmapDetails
-    >
 {
-    protected override CalculatorService<
+    private CalculatorService<
         OsuScore,
         OsuDifficulty,
         OsuPerformance,
@@ -27,27 +19,46 @@ public class OsuCalculatorServiceTest
             new TestBeatmapProvider(typeof(OsuCalculatorService).Assembly.GetName().Name)
         );
 
-    [Theory]
-    [InlineData(6.5243230054514676, 291.15100073619107, "diffcalc-test", new string[] { })]
-    [InlineData(9.4677694877983463, 878.04911849488235, "diffcalc-test", new string[] { "DT" })]
-    public void Test(
-        double expectedDifficultyTotal,
-        double expectedPerformanceTotal,
-        string beatmapId,
-        string[] mods
-    ) =>
-        TestGetCalculationReturnsCorrectValues(
-            expectedDifficultyTotal,
-            expectedPerformanceTotal,
-            new OsuScore
-            {
-                BeatmapId = beatmapId,
-                Mods = mods.Select(m => new Mod { Acronym = m }).ToArray(),
-            }
-        );
+    [Fact]
+    public async Task Test()
+    {
+        var score = new OsuScore { BeatmapId = "diffcalc-test", Mods = [] };
+
+        var calculation = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(6.5243230054514676, calculation.Difficulty.Total, 4);
+        Assert.Equal(291.15100073619107, calculation.Performance.Total, 4);
+        Assert.Equal(1, calculation.Accuracy, 4);
+        Assert.Equal(239, calculation.Combo, 4);
+
+        var calculationFromCache = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(calculation, calculationFromCache);
+    }
 
     [Fact]
-    public void TestAllParameters()
+    public async Task TestWithDT()
+    {
+        var score = new OsuScore
+        {
+            BeatmapId = "diffcalc-test",
+            Mods = [new Mod() { Acronym = "DT" }],
+        };
+
+        var calculation = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(9.4677694877983463, calculation.Difficulty.Total, 4);
+        Assert.Equal(878.04911849488235, calculation.Performance.Total, 4);
+        Assert.Equal(1, calculation.Accuracy, 4);
+        Assert.Equal(239, calculation.Combo, 4);
+
+        var calculationFromCache = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(calculation, calculationFromCache);
+    }
+
+    [Fact]
+    public async Task TestAllParameters()
     {
         var score = new OsuScore
         {
@@ -70,7 +81,17 @@ public class OsuCalculatorServiceTest
             SliderTails = 2,
             SliderTicks = 1,
         };
-        TestGetCalculationReturnsCorrectValues(14.27904896620441, 1380.5431667352334, score);
+
+        var calculation = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(14.27904896620441, calculation.Difficulty.Total, 4);
+        Assert.Equal(1380.5431667352334, calculation.Performance.Total, 4);
+        Assert.Equal(0.77180004483299702, calculation.Accuracy, 4);
+        Assert.Equal(200, calculation.Combo, 4);
+
+        var calculationFromCache = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(calculation, calculationFromCache);
     }
 
     [Fact]

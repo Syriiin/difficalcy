@@ -2,20 +2,12 @@ using Difficalcy.Models;
 using Difficalcy.Services;
 using Difficalcy.Taiko.Models;
 using Difficalcy.Taiko.Services;
-using Difficalcy.Tests;
 
 namespace Difficalcy.Taiko.Tests;
 
 public class TaikoCalculatorServiceTest
-    : CalculatorServiceTest<
-        TaikoScore,
-        TaikoDifficulty,
-        TaikoPerformance,
-        TaikoCalculation,
-        TaikoBeatmapDetails
-    >
 {
-    protected override CalculatorService<
+    private CalculatorService<
         TaikoScore,
         TaikoDifficulty,
         TaikoPerformance,
@@ -27,27 +19,46 @@ public class TaikoCalculatorServiceTest
             new TestBeatmapProvider(typeof(TaikoCalculatorService).Assembly.GetName().Name)
         );
 
-    [Theory]
-    [InlineData(3.3190848563395079, 168.87232101873195, "diffcalc-test", new string[] { })]
-    [InlineData(4.4551414906554987, 324.15878408465358, "diffcalc-test", new string[] { "DT" })]
-    public void Test(
-        double expectedDifficultyTotal,
-        double expectedPerformanceTotal,
-        string beatmapId,
-        string[] mods
-    ) =>
-        TestGetCalculationReturnsCorrectValues(
-            expectedDifficultyTotal,
-            expectedPerformanceTotal,
-            new TaikoScore
-            {
-                BeatmapId = beatmapId,
-                Mods = mods.Select(m => new Mod { Acronym = m }).ToArray(),
-            }
-        );
+    [Fact]
+    public async Task Test()
+    {
+        var score = new TaikoScore { BeatmapId = "diffcalc-test", Mods = [] };
+
+        var calculation = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(3.3190848563395079, calculation.Difficulty.Total, 4);
+        Assert.Equal(168.87232101873195, calculation.Performance.Total, 4);
+        Assert.Equal(1, calculation.Accuracy, 4);
+        Assert.Equal(200, calculation.Combo, 4);
+
+        var calculationFromCache = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(calculation, calculationFromCache);
+    }
 
     [Fact]
-    public void TestAllParameters()
+    public async Task TestWithDT()
+    {
+        var score = new TaikoScore
+        {
+            BeatmapId = "diffcalc-test",
+            Mods = [new Mod() { Acronym = "DT" }],
+        };
+
+        var calculation = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(4.4551414906554987, calculation.Difficulty.Total, 4);
+        Assert.Equal(324.15878408465358, calculation.Performance.Total, 4);
+        Assert.Equal(1, calculation.Accuracy, 4);
+        Assert.Equal(200, calculation.Combo, 4);
+
+        var calculationFromCache = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(calculation, calculationFromCache);
+    }
+
+    [Fact]
+    public async Task TestAllParameters()
     {
         var score = new TaikoScore
         {
@@ -65,7 +76,17 @@ public class TaikoCalculatorServiceTest
             Misses = 5,
             Oks = 3,
         };
-        TestGetCalculationReturnsCorrectValues(6.22607274618289, 568.88629422631971, score);
+
+        var calculation = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(6.22607274618289, calculation.Difficulty.Total, 4);
+        Assert.Equal(568.88629422631971, calculation.Performance.Total, 4);
+        Assert.Equal(0.96750000000000003, calculation.Accuracy, 4);
+        Assert.Equal(150, calculation.Combo, 4);
+
+        var calculationFromCache = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(calculation, calculationFromCache);
     }
 
     [Fact]

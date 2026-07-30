@@ -16,8 +16,8 @@ using osu.Game.Rulesets.Mania.Objects;
 using osu.Game.Rulesets.Osu;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Scoring;
-using LazerMod = osu.Game.Rulesets.Mods.Mod;
 using LazerClassicMod = osu.Game.Rulesets.Mods.ModClassic;
+using LazerMod = osu.Game.Rulesets.Mods.Mod;
 
 namespace Difficalcy.Mania.Services
 {
@@ -216,7 +216,10 @@ namespace Difficalcy.Mania.Services
             };
         }
 
-        private static double CalculateAccuracy(Dictionary<HitResult, int> statistics, bool isClassic)
+        private static double CalculateAccuracy(
+            Dictionary<HitResult, int> statistics,
+            bool isClassic
+        )
         {
             var countPerfect = statistics[HitResult.Perfect];
             var countGreat = statistics[HitResult.Great];
