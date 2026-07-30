@@ -119,8 +119,6 @@ namespace Difficalcy.Mania.Services
             var workingBeatmap = GetWorkingBeatmap(beatmapId);
             var beatmap = workingBeatmap.GetPlayableBeatmap(ManiaRuleset.RulesetInfo);
 
-            var scoreInfo = new ScoreInfo(beatmap.BeatmapInfo, ManiaRuleset.RulesetInfo) { };
-
             var noteCount = beatmap.HitObjects.OfType<Note>().Count();
 
             return new ManiaBeatmapDetails()
