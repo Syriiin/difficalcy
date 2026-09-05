@@ -3,9 +3,9 @@
     <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="ppy.osu.Game.Rulesets.Catch" Version="2026.702.1" />
+    <PackageReference Include="ppy.osu.Game.Rulesets.Catch" Version="2026.730.0" />
     <!-- required for convert support -->
-    <PackageReference Include="ppy.osu.Game.Rulesets.Osu" Version="2026.702.1" />
+    <PackageReference Include="ppy.osu.Game.Rulesets.Osu" Version="2026.730.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../Difficalcy/Difficalcy.csproj" />
