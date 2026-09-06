@@ -1,5 +1,5 @@
 NIX_RUN = nix develop --command
-COMPOSE_E2E = docker compose -f compose.yaml -f compose.override.e2e.yaml
+COMPOSE_E2E = docker compose -f compose.e2e.yaml
 COMPOSE_E2E_RUN = $(COMPOSE_E2E) run --rm --build e2e-test-runner
 COMPOSE_APP_DEV = docker compose -f compose.yaml -f compose.override.yaml
 COMPOSE_RUN_DOCS = docker compose -f compose.yaml -f compose.override.yaml run --rm --build docs
@@ -16,7 +16,11 @@ test:	## Runs test suite
 
 test-e2e:	## Runs E2E test suite (slim + full)
 	$(COMPOSE_E2E_RUN)
-	$(COMPOSE_E2E) down
+	$(COMPOSE_E2E) down --volumes
+
+update-e2e-snapshot:	## Regenerates the E2E response snapshot
+	UPDATE_SNAPSHOTS=true $(COMPOSE_E2E_RUN)
+	$(COMPOSE_E2E) down --volumes
 
 build-dev:	## Builds development docker images
 	$(COMPOSE_APP_DEV) build
