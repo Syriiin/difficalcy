@@ -1,4 +1,4 @@
-COMPOSE_TOOLING_RUN = docker compose -f compose.tooling.yaml run --rm --build tooling
+NIX_RUN = nix develop --command
 COMPOSE_E2E = docker compose -f compose.yaml -f compose.override.e2e.yaml
 COMPOSE_E2E_RUN = $(COMPOSE_E2E) run --rm --build e2e-test-runner
 COMPOSE_APP_DEV = docker compose -f compose.yaml -f compose.override.yaml
@@ -8,11 +8,11 @@ REPO = ghcr.io/syriiin/difficalcy
 help:	## Show this help
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
-bash:	## Opens bash shell in tooling container
-	$(COMPOSE_TOOLING_RUN) bash
+shell:  ## Runs a bash shell with dev tooling
+	nix develop
 
 test:	## Runs test suite
-	$(COMPOSE_TOOLING_RUN) dotnet test
+	$(NIX_RUN) dotnet test
 
 test-e2e:	## Runs E2E test suite (main + slim)
 	$(COMPOSE_E2E_RUN)
@@ -31,21 +31,23 @@ reset-dev:	## Resets development environment
 	$(COMPOSE_APP_DEV) down --remove-orphans --volumes
 
 update-api-reference:	## Updates OpenAPI schemas in docs site
-	$(COMPOSE_TOOLING_RUN) scripts/update-api-reference.sh
+	$(NIX_RUN) scripts/update-api-reference.sh
 
 check-api-reference: ## Checks OpenAPI schemas are updated
-	$(COMPOSE_TOOLING_RUN) scripts/check-api-reference.sh
+	$(NIX_RUN) scripts/check-api-reference.sh
 
 build-docs:	## Builds documentation site
 	$(COMPOSE_RUN_DOCS) build --strict --clean
 
-check-formatting:	## Checks code formatting
-	$(COMPOSE_TOOLING_RUN) dotnet tool run csharpier check .
+restore-dotnet-tooling:
+	dotnet tool restore
 
-fix-formatting:	## Fix code formatting
-	$(COMPOSE_TOOLING_RUN) dotnet tool run csharpier format .
+check-formatting: restore-dotnet-tooling	## Checks code formatting
+	$(NIX_RUN) dotnet tool run csharpier check .
 
-# TODO: move gh into tooling container (requires env var considerations)
+fix-formatting: restore-dotnet-tooling	## Fix code formatting
+	$(NIX_RUN) dotnet tool run csharpier format .
+
 VERSION =
 release:	## Pushes docker images to ghcr.io and creates a github release
 ifndef VERSION
@@ -74,7 +76,7 @@ endif
 	docker push $(REPO):latest
 	docker push $(REPO):$(VERSION)-slim
 	docker push $(REPO):latest-slim
-	gh release create "$(VERSION)" --generate-notes
+	$(NIX_RUN) gh release create "$(VERSION)" --generate-notes
 
 VERSION =
 pre-release:	## Pushes docker images to ghcr.io and creates a github prerelease
@@ -95,4 +97,4 @@ endif
 	docker build . --target publish-slim -t $(REPO):$(VERSION)-slim
 	docker push $(REPO):$(VERSION)
 	docker push $(REPO):$(VERSION)-slim
-	gh release create "$(VERSION)" --generate-notes --prerelease --target "$(shell git branch --show-current)"
+	$(NIX_RUN) gh release create "$(VERSION)" --generate-notes --prerelease --target "$(shell git branch --show-current)"
