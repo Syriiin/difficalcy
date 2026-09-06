@@ -59,6 +59,17 @@ services:
       - "5000:80"
 ```
 
+## Image variants
+
+difficalcy is published in two variants with the same API:
+
+| Variant | Tags                                         | Description                                                                                                             |
+| ------- | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Slim    | `latest`, `vX.Y.Z` (`latest-slim`, `vX.Y.Z-slim` aliases) | Default lightweight image. Unnecessary game resources and dependencies are stripped.                     |
+| Full    | `latest-full`, `vX.Y.Z-full`                 | Complete unstripped image (5-6x larger). Use this if you run into issues with the slim image, and please submit a bug report!                                                    |
+
+Both variants are tested with the same end-to-end suite, so calculation results are equivalent.
+
 ## Available calculators
 
 difficalcy is available for all four official osu! rulesets under a single service. Each calculator is accessible by its key:

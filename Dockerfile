@@ -46,16 +46,16 @@ RUN mkdir -p /beatmaps && chmod -R 777 /beatmaps
 
 # -----------------------------------------------------------------------------
 
-FROM build-base AS build
+FROM build-base AS build-full
 RUN dotnet publish ./Difficalcy.Api/Difficalcy.Api.csproj -o /app/difficalcy --runtime linux-x64 --self-contained true \
     && rm -f /app/difficalcy/*.dbg /app/difficalcy/*.pdb /app/difficalcy/*.Development.json
 
 # -----------------------------------------------------------------------------
 
-FROM base AS publish
-LABEL org.opencontainers.image.description "Lazer powered osu! difficulty calculator API"
-COPY --from=build --chown=app:app /beatmaps /beatmaps
-COPY --from=build /app/difficalcy .
+FROM base AS publish-full
+LABEL org.opencontainers.image.description "Lazer powered osu! difficulty calculator API (full)"
+COPY --from=build-full --chown=app:app /beatmaps /beatmaps
+COPY --from=build-full /app/difficalcy .
 ENTRYPOINT ["./Difficalcy.Api"]
 
 # -----------------------------------------------------------------------------
@@ -75,8 +75,8 @@ RUN dotnet build ./tools/StripResources/StripResources.csproj -o /tools && \
 
 # -----------------------------------------------------------------------------
 
-FROM base AS publish-slim
-LABEL org.opencontainers.image.description "Lazer powered osu! difficulty calculator API (slim)"
+FROM base AS publish
+LABEL org.opencontainers.image.description "Lazer powered osu! difficulty calculator API"
 COPY --from=build-slim --chown=app:app /beatmaps /beatmaps
 COPY --from=build-slim /app/difficalcy .
 ENTRYPOINT ["./Difficalcy.Api"]
