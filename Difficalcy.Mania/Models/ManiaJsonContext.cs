@@ -4,6 +4,7 @@ using osu.Game.Rulesets.Mania.Difficulty;
 
 namespace Difficalcy.Mania.Models;
 
+[JsonSourceGenerationOptions(NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals)]
 // Response models
 [JsonSerializable(typeof(ManiaCalculation))]
 [JsonSerializable(typeof(ManiaCalculation[]))]
