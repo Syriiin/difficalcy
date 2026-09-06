@@ -14,7 +14,7 @@ shell:  ## Runs a bash shell with dev tooling
 test:	## Runs test suite
 	$(NIX_RUN) dotnet test
 
-test-e2e:	## Runs E2E test suite (main + slim)
+test-e2e:	## Runs E2E test suite (slim + full)
 	$(COMPOSE_E2E_RUN)
 	$(COMPOSE_E2E) down
 
@@ -70,14 +70,18 @@ endif
 	echo $$GITHUB_TOKEN | docker login ghcr.io --username $$GITHUB_USERNAME --password-stdin
 	docker build . --target publish \
 	    -t $(REPO):$(VERSION) \
-	    -t $(REPO):latest
-	docker build . --target publish-slim \
+	    -t $(REPO):latest \
 	    -t $(REPO):$(VERSION)-slim \
 	    -t $(REPO):latest-slim
+	docker build . --target publish-full \
+	    -t $(REPO):$(VERSION)-full \
+	    -t $(REPO):latest-full
 	docker push $(REPO):$(VERSION)
 	docker push $(REPO):latest
 	docker push $(REPO):$(VERSION)-slim
 	docker push $(REPO):latest-slim
+	docker push $(REPO):$(VERSION)-full
+	docker push $(REPO):latest-full
 	$(NIX_RUN) gh release create "$(VERSION)" --generate-notes
 
 VERSION =
@@ -95,8 +99,9 @@ ifneq "$(shell git diff --name-only HEAD)" ""
 	$(error There are uncommitted changes in the working directory)
 endif
 	echo $$GITHUB_TOKEN | docker login ghcr.io --username $$GITHUB_USERNAME --password-stdin
-	docker build . --target publish -t $(REPO):$(VERSION)
-	docker build . --target publish-slim -t $(REPO):$(VERSION)-slim
+	docker build . --target publish -t $(REPO):$(VERSION) -t $(REPO):$(VERSION)-slim
+	docker build . --target publish-full -t $(REPO):$(VERSION)-full
 	docker push $(REPO):$(VERSION)
 	docker push $(REPO):$(VERSION)-slim
+	docker push $(REPO):$(VERSION)-full
 	$(NIX_RUN) gh release create "$(VERSION)" --generate-notes --prerelease --target "$(shell git branch --show-current)"
