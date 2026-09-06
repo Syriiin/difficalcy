@@ -10,6 +10,7 @@ using Difficalcy.Osu.Services;
 using Difficalcy.Taiko.Models;
 using Difficalcy.Taiko.Services;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -44,7 +45,7 @@ if (app.Environment.IsDevelopment())
 
 app.MapOpenApi();
 
-var api = app.MapGroup("/api");
+var api = app.MapGroup("/api").WithTags("difficalcy");
 
 api.MapGet(
     "/calculators",
@@ -72,7 +73,7 @@ var osuHandlers = new DifficalcyHandlers<
     OsuCalculation,
     OsuBeatmapDetails
 >(app.Services.GetRequiredService<OsuCalculatorService>());
-var osu = api.MapGroup("/calculators/osu");
+var osu = api.MapGroup("/calculators/osu").WithTags("osu");
 osu.MapGet("/info", osuHandlers.GetInfo);
 osu.MapGet("/calculation", osuHandlers.GetCalculation);
 osu.MapPost("/batch/calculation", osuHandlers.GetCalculationBatch);
@@ -85,7 +86,7 @@ var taikoHandlers = new DifficalcyHandlers<
     TaikoCalculation,
     TaikoBeatmapDetails
 >(app.Services.GetRequiredService<TaikoCalculatorService>());
-var taiko = api.MapGroup("/calculators/taiko");
+var taiko = api.MapGroup("/calculators/taiko").WithTags("taiko");
 taiko.MapGet("/info", taikoHandlers.GetInfo);
 taiko.MapGet("/calculation", taikoHandlers.GetCalculation);
 taiko.MapPost("/batch/calculation", taikoHandlers.GetCalculationBatch);
@@ -98,7 +99,7 @@ var catchHandlers = new DifficalcyHandlers<
     CatchCalculation,
     CatchBeatmapDetails
 >(app.Services.GetRequiredService<CatchCalculatorService>());
-var catch_ = api.MapGroup("/calculators/catch");
+var catch_ = api.MapGroup("/calculators/catch").WithTags("catch");
 catch_.MapGet("/info", catchHandlers.GetInfo);
 catch_.MapGet("/calculation", catchHandlers.GetCalculation);
 catch_.MapPost("/batch/calculation", catchHandlers.GetCalculationBatch);
@@ -111,7 +112,7 @@ var maniaHandlers = new DifficalcyHandlers<
     ManiaCalculation,
     ManiaBeatmapDetails
 >(app.Services.GetRequiredService<ManiaCalculatorService>());
-var mania = api.MapGroup("/calculators/mania");
+var mania = api.MapGroup("/calculators/mania").WithTags("mania");
 mania.MapGet("/info", maniaHandlers.GetInfo);
 mania.MapGet("/calculation", maniaHandlers.GetCalculation);
 mania.MapPost("/batch/calculation", maniaHandlers.GetCalculationBatch);
