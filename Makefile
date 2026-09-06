@@ -44,9 +44,11 @@ restore-dotnet-tooling:
 
 check-formatting: restore-dotnet-tooling	## Checks code formatting
 	$(NIX_RUN) dotnet tool run csharpier check .
+	$(NIX_RUN) nixfmt --check flake.nix
 
 fix-formatting: restore-dotnet-tooling	## Fix code formatting
 	$(NIX_RUN) dotnet tool run csharpier format .
+	$(NIX_RUN) nixfmt flake.nix
 
 VERSION =
 release:	## Pushes docker images to ghcr.io and creates a github release
