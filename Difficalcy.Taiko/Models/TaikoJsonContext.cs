@@ -4,6 +4,7 @@ using osu.Game.Rulesets.Taiko.Difficulty;
 
 namespace Difficalcy.Taiko.Models;
 
+[JsonSourceGenerationOptions(NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals)]
 // Response models
 [JsonSerializable(typeof(TaikoCalculation))]
 [JsonSerializable(typeof(TaikoCalculation[]))]

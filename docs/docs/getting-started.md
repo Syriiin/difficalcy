@@ -296,6 +296,9 @@ curl "localhost:5000/api/calculators/osu/batch/calculation" \
 ]
 ```
 
+!!! tip "Non-finite values"
+    Sometimes, due to broken maps or bugs, the calculator can return non-finite values. These are serialised as `"NaN"`, `"Infinity"` or `"-Infinity"` strings.
+
 There is also a `/beatmapdetails` endpoint for getting various specifics about a beatmap:
 
 ```sh

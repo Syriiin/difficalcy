@@ -4,6 +4,7 @@ using osu.Game.Rulesets.Osu.Difficulty;
 
 namespace Difficalcy.Osu.Models;
 
+[JsonSourceGenerationOptions(NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals)]
 // Response models
 [JsonSerializable(typeof(OsuCalculation))]
 [JsonSerializable(typeof(OsuCalculation[]))]
