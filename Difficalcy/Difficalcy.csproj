@@ -6,7 +6,7 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.7" />
-    <PackageReference Include="StackExchange.Redis" Version="2.13.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
+    <PackageReference Include="StackExchange.Redis" Version="2.13.17" />
   </ItemGroup>
 </Project>
