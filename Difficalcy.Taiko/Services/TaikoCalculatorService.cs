@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
@@ -9,6 +10,7 @@ using Difficalcy.Services;
 using Difficalcy.Taiko.Models;
 using osu.Game.Beatmaps;
 using osu.Game.Online.API;
+using osu.Game.Rulesets.Osu;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Taiko;
 using osu.Game.Rulesets.Taiko.Difficulty;
@@ -68,27 +70,30 @@ namespace Difficalcy.Taiko.Services
             var difficultyAttributes =
                 difficultyCalculator.Calculate(lazerMods) as TaikoDifficultyAttributes;
 
-            // Serialising anonymous object with same names because some properties can't be serialised, and the built-in JsonProperty fields aren't on all required fields
+            // Serialising DTO with same names because some properties can't be serialised, and the built-in JsonProperty fields aren't on all required fields
+            var dto = new TaikoDifficultyAttributesDto
+            {
+                StarRating = difficultyAttributes.StarRating,
+                MaxCombo = difficultyAttributes.MaxCombo,
+                MonoStaminaFactor = difficultyAttributes.MonoStaminaFactor,
+                StaminaDifficulty = difficultyAttributes.StaminaDifficulty,
+                RhythmDifficulty = difficultyAttributes.RhythmDifficulty,
+                ColourDifficulty = difficultyAttributes.ColourDifficulty,
+                ConsistencyFactor = difficultyAttributes.ConsistencyFactor,
+            };
+
             return (
                 difficultyAttributes,
-                JsonSerializer.Serialize(
-                    new
-                    {
-                        difficultyAttributes.StarRating,
-                        difficultyAttributes.MaxCombo,
-                        difficultyAttributes.MonoStaminaFactor,
-                        difficultyAttributes.StaminaDifficulty,
-                        difficultyAttributes.RhythmDifficulty,
-                        difficultyAttributes.ColourDifficulty,
-                        difficultyAttributes.ConsistencyFactor,
-                    }
-                )
+                JsonSerializer.Serialize(dto, TaikoJsonContext.Default.TaikoDifficultyAttributesDto)
             );
         }
 
         protected override object DeserialiseDifficultyAttributes(string difficultyAttributesJson)
         {
-            return JsonSerializer.Deserialize<TaikoDifficultyAttributes>(difficultyAttributesJson);
+            return JsonSerializer.Deserialize(
+                difficultyAttributesJson,
+                TaikoJsonContext.Default.TaikoDifficultyAttributes
+            );
         }
 
         protected override TaikoCalculation CalculatePerformance(
@@ -162,10 +167,17 @@ namespace Difficalcy.Taiko.Services
             };
         }
 
-        private CalculatorWorkingBeatmap GetWorkingBeatmap(string beatmapId)
+        [DynamicDependency(
+            DynamicallyAccessedMemberTypes.PublicParameterlessConstructor,
+            typeof(TaikoRuleset)
+        )]
+        [DynamicDependency(
+            DynamicallyAccessedMemberTypes.PublicParameterlessConstructor,
+            typeof(OsuRuleset)
+        )]
+        private FlatWorkingBeatmap GetWorkingBeatmap(string beatmapId)
         {
-            using var beatmapStream = _beatmapProvider.GetBeatmapStream(beatmapId);
-            return new CalculatorWorkingBeatmap(TaikoRuleset, beatmapStream);
+            return new FlatWorkingBeatmap(_beatmapProvider.GetBeatmapPath(beatmapId));
         }
 
         private LazerMod ModToLazerMod(Mod mod)

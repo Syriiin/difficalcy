@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
+      - uses: cachix/install-nix-action@v31
       - run: make test
 
   e2e-test:
@@ -22,6 +23,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
+      - uses: cachix/install-nix-action@v31
       - run: make check-api-reference
 
   check-docs-build:
@@ -34,4 +36,5 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
+      - uses: cachix/install-nix-action@v31
       - run: make check-formatting

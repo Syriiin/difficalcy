@@ -1,34 +1,69 @@
 #!/bin/bash
-set -euxo pipefail
+set -euo pipefail
 
-curl --fail --silent --show-error "http://$DIFFICALCY_OSU_HOST/api/info" | jq
-curl --fail --silent --show-error "http://$DIFFICALCY_OSU_HOST/api/calculation?BeatmapId=diffcalc-test-osu" | jq
-curl --fail --silent --show-error "http://$DIFFICALCY_OSU_HOST/api/calculation?BeatmapId=diffcalc-test-osu" | jq # Run twice to test caching
-curl --fail --silent --show-error -X POST "http://$DIFFICALCY_OSU_HOST/api/batch/calculation" \
-  -H "Content-Type: application/json" \
-  -d '[{"BeatmapId": "diffcalc-test-osu"}, {"BeatmapId": "diffcalc-test-osu", "Mods": [{"Acronym": "DT"}]}]' | jq
-curl --fail --silent --show-error "http://$DIFFICALCY_OSU_HOST/api/beatmapdetails?BeatmapId=diffcalc-test-osu" | jq
+SNAPSHOT_FILE="/e2e/snapshot.txt"
 
-curl --fail --silent --show-error "http://$DIFFICALCY_CATCH_HOST/api/info" | jq
-curl --fail --silent --show-error "http://$DIFFICALCY_CATCH_HOST/api/calculation?BeatmapId=diffcalc-test-catch" | jq
-curl --fail --silent --show-error "http://$DIFFICALCY_CATCH_HOST/api/calculation?BeatmapId=diffcalc-test-catch" | jq # Run twice to test caching
-curl --fail --silent --show-error -X POST "http://$DIFFICALCY_CATCH_HOST/api/batch/calculation" \
-  -H "Content-Type: application/json" \
-  -d '[{"BeatmapId": "diffcalc-test-catch"}, {"BeatmapId": "diffcalc-test-catch", "Mods": [{"Acronym": "DT"}]}]' | jq
-curl --fail --silent --show-error "http://$DIFFICALCY_CATCH_HOST/api/beatmapdetails?BeatmapId=diffcalc-test-catch" | jq
+hosts=("$DIFFICALCY_HOST" "$DIFFICALCY_FULL_HOST")
 
-curl --fail --silent --show-error "http://$DIFFICALCY_TAIKO_HOST/api/info" | jq
-curl --fail --silent --show-error "http://$DIFFICALCY_TAIKO_HOST/api/calculation?BeatmapId=diffcalc-test-taiko" | jq
-curl --fail --silent --show-error "http://$DIFFICALCY_TAIKO_HOST/api/calculation?BeatmapId=diffcalc-test-taiko" | jq # Run twice to test caching
-curl --fail --silent --show-error -X POST "http://$DIFFICALCY_TAIKO_HOST/api/batch/calculation" \
-  -H "Content-Type: application/json" \
-  -d '[{"BeatmapId": "diffcalc-test-taiko"}, {"BeatmapId": "diffcalc-test-taiko", "Mods": [{"Acronym": "DT"}]}]' | jq
-curl --fail --silent --show-error "http://$DIFFICALCY_TAIKO_HOST/api/beatmapdetails?BeatmapId=diffcalc-test-taiko" | jq
+fetch() {
+  echo "${*//$API/}" >> "$OUT"
+  curl --fail --silent --show-error "$@" | jq >> "$OUT"
+}
 
-curl --fail --silent --show-error "http://$DIFFICALCY_MANIA_HOST/api/info" | jq
-curl --fail --silent --show-error "http://$DIFFICALCY_MANIA_HOST/api/calculation?BeatmapId=diffcalc-test-mania" | jq
-curl --fail --silent --show-error "http://$DIFFICALCY_MANIA_HOST/api/calculation?BeatmapId=diffcalc-test-mania" | jq # Run twice to test caching
-curl --fail --silent --show-error -X POST "http://$DIFFICALCY_MANIA_HOST/api/batch/calculation" \
-  -H "Content-Type: application/json" \
-  -d '[{"BeatmapId": "diffcalc-test-mania"}, {"BeatmapId": "diffcalc-test-mania", "Mods": [{"Acronym": "DT"}]}]' | jq
-curl --fail --silent --show-error "http://$DIFFICALCY_MANIA_HOST/api/beatmapdetails?BeatmapId=diffcalc-test-mania" | jq
+outputs=()
+for host in "${hosts[@]}"; do
+  echo "Testing $host"
+  API="http://$host"
+  OUT="$(mktemp)"
+  outputs+=("$OUT")
+
+  fetch "$API/api/calculators"
+
+  fetch "$API/api/calculators/osu/info"
+  fetch "$API/api/calculators/osu/calculation?BeatmapId=diffcalc-test-osu"
+  fetch "$API/api/calculators/osu/calculation?BeatmapId=diffcalc-test-osu"
+  fetch "$API/api/calculators/osu/calculation?BeatmapId=diffcalc-test-osu&Mods=HD,DT"
+  fetch -X POST "$API/api/calculators/osu/batch/calculation" \
+    -H "Content-Type: application/json" \
+    -d '[{"BeatmapId": "diffcalc-test-osu"}, {"BeatmapId": "diffcalc-test-osu", "Mods": [{"Acronym": "DT"}]}]'
+  fetch "$API/api/calculators/osu/beatmapdetails?BeatmapId=diffcalc-test-osu"
+
+  fetch "$API/api/calculators/taiko/info"
+  fetch "$API/api/calculators/taiko/calculation?BeatmapId=diffcalc-test-taiko"
+  fetch "$API/api/calculators/taiko/calculation?BeatmapId=diffcalc-test-taiko"
+  fetch "$API/api/calculators/taiko/calculation?BeatmapId=diffcalc-test-taiko&Mods=HD,DT"
+  fetch -X POST "$API/api/calculators/taiko/batch/calculation" \
+    -H "Content-Type: application/json" \
+    -d '[{"BeatmapId": "diffcalc-test-taiko"}, {"BeatmapId": "diffcalc-test-taiko", "Mods": [{"Acronym": "DT"}]}]'
+  fetch "$API/api/calculators/taiko/beatmapdetails?BeatmapId=diffcalc-test-taiko"
+
+  fetch "$API/api/calculators/catch/info"
+  fetch "$API/api/calculators/catch/calculation?BeatmapId=diffcalc-test-catch"
+  fetch "$API/api/calculators/catch/calculation?BeatmapId=diffcalc-test-catch"
+  fetch "$API/api/calculators/catch/calculation?BeatmapId=diffcalc-test-catch&Mods=HD,DT"
+  fetch -X POST "$API/api/calculators/catch/batch/calculation" \
+    -H "Content-Type: application/json" \
+    -d '[{"BeatmapId": "diffcalc-test-catch"}, {"BeatmapId": "diffcalc-test-catch", "Mods": [{"Acronym": "DT"}]}]'
+  fetch "$API/api/calculators/catch/beatmapdetails?BeatmapId=diffcalc-test-catch"
+
+  fetch "$API/api/calculators/mania/info"
+  fetch "$API/api/calculators/mania/calculation?BeatmapId=diffcalc-test-mania"
+  fetch "$API/api/calculators/mania/calculation?BeatmapId=diffcalc-test-mania"
+  fetch "$API/api/calculators/mania/calculation?BeatmapId=diffcalc-test-mania&Mods=HD,DT"
+  fetch -X POST "$API/api/calculators/mania/batch/calculation" \
+    -H "Content-Type: application/json" \
+    -d '[{"BeatmapId": "diffcalc-test-mania"}, {"BeatmapId": "diffcalc-test-mania", "Mods": [{"Acronym": "DT"}]}]'
+  fetch "$API/api/calculators/mania/beatmapdetails?BeatmapId=diffcalc-test-mania"
+done
+
+if [ "${UPDATE_SNAPSHOTS:-false}" = "true" ]; then
+  cat "${outputs[0]}" > "$SNAPSHOT_FILE"
+  echo "Snapshot updated: $SNAPSHOT_FILE"
+  exit 0
+fi
+
+for out in "${outputs[@]:1}"; do
+  diff -u "${outputs[0]}" "$out"
+done
+diff -u "$SNAPSHOT_FILE" "${outputs[0]}"
+echo "Snapshots match."

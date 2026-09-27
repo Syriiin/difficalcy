@@ -56,7 +56,7 @@ namespace Difficalcy.Services
                     throw new BeatmapNotFoundException(beatmapId);
                 }
 
-                using var fs = new FileStream(beatmapPath, FileMode.CreateNew);
+                using var fs = new FileStream(beatmapPath, FileMode.Create);
                 await response.Content.CopyToAsync(fs);
                 if (fs.Length == 0)
                 {
@@ -71,13 +71,7 @@ namespace Difficalcy.Services
             }
         }
 
-        public Stream GetBeatmapStream(string beatmapId)
-        {
-            var beatmapPath = GetBeatmapPath(beatmapId);
-            return File.OpenRead(beatmapPath);
-        }
-
-        private string GetBeatmapPath(string beatmapId)
+        public string GetBeatmapPath(string beatmapId)
         {
             return Path.Combine(_beatmapDirectory, $"{beatmapId}.osu");
         }

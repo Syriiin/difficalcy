@@ -8,12 +8,11 @@ See the docs for configuration details https://difficalcy.syrin.me/
 
 1.  Run the container
     ```sh
-    docker run -p 5000:80 ghcr.io/syriiin/difficalcy-osu:latest
+    docker run -p 5000:80 ghcr.io/syriiin/difficalcy:latest
     ```
 1.  Query the API
-
     ```sh
-    curl "localhost:5000/api/info"
+    curl "localhost:5000/api/calculators/osu/info"
     ```
 
     ```json
@@ -27,7 +26,7 @@ See the docs for configuration details https://difficalcy.syrin.me/
     ```
 
     ```sh
-    curl "localhost:5000/api/calculation?BeatmapId=658127"
+    curl "localhost:5000/api/calculators/osu/calculation?BeatmapId=658127"
     ```
 
     ```json
@@ -54,8 +53,8 @@ See the docs for configuration details https://difficalcy.syrin.me/
 
 ```yaml
 services:
-  difficalcy-osu:
-    image: ghcr.io/syriiin/difficalcy-osu:latest
+  difficalcy:
+    image: ghcr.io/syriiin/difficalcy:latest
     environment:
       - REDIS_CONFIGURATION=cache:6379
     ports:

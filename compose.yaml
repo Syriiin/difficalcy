@@ -1,41 +1,8 @@
 services:
-  difficalcy-osu:
+  difficalcy:
     build:
       context: .
-      target: difficalcy-osu
-    environment:
-      - REDIS_CONFIGURATION=cache:6379
-    volumes:
-      - beatmaps:/beatmaps
-    depends_on:
-      - cache
-
-  difficalcy-taiko:
-    build:
-      context: .
-      target: difficalcy-taiko
-    environment:
-      - REDIS_CONFIGURATION=cache:6379
-    volumes:
-      - beatmaps:/beatmaps
-    depends_on:
-      - cache
-
-  difficalcy-catch:
-    build:
-      context: .
-      target: difficalcy-catch
-    environment:
-      - REDIS_CONFIGURATION=cache:6379
-    volumes:
-      - beatmaps:/beatmaps
-    depends_on:
-      - cache
-
-  difficalcy-mania:
-    build:
-      context: .
-      target: difficalcy-mania
+      target: publish
     environment:
       - REDIS_CONFIGURATION=cache:6379
     volumes:

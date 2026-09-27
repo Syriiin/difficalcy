@@ -1,0 +1,437 @@
+/api/calculators
+{
+  "osu": {
+    "rulesetName": "osu!",
+    "calculatorName": "Official osu!",
+    "calculatorPackage": "osu.Game.Rulesets.Osu",
+    "calculatorVersion": "2026.702.1.0",
+    "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Osu/2026.702.1.0"
+  },
+  "taiko": {
+    "rulesetName": "osu!taiko",
+    "calculatorName": "Official osu!taiko",
+    "calculatorPackage": "osu.Game.Rulesets.Taiko",
+    "calculatorVersion": "2026.702.1.0",
+    "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Taiko/2026.702.1.0"
+  },
+  "catch": {
+    "rulesetName": "osu!catch",
+    "calculatorName": "Official osu!catch",
+    "calculatorPackage": "osu.Game.Rulesets.Catch",
+    "calculatorVersion": "2026.702.1.0",
+    "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Catch/2026.702.1.0"
+  },
+  "mania": {
+    "rulesetName": "osu!mania",
+    "calculatorName": "Official osu!mania",
+    "calculatorPackage": "osu.Game.Rulesets.Mania",
+    "calculatorVersion": "2026.702.1.0",
+    "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Mania/2026.702.1.0"
+  }
+}
+/api/calculators/osu/info
+{
+  "rulesetName": "osu!",
+  "calculatorName": "Official osu!",
+  "calculatorPackage": "osu.Game.Rulesets.Osu",
+  "calculatorVersion": "2026.702.1.0",
+  "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Osu/2026.702.1.0"
+}
+/api/calculators/osu/calculation?BeatmapId=diffcalc-test-osu
+{
+  "accuracy": 1,
+  "combo": 239,
+  "difficulty": {
+    "aim": 3.809399008867019,
+    "speed": 1.564710574509105,
+    "flashlight": 0,
+    "reading": 1.7803497292117219,
+    "total": 6.524323005451468
+  },
+  "performance": {
+    "aim": 214.86297636210972,
+    "speed": 12.604838421331243,
+    "accuracy": 27.715025148546076,
+    "flashlight": 0,
+    "reading": 22.572307597136877,
+    "total": 291.15100073619107
+  }
+}
+/api/calculators/osu/calculation?BeatmapId=diffcalc-test-osu
+{
+  "accuracy": 1,
+  "combo": 239,
+  "difficulty": {
+    "aim": 3.809399008867019,
+    "speed": 1.564710574509105,
+    "flashlight": 0,
+    "reading": 1.7803497292117219,
+    "total": 6.524323005451468
+  },
+  "performance": {
+    "aim": 214.86297636210972,
+    "speed": 12.604838421331243,
+    "accuracy": 27.715025148546076,
+    "flashlight": 0,
+    "reading": 22.572307597136877,
+    "total": 291.15100073619107
+  }
+}
+/api/calculators/osu/calculation?BeatmapId=diffcalc-test-osu&Mods=HD,DT
+{
+  "accuracy": 1,
+  "combo": 239,
+  "difficulty": {
+    "aim": 5.593003356550778,
+    "speed": 2.1913401312274825,
+    "flashlight": 0,
+    "reading": 2.4916040541849767,
+    "total": 9.528765958388444
+  },
+  "performance": {
+    "aim": 680.0290003971704,
+    "speed": 40.11972025387838,
+    "accuracy": 66.45471855442933,
+    "flashlight": 0,
+    "reading": 61.872416453672216,
+    "total": 894.5024557788594
+  }
+}
+-X POST /api/calculators/osu/batch/calculation -H Content-Type: application/json -d [{"BeatmapId": "diffcalc-test-osu"}, {"BeatmapId": "diffcalc-test-osu", "Mods": [{"Acronym": "DT"}]}]
+[
+  {
+    "accuracy": 1,
+    "combo": 239,
+    "difficulty": {
+      "aim": 3.809399008867019,
+      "speed": 1.564710574509105,
+      "flashlight": 0,
+      "reading": 1.7803497292117219,
+      "total": 6.524323005451468
+    },
+    "performance": {
+      "aim": 214.86297636210972,
+      "speed": 12.604838421331243,
+      "accuracy": 27.715025148546076,
+      "flashlight": 0,
+      "reading": 22.572307597136877,
+      "total": 291.15100073619107
+    }
+  },
+  {
+    "accuracy": 1,
+    "combo": 239,
+    "difficulty": {
+      "aim": 5.593003356550778,
+      "speed": 2.1913401312274825,
+      "flashlight": 0,
+      "reading": 2.1998562282900487,
+      "total": 9.467769487798346
+    },
+    "performance": {
+      "aim": 680.0290003971704,
+      "speed": 40.11972025387838,
+      "accuracy": 66.45471855442933,
+      "flashlight": 0,
+      "reading": 42.58365028477019,
+      "total": 878.0491184948824
+    }
+  }
+]
+/api/calculators/osu/beatmapdetails?BeatmapId=diffcalc-test-osu
+{
+  "circleCount": 79,
+  "sliderCount": 33,
+  "spinnerCount": 12,
+  "sliderTickCount": 82,
+  "circleSize": 4,
+  "approachRate": 8.3,
+  "accuracy": 7,
+  "drainRate": 5,
+  "artist": "Unknown",
+  "title": "Unknown",
+  "difficultyName": "Normal",
+  "author": "Unknown Creator",
+  "maxCombo": 239,
+  "length": 102500,
+  "minBPM": 120,
+  "maxBPM": 120,
+  "commonBPM": 120,
+  "baseVelocity": 1.6,
+  "tickRate": 1
+}
+/api/calculators/taiko/info
+{
+  "rulesetName": "osu!taiko",
+  "calculatorName": "Official osu!taiko",
+  "calculatorPackage": "osu.Game.Rulesets.Taiko",
+  "calculatorVersion": "2026.702.1.0",
+  "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Taiko/2026.702.1.0"
+}
+/api/calculators/taiko/calculation?BeatmapId=diffcalc-test-taiko
+{
+  "accuracy": 1,
+  "combo": 200,
+  "difficulty": {
+    "stamina": 2.5790422727964706,
+    "rhythm": 0.028816271027626596,
+    "colour": 0.711226393181619,
+    "total": 3.319084940658167
+  },
+  "performance": {
+    "difficulty": 49.87918863790332,
+    "accuracy": 118.99311301773677,
+    "total": 168.8723016556401
+  }
+}
+/api/calculators/taiko/calculation?BeatmapId=diffcalc-test-taiko
+{
+  "accuracy": 1,
+  "combo": 200,
+  "difficulty": {
+    "stamina": 2.5790422727964706,
+    "rhythm": 0.028816271027626596,
+    "colour": 0.711226393181619,
+    "total": 3.319084940658167
+  },
+  "performance": {
+    "difficulty": 49.87918863790332,
+    "accuracy": 118.99311301773677,
+    "total": 168.8723016556401
+  }
+}
+/api/calculators/taiko/calculation?BeatmapId=diffcalc-test-taiko&Mods=HD,DT
+{
+  "accuracy": 1,
+  "combo": 200,
+  "difficulty": {
+    "stamina": 3.5637146604761245,
+    "rhythm": 0.04378682744127979,
+    "colour": 0.8476265558773907,
+    "total": 4.455142137225538
+  },
+  "performance": {
+    "difficulty": 125.63963882463727,
+    "accuracy": 216.05637933193077,
+    "total": 341.696018156568
+  }
+}
+-X POST /api/calculators/taiko/batch/calculation -H Content-Type: application/json -d [{"BeatmapId": "diffcalc-test-taiko"}, {"BeatmapId": "diffcalc-test-taiko", "Mods": [{"Acronym": "DT"}]}]
+[
+  {
+    "accuracy": 1,
+    "combo": 200,
+    "difficulty": {
+      "stamina": 2.5790422727964706,
+      "rhythm": 0.028816271027626596,
+      "colour": 0.711226393181619,
+      "total": 3.319084940658167
+    },
+    "performance": {
+      "difficulty": 49.87918863790332,
+      "accuracy": 118.99311301773677,
+      "total": 168.8723016556401
+    }
+  },
+  {
+    "accuracy": 1,
+    "combo": 200,
+    "difficulty": {
+      "stamina": 3.5637146604761245,
+      "rhythm": 0.04378682744127979,
+      "colour": 0.8476265558773907,
+      "total": 4.455142137225538
+    },
+    "performance": {
+      "difficulty": 123.17611649474243,
+      "accuracy": 200.98267844830772,
+      "total": 324.15879494305017
+    }
+  }
+]
+/api/calculators/taiko/beatmapdetails?BeatmapId=diffcalc-test-taiko
+{
+  "hitCount": 200,
+  "drumRollCount": 30,
+  "swellCount": 8,
+  "accuracy": 7,
+  "drainRate": 5,
+  "artist": "Unknown",
+  "title": "Unknown",
+  "difficultyName": "Normal",
+  "author": "Unknown Creator",
+  "maxCombo": 200,
+  "length": 53000,
+  "minBPM": 120,
+  "maxBPM": 120,
+  "commonBPM": 120,
+  "baseVelocity": 1.6,
+  "tickRate": 1
+}
+/api/calculators/catch/info
+{
+  "rulesetName": "osu!catch",
+  "calculatorName": "Official osu!catch",
+  "calculatorPackage": "osu.Game.Rulesets.Catch",
+  "calculatorVersion": "2026.702.1.0",
+  "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Catch/2026.702.1.0"
+}
+/api/calculators/catch/calculation?BeatmapId=diffcalc-test-catch
+{
+  "accuracy": 1,
+  "combo": 127,
+  "difficulty": {
+    "total": 4.039861734717169
+  },
+  "performance": {
+    "total": 163.70914311938117
+  }
+}
+/api/calculators/catch/calculation?BeatmapId=diffcalc-test-catch
+{
+  "accuracy": 1,
+  "combo": 127,
+  "difficulty": {
+    "total": 4.039861734717169
+  },
+  "performance": {
+    "total": 163.70914311938117
+  }
+}
+/api/calculators/catch/calculation?BeatmapId=diffcalc-test-catch&Mods=HD,DT
+{
+  "accuracy": 1,
+  "combo": 127,
+  "difficulty": {
+    "total": 5.152717389780087
+  },
+  "performance": {
+    "total": 306.9000617968891
+  }
+}
+-X POST /api/calculators/catch/batch/calculation -H Content-Type: application/json -d [{"BeatmapId": "diffcalc-test-catch"}, {"BeatmapId": "diffcalc-test-catch", "Mods": [{"Acronym": "DT"}]}]
+[
+  {
+    "accuracy": 1,
+    "combo": 127,
+    "difficulty": {
+      "total": 4.039861734717169
+    },
+    "performance": {
+      "total": 163.70914311938117
+    }
+  },
+  {
+    "accuracy": 1,
+    "combo": 127,
+    "difficulty": {
+      "total": 5.152717389780087
+    },
+    "performance": {
+      "total": 289.5283627906101
+    }
+  }
+]
+/api/calculators/catch/beatmapdetails?BeatmapId=diffcalc-test-catch
+{
+  "fruitCount": 78,
+  "juiceStreamCount": 12,
+  "bananaShowerCount": 3,
+  "circleSize": 4,
+  "approachRate": 8.3,
+  "drainRate": 5,
+  "artist": "Unknown",
+  "title": "Unknown",
+  "difficultyName": "Normal",
+  "author": "Unknown Creator",
+  "maxCombo": 127,
+  "length": 45250,
+  "minBPM": 120,
+  "maxBPM": 120,
+  "commonBPM": 120,
+  "baseVelocity": 1.6,
+  "tickRate": 1
+}
+/api/calculators/mania/info
+{
+  "rulesetName": "osu!mania",
+  "calculatorName": "Official osu!mania",
+  "calculatorPackage": "osu.Game.Rulesets.Mania",
+  "calculatorVersion": "2026.702.1.0",
+  "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Mania/2026.702.1.0"
+}
+/api/calculators/mania/calculation?BeatmapId=diffcalc-test-mania
+{
+  "accuracy": 1,
+  "difficulty": {
+    "total": 2.3493769750220914
+  },
+  "performance": {
+    "difficulty": 45.76140071089439,
+    "total": 45.76140071089439
+  }
+}
+/api/calculators/mania/calculation?BeatmapId=diffcalc-test-mania
+{
+  "accuracy": 1,
+  "difficulty": {
+    "total": 2.3493769750220914
+  },
+  "performance": {
+    "difficulty": 45.76140071089439,
+    "total": 45.76140071089439
+  }
+}
+/api/calculators/mania/calculation?BeatmapId=diffcalc-test-mania&Mods=HD,DT
+{
+  "accuracy": 1,
+  "difficulty": {
+    "total": 2.797245912537965
+  },
+  "performance": {
+    "difficulty": 68.79984443279172,
+    "total": 68.79984443279172
+  }
+}
+-X POST /api/calculators/mania/batch/calculation -H Content-Type: application/json -d [{"BeatmapId": "diffcalc-test-mania"}, {"BeatmapId": "diffcalc-test-mania", "Mods": [{"Acronym": "DT"}]}]
+[
+  {
+    "accuracy": 1,
+    "difficulty": {
+      "total": 2.3493769750220914
+    },
+    "performance": {
+      "difficulty": 45.76140071089439,
+      "total": 45.76140071089439
+    }
+  },
+  {
+    "accuracy": 1,
+    "difficulty": {
+      "total": 2.797245912537965
+    },
+    "performance": {
+      "difficulty": 68.79984443279172,
+      "total": 68.79984443279172
+    }
+  }
+]
+/api/calculators/mania/beatmapdetails?BeatmapId=diffcalc-test-mania
+{
+  "noteCount": 123,
+  "holdNoteCount": 14,
+  "keyCount": 4,
+  "accuracy": 7,
+  "drainRate": 5,
+  "artist": "Unknown",
+  "title": "Unknown",
+  "difficultyName": "Normal",
+  "author": "Unknown Creator",
+  "maxCombo": 151,
+  "length": 30500,
+  "minBPM": 120,
+  "maxBPM": 120,
+  "commonBPM": 120,
+  "baseVelocity": 1.6,
+  "tickRate": 1
+}

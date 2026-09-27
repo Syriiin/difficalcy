@@ -2,20 +2,12 @@ using Difficalcy.Catch.Models;
 using Difficalcy.Catch.Services;
 using Difficalcy.Models;
 using Difficalcy.Services;
-using Difficalcy.Tests;
 
 namespace Difficalcy.Catch.Tests;
 
 public class CatchCalculatorServiceTest
-    : CalculatorServiceTest<
-        CatchScore,
-        CatchDifficulty,
-        CatchPerformance,
-        CatchCalculation,
-        CatchBeatmapDetails
-    >
 {
-    protected override CalculatorService<
+    private CalculatorService<
         CatchScore,
         CatchDifficulty,
         CatchPerformance,
@@ -27,27 +19,46 @@ public class CatchCalculatorServiceTest
             new TestBeatmapProvider(typeof(CatchCalculatorService).Assembly.GetName().Name)
         );
 
-    [Theory]
-    [InlineData(4.039861734717169, 163.70914311938117, "diffcalc-test", new string[] { })]
-    [InlineData(5.1527173897800873, 289.52836279061012, "diffcalc-test", new string[] { "DT" })]
-    public void Test(
-        double expectedDifficultyTotal,
-        double expectedPerformanceTotal,
-        string beatmapId,
-        string[] mods
-    ) =>
-        TestGetCalculationReturnsCorrectValues(
-            expectedDifficultyTotal,
-            expectedPerformanceTotal,
-            new CatchScore
-            {
-                BeatmapId = beatmapId,
-                Mods = mods.Select(m => new Mod { Acronym = m }).ToArray(),
-            }
-        );
+    [Fact]
+    public async Task Test()
+    {
+        var score = new CatchScore { BeatmapId = "diffcalc-test", Mods = [] };
+
+        var calculation = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(4.039861734717169, calculation.Difficulty.Total, 4);
+        Assert.Equal(163.70914311938117, calculation.Performance.Total, 4);
+        Assert.Equal(1, calculation.Accuracy, 4);
+        Assert.Equal(127, calculation.Combo, 4);
+
+        var calculationFromCache = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(calculation, calculationFromCache);
+    }
 
     [Fact]
-    public void TestAllParameters()
+    public async Task TestWithDT()
+    {
+        var score = new CatchScore
+        {
+            BeatmapId = "diffcalc-test",
+            Mods = [new Mod() { Acronym = "DT" }],
+        };
+
+        var calculation = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(5.1527173897800873, calculation.Difficulty.Total, 4);
+        Assert.Equal(289.52836279061012, calculation.Performance.Total, 4);
+        Assert.Equal(1, calculation.Accuracy, 4);
+        Assert.Equal(127, calculation.Combo, 4);
+
+        var calculationFromCache = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(calculation, calculationFromCache);
+    }
+
+    [Fact]
+    public async Task TestAllParameters()
     {
         var score = new CatchScore
         {
@@ -66,7 +77,51 @@ public class CatchCalculatorServiceTest
             LargeDroplets = 18,
             SmallDroplets = 200,
         };
-        TestGetCalculationReturnsCorrectValues(6.6156692905339396, 384.42585375147621, score);
+
+        var calculation = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(6.6156692905339396, calculation.Difficulty.Total, 4);
+        Assert.Equal(384.42585375147621, calculation.Performance.Total, 4);
+        Assert.Equal(0.95833333333333337, calculation.Accuracy, 4);
+        Assert.Equal(100, calculation.Combo, 4);
+
+        var calculationFromCache = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(calculation, calculationFromCache);
+    }
+
+    [Fact]
+    public async Task TestAllParametersClassicMod()
+    {
+        var score = new CatchScore
+        {
+            BeatmapId = "diffcalc-test",
+            Mods =
+            [
+                new Mod() { Acronym = "HR" },
+                new Mod()
+                {
+                    Acronym = "DT",
+                    Settings = new Dictionary<string, string> { { "speed_change", "2" } },
+                },
+                new Mod() { Acronym = "CL" },
+            ],
+            Combo = 100,
+            Misses = 5,
+            LargeDroplets = 18,
+            SmallDroplets = 200,
+        };
+
+        var calculation = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(6.6156692905339396, calculation.Difficulty.Total, 4);
+        Assert.Equal(384.42585375147621, calculation.Performance.Total, 4);
+        Assert.Equal(0.95833333333333337, calculation.Accuracy, 4);
+        Assert.Equal(100, calculation.Combo, 4);
+
+        var calculationFromCache = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(calculation, calculationFromCache);
     }
 
     [Fact]

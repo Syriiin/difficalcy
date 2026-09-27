@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
@@ -68,40 +69,43 @@ namespace Difficalcy.Osu.Services
             var difficultyAttributes =
                 difficultyCalculator.Calculate(lazerMods) as OsuDifficultyAttributes;
 
-            // Serialising anonymous object with same names because some properties can't be serialised, and the built-in JsonProperty fields aren't on all required fields
+            // Serialising DTO with same names because some properties can't be serialised, and the built-in JsonProperty fields aren't on all required fields
+            var dto = new OsuDifficultyAttributesDto
+            {
+                StarRating = difficultyAttributes.StarRating,
+                MaxCombo = difficultyAttributes.MaxCombo,
+                AimDifficulty = difficultyAttributes.AimDifficulty,
+                SpeedDifficulty = difficultyAttributes.SpeedDifficulty,
+                SpeedNoteCount = difficultyAttributes.SpeedNoteCount,
+                FlashlightDifficulty = difficultyAttributes.FlashlightDifficulty,
+                ReadingDifficulty = difficultyAttributes.ReadingDifficulty,
+                SliderFactor = difficultyAttributes.SliderFactor,
+                AimDifficultSliderCount = difficultyAttributes.AimDifficultSliderCount,
+                AimDifficultStrainCount = difficultyAttributes.AimDifficultStrainCount,
+                SpeedDifficultStrainCount = difficultyAttributes.SpeedDifficultStrainCount,
+                ReadingDifficultNoteCount = difficultyAttributes.ReadingDifficultNoteCount,
+                HitCircleCount = difficultyAttributes.HitCircleCount,
+                SliderCount = difficultyAttributes.SliderCount,
+                SpinnerCount = difficultyAttributes.SpinnerCount,
+                AimTopWeightedSliderFactor = difficultyAttributes.AimTopWeightedSliderFactor,
+                SpeedTopWeightedSliderFactor = difficultyAttributes.SpeedTopWeightedSliderFactor,
+                NestedScorePerObject = difficultyAttributes.NestedScorePerObject,
+                LegacyScoreBaseMultiplier = difficultyAttributes.LegacyScoreBaseMultiplier,
+                MaximumLegacyComboScore = difficultyAttributes.MaximumLegacyComboScore,
+            };
+
             return (
                 difficultyAttributes,
-                JsonSerializer.Serialize(
-                    new
-                    {
-                        difficultyAttributes.StarRating,
-                        difficultyAttributes.MaxCombo,
-                        difficultyAttributes.AimDifficulty,
-                        difficultyAttributes.SpeedDifficulty,
-                        difficultyAttributes.SpeedNoteCount,
-                        difficultyAttributes.FlashlightDifficulty,
-                        difficultyAttributes.ReadingDifficulty,
-                        difficultyAttributes.SliderFactor,
-                        difficultyAttributes.AimDifficultSliderCount,
-                        difficultyAttributes.AimDifficultStrainCount,
-                        difficultyAttributes.SpeedDifficultStrainCount,
-                        difficultyAttributes.ReadingDifficultNoteCount,
-                        difficultyAttributes.HitCircleCount,
-                        difficultyAttributes.SliderCount,
-                        difficultyAttributes.SpinnerCount,
-                        difficultyAttributes.AimTopWeightedSliderFactor,
-                        difficultyAttributes.SpeedTopWeightedSliderFactor,
-                        difficultyAttributes.NestedScorePerObject,
-                        difficultyAttributes.LegacyScoreBaseMultiplier,
-                        difficultyAttributes.MaximumLegacyComboScore,
-                    }
-                )
+                JsonSerializer.Serialize(dto, OsuJsonContext.Default.OsuDifficultyAttributesDto)
             );
         }
 
         protected override object DeserialiseDifficultyAttributes(string difficultyAttributesJson)
         {
-            return JsonSerializer.Deserialize<OsuDifficultyAttributes>(difficultyAttributesJson);
+            return JsonSerializer.Deserialize(
+                difficultyAttributesJson,
+                OsuJsonContext.Default.OsuDifficultyAttributes
+            );
         }
 
         protected override OsuCalculation CalculatePerformance(
@@ -210,10 +214,13 @@ namespace Difficalcy.Osu.Services
             };
         }
 
-        private CalculatorWorkingBeatmap GetWorkingBeatmap(string beatmapId)
+        [DynamicDependency(
+            DynamicallyAccessedMemberTypes.PublicParameterlessConstructor,
+            typeof(OsuRuleset)
+        )]
+        private FlatWorkingBeatmap GetWorkingBeatmap(string beatmapId)
         {
-            using var beatmapStream = beatmapProvider.GetBeatmapStream(beatmapId);
-            return new CalculatorWorkingBeatmap(OsuRuleset, beatmapStream);
+            return new FlatWorkingBeatmap(beatmapProvider.GetBeatmapPath(beatmapId));
         }
 
         private LazerMod ModToLazerMod(Mod mod)

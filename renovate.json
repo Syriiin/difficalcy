@@ -24,5 +24,8 @@
       ],
       "groupName": "test-tools"
     }
-  ]
+  ],
+  "nix": {
+    "enabled": true
+  }
 }

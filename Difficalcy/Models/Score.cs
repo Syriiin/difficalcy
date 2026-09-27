@@ -9,7 +9,11 @@ namespace Difficalcy.Models
         [Required]
         public string BeatmapId { get; init; }
 
-        public Mod[] Mods { get; init; } = [];
+        public Mod[] Mods
+        {
+            get => field ?? [];
+            init;
+        }
     }
 
     public record Mod
@@ -17,7 +21,11 @@ namespace Difficalcy.Models
         [Required]
         public string Acronym { get; init; }
 
-        public Dictionary<string, string> Settings { get; init; } = [];
+        public Dictionary<string, string> Settings
+        {
+            get => field ?? [];
+            init;
+        }
 
         public override string ToString()
         {

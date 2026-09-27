@@ -1,18 +1,23 @@
 # API Reference
 
-While all difficalcy calculators have the same routes, their parameters and responses differ due to the differences in the rulesets' scores and calculators.
+difficalcy exposes calculators for all official rulesets in a single server.
 
-Thus, each calculator has it's own API Reference:
+Each calculator is accessible by key under `/api/calculators/{key}`:
 
-- [difficalcy-osu](./difficalcy-osu.md)
-- [difficalcy-taiko](./difficalcy-taiko.md)
-- [difficalcy-catch](./difficalcy-catch.md)
-- [difficalcy-mania](./difficalcy-mania.md)
+| Endpoint                                           | Description                                           |
+| -------------------------------------------------- | ----------------------------------------------------- |
+| `GET /api/calculators`                             | Lists all available calculators with their keys       |
+| `GET /api/calculators/{key}/info`                  | Returns details of the calculation engine             |
+| `GET /api/calculators/{key}/calculation`           | Calculates both difficulty and performance of a score |
+| `POST /api/calculators/{key}/batch/calculation`    | Calculates a batch of difficulties and performances   |
+| `GET /api/calculators/{key}/beatmapdetails`        | Returns beatmap metadata and statistics               |
 
-In general, each calculator exposes:
+The default available keys are `osu`, `taiko`, `catch`, and `mania`.
 
-| Endpoint                      | Description                                           |
-| ----------------------------- | ----------------------------------------------------- |
-| `GET /api/info`               | Returns details of the running calculation engine     |
-| `GET /api/calculation`        | Calculates both difficulty and performance of a score |
-| `POST /api/batch/calculation` | Calculates a batch of difficulties and performances   |
+---
+
+[OAD(./docs/api-reference/difficalcy.json)]
+
+---
+
+Generated from [difficalcy OpenAPI schema](./difficalcy.json)

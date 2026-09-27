@@ -2,20 +2,12 @@ using Difficalcy.Mania.Models;
 using Difficalcy.Mania.Services;
 using Difficalcy.Models;
 using Difficalcy.Services;
-using Difficalcy.Tests;
 
 namespace Difficalcy.Mania.Tests;
 
 public class ManiaCalculatorServiceTest
-    : CalculatorServiceTest<
-        ManiaScore,
-        ManiaDifficulty,
-        ManiaPerformance,
-        ManiaCalculation,
-        ManiaBeatmapDetails
-    >
 {
-    protected override CalculatorService<
+    private CalculatorService<
         ManiaScore,
         ManiaDifficulty,
         ManiaPerformance,
@@ -27,27 +19,44 @@ public class ManiaCalculatorServiceTest
             new TestBeatmapProvider(typeof(ManiaCalculatorService).Assembly.GetName().Name)
         );
 
-    [Theory]
-    [InlineData(2.3493769750220914, 45.76140071089439, "diffcalc-test", new string[] { })]
-    [InlineData(2.797245912537965, 68.79984443279172, "diffcalc-test", new string[] { "DT" })]
-    public void Test(
-        double expectedDifficultyTotal,
-        double expectedPerformanceTotal,
-        string beatmapId,
-        string[] mods
-    ) =>
-        TestGetCalculationReturnsCorrectValues(
-            expectedDifficultyTotal,
-            expectedPerformanceTotal,
-            new ManiaScore
-            {
-                BeatmapId = beatmapId,
-                Mods = mods.Select(m => new Mod { Acronym = m }).ToArray(),
-            }
-        );
+    [Fact]
+    public async Task Test()
+    {
+        var score = new ManiaScore { BeatmapId = "diffcalc-test", Mods = [] };
+
+        var calculation = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(2.3493769750220914, calculation.Difficulty.Total, 4);
+        Assert.Equal(45.76140071089439, calculation.Performance.Total, 4);
+        Assert.Equal(1, calculation.Accuracy, 4);
+
+        var calculationFromCache = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(calculation, calculationFromCache);
+    }
 
     [Fact]
-    public void TestAllParameters()
+    public async Task TestWithDT()
+    {
+        var score = new ManiaScore
+        {
+            BeatmapId = "diffcalc-test",
+            Mods = [new Mod() { Acronym = "DT" }],
+        };
+
+        var calculation = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(2.797245912537965, calculation.Difficulty.Total, 4);
+        Assert.Equal(68.79984443279172, calculation.Performance.Total, 4);
+        Assert.Equal(1, calculation.Accuracy, 4);
+
+        var calculationFromCache = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(calculation, calculationFromCache);
+    }
+
+    [Fact]
+    public async Task TestAllParameters()
     {
         var score = new ManiaScore
         {
@@ -66,7 +75,49 @@ public class ManiaCalculatorServiceTest
             Goods = 2,
             Greats = 1,
         };
-        TestGetCalculationReturnsCorrectValues(3.3252153148972425, 64.40851628238396, score);
+
+        var calculation = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(3.3252153148972425, calculation.Difficulty.Total, 4);
+        Assert.Equal(64.40851628238396, calculation.Performance.Total, 4);
+        Assert.Equal(0.92671805450005429, calculation.Accuracy, 4);
+
+        var calculationFromCache = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(calculation, calculationFromCache);
+    }
+
+    [Fact]
+    public async Task TestAllParametersClassicMod()
+    {
+        var score = new ManiaScore
+        {
+            BeatmapId = "diffcalc-test",
+            Mods =
+            [
+                new Mod()
+                {
+                    Acronym = "DT",
+                    Settings = new Dictionary<string, string> { { "speed_change", "2" } },
+                },
+                new Mod() { Acronym = "CL" },
+            ],
+            Misses = 5,
+            Mehs = 4,
+            Oks = 3,
+            Goods = 2,
+            Greats = 1,
+        };
+
+        var calculation = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(3.3252153148972425, calculation.Difficulty.Total, 4);
+        Assert.Equal(60.445155625089356, calculation.Performance.Total, 4);
+        Assert.Equal(0.91970802919708028, calculation.Accuracy, 4);
+
+        var calculationFromCache = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(calculation, calculationFromCache);
     }
 
     [Fact]

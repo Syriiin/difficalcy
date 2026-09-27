@@ -5,15 +5,8 @@ using Difficalcy.Models;
 using Difficalcy.Services;
 
 public class DummyCalculatorServiceTest
-    : CalculatorServiceTest<
-        DummyScore,
-        DummyDifficulty,
-        DummyPerformance,
-        DummyCalculation,
-        DummyBeatmapDetails
-    >
 {
-    protected override CalculatorService<
+    private CalculatorService<
         DummyScore,
         DummyDifficulty,
         DummyPerformance,
@@ -21,25 +14,45 @@ public class DummyCalculatorServiceTest
         DummyBeatmapDetails
     > CalculatorService { get; } = new DummyCalculatorService(new InMemoryCache());
 
-    [Theory]
-    [InlineData(15, 1500, "test 1", new string[] { "150" })]
-    [InlineData(10, 1000, "test 2", new string[] { "25", "75" })]
-    public void Test(
-        double expectedDifficultyTotal,
-        double expectedPerformanceTotal,
-        string beatmapId,
-        string[] mods
-    ) =>
-        TestGetCalculationReturnsCorrectValues(
-            expectedDifficultyTotal,
-            expectedPerformanceTotal,
-            new DummyScore
-            {
-                BeatmapId = beatmapId,
-                Mods = mods.Select(m => new Mod { Acronym = m }).ToArray(),
-                Points = 100,
-            }
-        );
+    [Fact]
+    public async Task Test()
+    {
+        var score = new DummyScore
+        {
+            BeatmapId = "test 1",
+            Mods = [new Mod() { Acronym = "150" }],
+            Points = 100,
+        };
+
+        var calculation = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(15, calculation.Difficulty.Total, 4);
+        Assert.Equal(1500, calculation.Performance.Total, 4);
+
+        var calculationFromCache = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(calculation, calculationFromCache);
+    }
+
+    [Fact]
+    public async Task TestWith2575()
+    {
+        var score = new DummyScore
+        {
+            BeatmapId = "test 2",
+            Mods = [new Mod() { Acronym = "25" }, new Mod() { Acronym = "75" }],
+            Points = 100,
+        };
+
+        var calculation = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(10, calculation.Difficulty.Total, 4);
+        Assert.Equal(1000, calculation.Performance.Total, 4);
+
+        var calculationFromCache = await CalculatorService.GetCalculation(score);
+
+        Assert.Equal(calculation, calculationFromCache);
+    }
 
     [Fact]
     public async Task TestGetCalculationBatchReturnsCorrectValuesInOrder()

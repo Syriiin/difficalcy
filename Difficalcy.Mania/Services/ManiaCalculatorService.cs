@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
@@ -12,8 +13,10 @@ using osu.Game.Online.API;
 using osu.Game.Rulesets.Mania;
 using osu.Game.Rulesets.Mania.Difficulty;
 using osu.Game.Rulesets.Mania.Objects;
+using osu.Game.Rulesets.Osu;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Scoring;
+using LazerClassicMod = osu.Game.Rulesets.Mods.ModClassic;
 using LazerMod = osu.Game.Rulesets.Mods.Mod;
 
 namespace Difficalcy.Mania.Services
@@ -68,18 +71,25 @@ namespace Difficalcy.Mania.Services
             var difficultyAttributes =
                 difficultyCalculator.Calculate(lazerMods) as ManiaDifficultyAttributes;
 
-            // Serialising anonymous object with same names because some properties can't be serialised, and the built-in JsonProperty fields aren't on all required fields
+            // Serialising DTO with same names because some properties can't be serialised, and the built-in JsonProperty fields aren't on all required fields
+            var dto = new ManiaDifficultyAttributesDto
+            {
+                StarRating = difficultyAttributes.StarRating,
+                MaxCombo = difficultyAttributes.MaxCombo,
+            };
+
             return (
                 difficultyAttributes,
-                JsonSerializer.Serialize(
-                    new { difficultyAttributes.StarRating, difficultyAttributes.MaxCombo }
-                )
+                JsonSerializer.Serialize(dto, ManiaJsonContext.Default.ManiaDifficultyAttributesDto)
             );
         }
 
         protected override object DeserialiseDifficultyAttributes(string difficultyAttributesJson)
         {
-            return JsonSerializer.Deserialize<ManiaDifficultyAttributes>(difficultyAttributesJson);
+            return JsonSerializer.Deserialize(
+                difficultyAttributesJson,
+                ManiaJsonContext.Default.ManiaDifficultyAttributes
+            );
         }
 
         protected override ManiaCalculation CalculatePerformance(
@@ -109,8 +119,6 @@ namespace Difficalcy.Mania.Services
             var workingBeatmap = GetWorkingBeatmap(beatmapId);
             var beatmap = workingBeatmap.GetPlayableBeatmap(ManiaRuleset.RulesetInfo);
 
-            var scoreInfo = new ScoreInfo(beatmap.BeatmapInfo, ManiaRuleset.RulesetInfo) { };
-
             var noteCount = beatmap.HitObjects.OfType<Note>().Count();
 
             return new ManiaBeatmapDetails()
@@ -138,19 +146,21 @@ namespace Difficalcy.Mania.Services
         {
             var workingBeatmap = GetWorkingBeatmap(score.BeatmapId);
             var mods = score.Mods.Select(ModToLazerMod).ToArray();
+            var isClassic = mods.Any(m => m is LazerClassicMod);
             var beatmap = workingBeatmap.GetPlayableBeatmap(ManiaRuleset.RulesetInfo, mods);
 
             var hitObjectCount = beatmap.HitObjects.Count;
             var holdNoteTailCount = beatmap.HitObjects.OfType<HoldNote>().Count();
+            var hitResultCount = isClassic ? hitObjectCount : hitObjectCount + holdNoteTailCount;
             var statistics = GetHitResults(
-                hitObjectCount + holdNoteTailCount,
+                hitResultCount,
                 score.Misses,
                 score.Mehs,
                 score.Oks,
                 score.Goods,
                 score.Greats
             );
-            var accuracy = CalculateAccuracy(statistics);
+            var accuracy = CalculateAccuracy(statistics, isClassic);
 
             return new ScoreInfo(beatmap.BeatmapInfo, ManiaRuleset.RulesetInfo)
             {
@@ -161,10 +171,17 @@ namespace Difficalcy.Mania.Services
             };
         }
 
-        private CalculatorWorkingBeatmap GetWorkingBeatmap(string beatmapId)
+        [DynamicDependency(
+            DynamicallyAccessedMemberTypes.PublicParameterlessConstructor,
+            typeof(ManiaRuleset)
+        )]
+        [DynamicDependency(
+            DynamicallyAccessedMemberTypes.PublicParameterlessConstructor,
+            typeof(OsuRuleset)
+        )]
+        private FlatWorkingBeatmap GetWorkingBeatmap(string beatmapId)
         {
-            using var beatmapStream = _beatmapProvider.GetBeatmapStream(beatmapId);
-            return new CalculatorWorkingBeatmap(ManiaRuleset, beatmapStream);
+            return new FlatWorkingBeatmap(_beatmapProvider.GetBeatmapPath(beatmapId));
         }
 
         private LazerMod ModToLazerMod(Mod mod)
@@ -199,7 +216,10 @@ namespace Difficalcy.Mania.Services
             };
         }
 
-        private static double CalculateAccuracy(Dictionary<HitResult, int> statistics)
+        private static double CalculateAccuracy(
+            Dictionary<HitResult, int> statistics,
+            bool isClassic
+        )
         {
             var countPerfect = statistics[HitResult.Perfect];
             var countGreat = statistics[HitResult.Great];
@@ -212,13 +232,15 @@ namespace Difficalcy.Mania.Services
             if (total == 0)
                 return 1;
 
+            var perfectPoints = isClassic ? 300 : 305;
+
             return (double)(
-                    (6 * countPerfect)
-                    + (6 * countGreat)
-                    + (4 * countGood)
-                    + (2 * countOk)
-                    + countMeh
-                ) / (6 * total);
+                    (perfectPoints * countPerfect)
+                    + (300 * countGreat)
+                    + (200 * countGood)
+                    + (100 * countOk)
+                    + (50 * countMeh)
+                ) / (perfectPoints * total);
         }
 
         private static ManiaDifficulty GetDifficultyFromDifficultyAttributes(
