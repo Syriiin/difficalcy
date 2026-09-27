@@ -66,10 +66,10 @@ RUN dotnet restore ./tools/StripResources/StripResources.csproj
 COPY ./tools/StripResources/ ./tools/StripResources/
 RUN dotnet build ./tools/StripResources/StripResources.csproj -o /tools && \
     /tools/StripResources \
-        /root/.nuget/packages/ppy.osu.game.resources/*/lib/netstandard2.1/osu.Game.Resources.dll \
+        /root/.nuget/packages/ppy.osu.game.resources/*/lib/net8.0/osu.Game.Resources.dll \
         /tmp/osu.Game.Resources.dll && \
     cp /tmp/osu.Game.Resources.dll \
-        /root/.nuget/packages/ppy.osu.game.resources/*/lib/netstandard2.1/osu.Game.Resources.dll && \
+        /root/.nuget/packages/ppy.osu.game.resources/*/lib/net8.0/osu.Game.Resources.dll && \
     dotnet publish ./Difficalcy.Api/Difficalcy.Api.csproj -o /app/difficalcy --runtime linux-x64 --self-contained true && \
     rm -f /app/difficalcy/*.dbg /app/difficalcy/*.pdb /app/difficalcy/*.Development.json /app/difficalcy/*.so /app/difficalcy/*.so.*
 
