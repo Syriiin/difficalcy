@@ -23,6 +23,17 @@
         "Microsoft.Net.Test.Sdk"
       ],
       "groupName": "test-tools"
+    },
+    {
+      "matchManagers": [
+        "nuget"
+      ],
+      "matchPackageNames": [
+        "Microsoft.Extensions.ApiDescription.Server",
+        "Microsoft.AspNetCore.OpenApi",
+        "Microsoft.OpenApi"
+      ],
+      "groupName": "openapi"
     }
   ],
   "nix": {
