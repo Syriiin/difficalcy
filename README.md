@@ -77,5 +77,8 @@ services:
 ## Development Setup
 
 ```sh
-make start-dev
+nix develop
+just start-dev
 ```
+
+Run `just` to list available commands.
