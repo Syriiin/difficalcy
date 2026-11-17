@@ -77,5 +77,6 @@ services:
 ## Development Setup
 
 ```sh
+nix develop
 make start-dev
 ```

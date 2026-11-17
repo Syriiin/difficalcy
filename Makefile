@@ -1,4 +1,3 @@
-NIX_RUN = nix develop --command
 COMPOSE_E2E = docker compose -f compose.e2e.yaml
 COMPOSE_E2E_RUN = $(COMPOSE_E2E) run --rm --build e2e-test-runner
 COMPOSE_APP_DEV = docker compose -f compose.yaml -f compose.override.yaml
@@ -6,56 +5,66 @@ COMPOSE_RUN_DOCS = docker compose -f compose.yaml -f compose.override.yaml run -
 REPO = ghcr.io/syriiin/difficalcy
 
 help:	## Show this help
-	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
+	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' -e 's/##//' -e 's/check-flake[[:space:]]*//'
+
+check-flake:
+	@if [ -z "$$DIFFICALCY_FLAKE_HASH" ]; then \
+		echo "Error: not in the Nix dev shell. Run 'nix develop' (or 'make shell') first." >&2; \
+		exit 1; \
+	fi
+	@if [ "$$DIFFICALCY_FLAKE_HASH" != "$$(cat flake.nix flake.lock | sha256sum | cut -d' ' -f1)" ]; then \
+		echo "Error: flake.nix or flake.lock changed since the shell started. Re-enter with 'nix develop'." >&2; \
+		exit 1; \
+	fi
 
 shell:  ## Runs a bash shell with dev tooling
 	nix develop
 
-test:	## Runs test suite
-	$(NIX_RUN) dotnet test
+test:	check-flake	## Runs test suite
+	dotnet test
 
-test-e2e:	## Runs E2E test suite (slim + full)
+test-e2e:	check-flake	## Runs E2E test suite (slim + full)
 	$(COMPOSE_E2E_RUN)
 	$(COMPOSE_E2E) down --volumes
 
-update-e2e-snapshot:	## Regenerates the E2E response snapshot
+update-e2e-snapshot:	check-flake	## Regenerates the E2E response snapshot
 	UPDATE_SNAPSHOTS=true $(COMPOSE_E2E_RUN)
 	$(COMPOSE_E2E) down --volumes
 
-build-dev:	## Builds development docker images
+build-dev:	check-flake	## Builds development docker images
 	$(COMPOSE_APP_DEV) build
 
 start-dev: build-dev	## Starts development environment
 	$(COMPOSE_APP_DEV) up -d
 
-clean-dev:	## Cleans development environment
+clean-dev:	check-flake	## Cleans development environment
 	$(COMPOSE_APP_DEV) down --remove-orphans
 
-reset-dev:	## Resets development environment
+reset-dev:	check-flake	## Resets development environment
 	$(COMPOSE_APP_DEV) down --remove-orphans --volumes
 
-update-api-reference:	## Updates OpenAPI schemas in docs site
-	$(NIX_RUN) scripts/update-api-reference.sh
+update-api-reference:	check-flake	## Updates OpenAPI schemas in docs site
+	scripts/update-api-reference.sh
 
-check-api-reference: ## Checks OpenAPI schemas are updated
-	$(NIX_RUN) scripts/check-api-reference.sh
+check-api-reference: check-flake	## Checks OpenAPI schemas are updated
+	scripts/check-api-reference.sh
 
-build-docs:	## Builds documentation site
+build-docs:	check-flake	## Builds documentation site
 	$(COMPOSE_RUN_DOCS) build --strict --clean
 
-restore-dotnet-tooling:
+restore-dotnet-tooling: check-flake
 	dotnet tool restore
 
 check-formatting: restore-dotnet-tooling	## Checks code formatting
-	$(NIX_RUN) dotnet tool run csharpier check .
-	$(NIX_RUN) nixfmt --check flake.nix
+	dotnet tool run csharpier check .
+	treefmt --ci
 
 fix-formatting: restore-dotnet-tooling	## Fix code formatting
-	$(NIX_RUN) dotnet tool run csharpier format .
-	$(NIX_RUN) nixfmt flake.nix
+	dotnet tool run csharpier format .
+	treefmt
 
 VERSION =
-release:	## Pushes docker images to ghcr.io and creates a github release
+release:	check-flake	## Pushes docker images to ghcr.io and creates a github release
 ifndef VERSION
 	$(error VERSION is undefined)
 endif
@@ -86,10 +95,10 @@ endif
 	docker push $(REPO):latest-slim
 	docker push $(REPO):$(VERSION)-full
 	docker push $(REPO):latest-full
-	$(NIX_RUN) gh release create "$(VERSION)" --generate-notes
+	gh release create "$(VERSION)" --generate-notes
 
 VERSION =
-pre-release:	## Pushes docker images to ghcr.io and creates a github prerelease
+pre-release:	check-flake	## Pushes docker images to ghcr.io and creates a github prerelease
 ifndef VERSION
 	$(error VERSION is undefined)
 endif
@@ -108,4 +117,4 @@ endif
 	docker push $(REPO):$(VERSION)
 	docker push $(REPO):$(VERSION)-slim
 	docker push $(REPO):$(VERSION)-full
-	$(NIX_RUN) gh release create "$(VERSION)" --generate-notes --prerelease --target "$(shell git branch --show-current)"
+	gh release create "$(VERSION)" --generate-notes --prerelease --target "$(shell git branch --show-current)"
