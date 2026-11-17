@@ -47,24 +47,21 @@ app.MapOpenApi();
 
 var api = app.MapGroup("/api").WithTags("difficalcy");
 
-api.MapGet(
-    "/calculators",
-    () =>
-    {
-        var osu = app.Services.GetRequiredService<OsuCalculatorService>();
-        var taiko = app.Services.GetRequiredService<TaikoCalculatorService>();
-        var catch_ = app.Services.GetRequiredService<CatchCalculatorService>();
-        var mania = app.Services.GetRequiredService<ManiaCalculatorService>();
+api.MapGet("/calculators", () =>
+{
+    var osu = app.Services.GetRequiredService<OsuCalculatorService>();
+    var taiko = app.Services.GetRequiredService<TaikoCalculatorService>();
+    var catch_ = app.Services.GetRequiredService<CatchCalculatorService>();
+    var mania = app.Services.GetRequiredService<ManiaCalculatorService>();
 
-        return new Dictionary<string, CalculatorInfo>
-        {
-            ["osu"] = osu.Info,
-            ["taiko"] = taiko.Info,
-            ["catch"] = catch_.Info,
-            ["mania"] = mania.Info,
-        };
-    }
-);
+    return new Dictionary<string, CalculatorInfo>
+    {
+        ["osu"] = osu.Info,
+        ["taiko"] = taiko.Info,
+        ["catch"] = catch_.Info,
+        ["mania"] = mania.Info,
+    };
+});
 
 var osuHandlers = new DifficalcyHandlers<
     OsuScore,
