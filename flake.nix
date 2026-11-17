@@ -15,7 +15,7 @@
       devShells.${system}.default = pkgs.mkShell {
         packages = with pkgs; [
           nixfmt-tree
-          gnumake
+          just
           dotnet-sdk_10
           gh
         ];

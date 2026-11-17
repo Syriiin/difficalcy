@@ -24,11 +24,11 @@ jobs:
       - uses: cachix/install-nix-action@v31
       - name: Release
         if: ${{ !inputs.prerelease }}
-        run: nix develop --command make release VERSION=${{ inputs.version }} GITHUB_USERNAME=${{ github.actor }}
+        run: nix develop --command just release "${{ inputs.version }}" "${{ github.actor }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Pre-release
         if: ${{ inputs.prerelease }}
-        run: nix develop --command make pre-release VERSION=${{ inputs.version }} GITHUB_USERNAME=${{ github.actor }}
+        run: nix develop --command just pre-release "${{ inputs.version }}" "${{ github.actor }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

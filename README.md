@@ -78,5 +78,7 @@ services:
 
 ```sh
 nix develop
-make start-dev
+just start-dev
 ```
+
+Run `just` to list available commands.
