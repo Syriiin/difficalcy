@@ -16,7 +16,7 @@ USER app
 
 # -----------------------------------------------------------------------------
 
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build-base
+FROM mcr.microsoft.com/dotnet/sdk:11.0 AS build-base
 WORKDIR /src
 
 COPY ./Directory.Build.props ./
