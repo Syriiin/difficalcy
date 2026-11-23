@@ -4,29 +4,29 @@
     "rulesetName": "osu!",
     "calculatorName": "Official osu!",
     "calculatorPackage": "osu.Game.Rulesets.Osu",
-    "calculatorVersion": "2026.916.0.0",
-    "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Osu/2026.916.0.0"
+    "calculatorVersion": "2026.1026.0.0",
+    "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Osu/2026.1026.0.0"
   },
   "taiko": {
     "rulesetName": "osu!taiko",
     "calculatorName": "Official osu!taiko",
     "calculatorPackage": "osu.Game.Rulesets.Taiko",
-    "calculatorVersion": "2026.916.0.0",
-    "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Taiko/2026.916.0.0"
+    "calculatorVersion": "2026.1026.0.0",
+    "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Taiko/2026.1026.0.0"
   },
   "catch": {
     "rulesetName": "osu!catch",
     "calculatorName": "Official osu!catch",
     "calculatorPackage": "osu.Game.Rulesets.Catch",
-    "calculatorVersion": "2026.916.0.0",
-    "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Catch/2026.916.0.0"
+    "calculatorVersion": "2026.1026.0.0",
+    "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Catch/2026.1026.0.0"
   },
   "mania": {
     "rulesetName": "osu!mania",
     "calculatorName": "Official osu!mania",
     "calculatorPackage": "osu.Game.Rulesets.Mania",
-    "calculatorVersion": "2026.916.0.0",
-    "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Mania/2026.916.0.0"
+    "calculatorVersion": "2026.1026.0.0",
+    "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Mania/2026.1026.0.0"
   }
 }
 /api/calculators/osu/info
@@ -34,8 +34,8 @@
   "rulesetName": "osu!",
   "calculatorName": "Official osu!",
   "calculatorPackage": "osu.Game.Rulesets.Osu",
-  "calculatorVersion": "2026.916.0.0",
-  "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Osu/2026.916.0.0"
+  "calculatorVersion": "2026.1026.0.0",
+  "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Osu/2026.1026.0.0"
 }
 /api/calculators/osu/calculation?BeatmapId=diffcalc-test-osu
 {
@@ -165,8 +165,8 @@
   "rulesetName": "osu!taiko",
   "calculatorName": "Official osu!taiko",
   "calculatorPackage": "osu.Game.Rulesets.Taiko",
-  "calculatorVersion": "2026.916.0.0",
-  "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Taiko/2026.916.0.0"
+  "calculatorVersion": "2026.1026.0.0",
+  "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Taiko/2026.1026.0.0"
 }
 /api/calculators/taiko/calculation?BeatmapId=diffcalc-test-taiko
 {
@@ -273,8 +273,8 @@
   "rulesetName": "osu!catch",
   "calculatorName": "Official osu!catch",
   "calculatorPackage": "osu.Game.Rulesets.Catch",
-  "calculatorVersion": "2026.916.0.0",
-  "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Catch/2026.916.0.0"
+  "calculatorVersion": "2026.1026.0.0",
+  "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Catch/2026.1026.0.0"
 }
 /api/calculators/catch/calculation?BeatmapId=diffcalc-test-catch
 {
@@ -357,8 +357,8 @@
   "rulesetName": "osu!mania",
   "calculatorName": "Official osu!mania",
   "calculatorPackage": "osu.Game.Rulesets.Mania",
-  "calculatorVersion": "2026.916.0.0",
-  "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Mania/2026.916.0.0"
+  "calculatorVersion": "2026.1026.0.0",
+  "calculatorUrl": "https://nuget.org/packages/ppy.osu.Game.Rulesets.Mania/2026.1026.0.0"
 }
 /api/calculators/mania/calculation?BeatmapId=diffcalc-test-mania
 {

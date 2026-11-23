@@ -77,7 +77,7 @@ namespace Difficalcy.Osu.Services
                 AimDifficulty = difficultyAttributes.AimDifficulty,
                 SpeedDifficulty = difficultyAttributes.SpeedDifficulty,
                 SpeedNoteCount = difficultyAttributes.SpeedNoteCount,
-                FlashlightDifficulty = difficultyAttributes.FlashlightDifficulty,
+                FlashlightDifficulty = difficultyAttributes.FlashlightDifficulty ?? 0,
                 ReadingDifficulty = difficultyAttributes.ReadingDifficulty,
                 SliderFactor = difficultyAttributes.SliderFactor,
                 AimDifficultSliderCount = difficultyAttributes.AimDifficultSliderCount,
@@ -333,7 +333,7 @@ namespace Difficalcy.Osu.Services
                 Total = difficultyAttributes.StarRating,
                 Aim = difficultyAttributes.AimDifficulty,
                 Speed = difficultyAttributes.SpeedDifficulty,
-                Flashlight = difficultyAttributes.FlashlightDifficulty,
+                Flashlight = difficultyAttributes.FlashlightDifficulty ?? 0,
                 Reading = difficultyAttributes.ReadingDifficulty,
             };
         }
